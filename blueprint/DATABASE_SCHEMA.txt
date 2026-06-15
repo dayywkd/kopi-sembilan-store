@@ -1,0 +1,53 @@
+========================================================================
+TABEL 1: categories
+========================================================================
+- id : BIGINT (Primary Key, Auto Increment)
+- name : STRING (Contoh: 'SINGLE ORIGIN', 'ESPRESSO BLENDS', 'GEAR')
+- slug : STRING (Unique)
+- timestamps
+
+========================================================================
+TABEL 2: products
+========================================================================
+- id : BIGINT (Primary Key, Auto Increment)
+- category_id : FOREIGN KEY (references categories.id, onDelete Cascade)
+- name : STRING (Contoh: 'SOLARIS BRIGHT', 'SEMBI_AN ZERO')
+- slug : STRING (Unique)
+- price : DECIMAL(12, 2)
+- image_path : STRING (Nullable)
+- roast_level : ENUM('Light', 'Medium-Light', 'Medium', 'Medium-Dark')
+- altitude : STRING (Contoh: '1200 - 1500m')
+- sensory_notes : STRING (Contoh: 'Dark Chocolate & Stone Fruit')
+- status : ENUM('AVAILABLE', 'LIMITED', 'SOLD OUT') DEFAULT 'AVAILABLE'
+- timestamps
+
+========================================================================
+TABEL 3: orders
+========================================================================
+- id : BIGINT (Primary Key, Auto Increment)
+- transaction_id : STRING (Unique) -> Format: 'TK9-' + random_number
+- first_name : STRING
+- last_name : STRING
+- email : STRING
+- shipping_address : TEXT
+- city : STRING
+- postal_code : STRING
+- order_notes : TEXT (Nullable)
+- payment_method : ENUM('Bank Transfer', 'QRIS')
+- subtotal : DECIMAL(12, 2)
+- shipping_cost : DECIMAL(12, 2) -> Logika: 0 jika subtotal >= 500000, else 15000
+- total_paid : DECIMAL(12, 2)
+- status : ENUM('Paid', 'Packing', 'Shipped') DEFAULT 'Paid'
+- timestamps
+
+========================================================================
+TABEL 4: order_items
+========================================================================
+- id : BIGINT (Primary Key, Auto Increment)
+- order_id : FOREIGN KEY (references orders.id, onDelete Cascade)
+- product_id : FOREIGN KEY (references products.id)
+- product_name : STRING (Menjaga riwayat nama produk jika diubah admin)
+- grind_size : ENUM('WHOLE BEAN', 'ESPRESSO (FINE)', 'POUR OVER (MEDIUM)', 'FRENCH PRESS (COARSE)')
+- quantity : INTEGER
+- price : DECIMAL(12, 2)
+- timestamps

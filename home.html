@@ -1,0 +1,626 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en" style=""><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Toko Kopi Sembilan | Minimalist Precision</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@100;300;400;700;900&amp;family=Playfair+Display:ital,wght@0,700;0,900;1,700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "secondary-container": "#1a1a1a",
+                        "on-background": "#F9F9F9",
+                        "inverse-surface": "#F9F9F9",
+                        "surface-tint": "#c6c6c6",
+                        "background": "#121212",
+                        "surface": "#121212",
+                        "primary": "#F9F9F9",
+                        "on-primary": "#121212",
+                        "outline": "#444444"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0px",
+                        "lg": "0px",
+                        "xl": "0px",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "margin-mobile": "24px",
+                        "container-max": "1440px",
+                        "stack-xl": "120px",
+                        "gutter": "32px",
+                        "stack-sm": "8px",
+                        "margin-desktop": "80px",
+                        "stack-md": "24px",
+                        "unit": "4px",
+                        "stack-lg": "64px"
+                    },
+                    "fontFamily": {
+                        "display": ["Playfair Display", "serif"],
+                        "sans": ["Hanken Grotesk", "sans-serif"],
+                        "headline-lg": ["Playfair Display"],
+                        "button": ["Hanken Grotesk"],
+                        "display-lg-mobile": ["Playfair Display"],
+                        "display-lg": ["Playfair Display"],
+                        "headline-md": ["Playfair Display"],
+                        "body-lg": ["Hanken Grotesk"],
+                        "body-md": ["Hanken Grotesk"],
+                        "label-caps": ["Hanken Grotesk"]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 200, 'GRAD' 0, 'opsz' 24;
+        }
+        html {
+            scroll-behavior: smooth;
+        }
+        body {
+            background-color: #121212;
+            color: #F9F9F9;
+            -webkit-font-smoothing: antialiased;
+            scrollbar-width: thin;
+            scrollbar-color: #444 #121212;
+            font-family: 'Hanken Grotesk', sans-serif;
+        }
+        
+        .scroll-container {
+            width: 100%;
+            overflow-x: hidden;
+        }
+        .snap-section {
+            min-height: 90vh;
+            width: 100%;
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+        }
+
+        .text-display-hero {
+            font-size: clamp(3.5rem, 12vw, 10rem);
+            line-height: 0.9;
+            font-weight: 700;
+            letter-spacing: -0.04em;
+        }
+
+        .label-tiny {
+            font-size: 11px;
+            font-weight: 500;
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+        }
+        @media (min-width: 768px) {
+            .label-tiny {
+                font-size: 12px;
+                letter-spacing: 0.25em;
+            }
+        }
+
+        @keyframes slow-zoom {
+            0% { transform: scale(1.02); }
+            100% { transform: scale(1.10); }
+        }
+        .bg-zoom-image {
+            position: absolute;
+            inset: 0;
+            background-size: cover;
+            background-position: center;
+            filter: grayscale(100%) brightness(30%);
+            z-index: 0;
+            animation: slow-zoom 25s infinite alternate ease-in-out;
+        }
+
+        /* Scroll Reveal Animation system */
+        .reveal {
+            opacity: 0;
+            transform: translateY(35px);
+            transition: opacity 1.2s cubic-bezier(0.16, 1, 0.3, 1), transform 1.2s cubic-bezier(0.16, 1, 0.3, 1);
+            will-change: transform, opacity;
+        }
+        .reveal.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        .delay-100 { transition-delay: 100ms; }
+        .delay-200 { transition-delay: 200ms; }
+        .delay-300 { transition-delay: 300ms; }
+        .delay-400 { transition-delay: 400ms; }
+
+        @keyframes fade-up {
+            0% {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            100% {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        .animate-fade-up {
+            opacity: 0;
+            animation: fade-up 1.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
+        .hero-delay-1 { animation-delay: 200ms; }
+        .hero-delay-2 { animation-delay: 400ms; }
+        .hero-delay-3 { animation-delay: 600ms; }
+
+        .content-layer {
+            position: relative;
+            z-index: 10;
+            width: 100%;
+        }
+
+        .architectural-grid {
+            display: grid;
+            grid-template-columns: repeat(12, 1fr);
+            gap: 24px;
+        }
+
+        /* Micro-interactions & Inversion States */
+        .btn-inversion {
+            background-color: #F9F9F9;
+            color: #121212;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            font-weight: 700;
+        }
+        .btn-inversion:hover {
+            background-color: transparent;
+            color: #F9F9F9;
+            box-shadow: inset 0 0 0 1px #F9F9F9;
+            transform: translateY(-2px);
+        }
+
+        .btn-dark-outline {
+            background-color: transparent;
+            color: #F9F9F9;
+            border: 1px solid #444444;
+            transition: all 0.3s ease;
+        }
+        .btn-dark-outline:hover {
+            background-color: #F9F9F9;
+            color: #121212;
+            border-color: #F9F9F9;
+            transform: translateY(-2px);
+        }
+
+        .nav-link-hover {
+            transition: color 0.3s ease, opacity 0.3s ease;
+        }
+        .nav-link-hover:hover {
+            color: #F9F9F9;
+            opacity: 1;
+        }
+
+        .product-image-container {
+            position: relative;
+            overflow: hidden;
+        }
+        .product-image-container img {
+            transition: filter 0.4s ease, transform 0.6s ease;
+        }
+        .product-image-container:hover img {
+            filter: grayscale(0%) contrast(110%);
+            transform: scale(1.05);
+        }
+        .product-overlay {
+            position: absolute;
+            inset: 0;
+            background: rgba(18,18,18,0.4);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+        .product-image-container:hover .product-overlay {
+            opacity: 1;
+        }
+    </style>
+</head>
+<body class="overflow-x-hidden">
+<!-- Cart Notification / Toast -->
+<div id="cart-toast" class="fixed bottom-8 right-8 bg-[#F9F9F9] text-[#121212] px-6 py-4 z-50 transform translate-y-20 opacity-0 transition-all duration-300 pointer-events-none flex items-center gap-4 shadow-2xl border border-white/10">
+    <span class="material-symbols-outlined text-green-600">check_circle</span>
+    <span class="label-tiny font-bold" id="toast-message">Item added to bag</span>
+</div>
+
+<nav class="fixed top-0 left-0 w-full z-50 bg-transparent border-b border-transparent transition-all duration-500" id="main-nav">
+<div class="flex justify-between items-center w-full px-margin-mobile md:px-margin-desktop py-8 max-w-container-max mx-auto transition-all duration-500" id="main-nav-container">
+<div class="flex items-center gap-6">
+<a href="home.html" class="flex items-center gap-4">
+<img alt="Toko Kopi Sembilan Logogram" class="h-8 w-auto mix-blend-difference" src="https://lh3.googleusercontent.com/aida-public/AB6AXuA9MpVXkkX9y3Q_Se_xUanS6w5p15bpo-B_mSEXVouJ0-V4stob2SLDcZ6bWOAJYDWK0fRxeiroHyw9gyc6lQ4wqWjNQVopzVTVzavgA9q4G_Jns1je7kyRMW9YZ8Pnm15y4fyR0LH8MTgR8r1_qhAsptFz0lEtXTkHQSYk8XazLz62-PN057iWfrwBk7eVgsTC1VvA0TDbXPbaKXpLPfLNNriXU2Oqpl9NhJc7ZOJNFjG0LIT3s4SDSER5NlbOjdVgl_TyBjuq3AU"/>
+<span class="label-tiny hidden sm:block mix-blend-difference font-semibold">Toko Kopi Sembilan</span>
+</a>
+</div>
+<div class="hidden lg:flex gap-12 items-center mix-blend-difference">
+<a class="label-tiny nav-link-hover opacity-100 border-b-2 border-[#F9F9F9] pb-1" href="home.html">Home</a>
+<a class="label-tiny nav-link-hover opacity-60 hover:opacity-100 transition-opacity pb-1" href="shop.html">Shop</a>
+<a class="label-tiny nav-link-hover opacity-60 hover:opacity-100 transition-opacity pb-1" href="#story">About</a>
+<a class="label-tiny nav-link-hover opacity-60 hover:opacity-100 transition-opacity pb-1" href="#lab">Lab</a>
+<a class="label-tiny nav-link-hover opacity-60 hover:opacity-100 transition-opacity pb-1" href="#visit">Visit</a>
+</div>
+<div class="flex gap-8 items-center mix-blend-difference relative">
+<a href="admindashboard.html" class="material-symbols-outlined text-xl hover:opacity-60 transition-opacity" title="Dashboard Admin">person</a>
+<a href="keranjang.html" class="material-symbols-outlined text-xl hover:opacity-60 transition-opacity relative" title="Keranjang Belanja">
+    shopping_bag
+    <span id="cart-count" class="absolute -top-2 -right-2 bg-red-600 text-white text-[10px] w-4 h-4 rounded-full flex items-center justify-center font-bold hidden">0</span>
+</a>
+<button onclick="toggleMobileMenu()" class="lg:hidden material-symbols-outlined text-xl hover:opacity-60 transition-opacity z-50">menu</button>
+</div>
+</div>
+</nav>
+
+<!-- Mobile Navigation Drawer -->
+<div id="mobile-menu" class="fixed inset-0 bg-[#121212] z-[55] flex flex-col justify-between p-8 transition-transform duration-500 translate-x-full">
+    <div class="flex justify-between items-center py-6 border-b border-[#F9F9F9]/5">
+        <span class="label-tiny opacity-60">Menu</span>
+        <button onclick="toggleMobileMenu()" class="material-symbols-outlined text-xl hover:opacity-60 transition-opacity">close</button>
+    </div>
+    <div class="flex flex-col gap-8 text-4xl font-display italic my-auto">
+        <a onclick="toggleMobileMenu()" class="hover:text-neutral-400 transition-colors" href="shop.html">Shop</a>
+        <a onclick="toggleMobileMenu()" class="hover:text-neutral-400 transition-colors" href="#story">About</a>
+        <a onclick="toggleMobileMenu()" class="hover:text-neutral-400 transition-colors" href="#lab">Lab</a>
+        <a onclick="toggleMobileMenu()" class="hover:text-neutral-400 transition-colors" href="#visit">Visit</a>
+    </div>
+    <div class="pt-8 border-t border-[#F9F9F9]/5 flex justify-between items-center">
+        <a onclick="toggleMobileMenu()" href="admindashboard.html" class="label-tiny flex items-center gap-2 opacity-80 hover:opacity-100 transition-opacity"><span class="material-symbols-outlined text-base">person</span> Account</a>
+        <a onclick="toggleMobileMenu()" href="keranjang.html" class="label-tiny flex items-center gap-2 opacity-80 hover:opacity-100 transition-opacity"><span class="material-symbols-outlined text-base">shopping_bag</span> Bag</a>
+    </div>
+</div>
+<div class="scroll-container">
+<!-- Hero Section -->
+<section class="snap-section bg-[#121212]">
+<div class="bg-zoom-image" style="background-image: url('https://lh3.googleusercontent.com/aida/AP1WRLv7olZyxkGvr_JPGc8W0FNVQEVf-TEoc86wJFAOz88IOS2fU__1PHRqrm5U03va8UfQaRW2a77G73_GWauW9cARdwQsvqUdcAysQLxu9GIVL-lMB-TH3-iI960PwfAhQPxEs9LGK9FJYAX45HHONwilt5CQKJMntQe65Zzmu_TsLxyE-uoTO3XjRtHBnb_NxYPq0WVGThRxVYm9To_H2uE0624KoFz5QuSkZkdOOHQPjSEtJ3ywsivduXc'); opacity: 0.5;"></div>
+<div class="content-layer px-margin-mobile md:px-margin-desktop text-center py-32">
+<p class="label-tiny mb-12 opacity-60 animate-fade-up hero-delay-1">Malang, Indonesia</p>
+<h1 class="text-display-hero font-display italic text-[#F9F9F9] animate-fade-up hero-delay-2">Absolute<br/>Precision</h1>
+<p class="label-tiny mt-12 opacity-60 animate-fade-up hero-delay-3">Est. MMXXIV — Specialized Roastery</p>
+</div>
+</section>
+<!-- Story Section -->
+<section id="story" class="snap-section bg-[#121212] overflow-hidden py-stack-xl">
+<div class="content-layer px-margin-mobile md:px-margin-desktop max-w-container-max mx-auto architectural-grid">
+<div class="col-span-12 lg:col-span-5 flex flex-col justify-center reveal">
+<p class="label-tiny mb-8 opacity-60">01 / The Origin</p>
+<h2 class="text-5xl md:text-7xl font-display leading-tight mb-stack-md text-[#F9F9F9]">Specialty for<br/>Everyone.</h2>
+</div>
+<div class="col-span-12 lg:col-span-6 lg:col-start-7 flex flex-col justify-center space-y-12 reveal delay-200">
+<div class="mb-12 overflow-hidden aspect-[4/3] group">
+<img alt="Barista pouring latte art" class="w-full h-full object-cover grayscale contrast-125 transition-all duration-700 group-hover:grayscale-0 group-hover:scale-105" src="https://lh3.googleusercontent.com/aida-public/AB6AXuB6IIdl59MMJpuAvvPRdpWWiguAyNVLnXtzVptqMWVUfMWVpr8RGKDeNT01ETL3mmGIKOfoEB2-U6QfyTVRxNQODeB4ishs1U9ZzgYVCAqZbXqocFnIui3Hk5JVaSv9d2nCp5znNWfEFYxY2jDLp0P6_cCgq57_TQLYKMBd-l5-PDwamvtffIEqQ6qqjUJvW9svmuOZPSqZ2_LRHtQj7VVBdS2HksQQ7F4qqtxfEAKRVCRBzOKD_2SxFI_phTVVstSKexAySAErxWs"/>
+</div>
+<p class="font-sans font-light text-xl md:text-2xl leading-relaxed text-neutral-300">
+                        Toko Kopi Sembilan was born from a fundamental inquiry into the accessibility of excellence. We believe the highest grade of coffee should not be an exclusive privilege.
+                    </p>
+<div class="pt-8">
+<a class="inline-flex items-center gap-6 group" href="shop.html">
+<span class="label-tiny group-hover:text-white transition-colors">The Manifesto</span>
+<div class="h-px w-12 bg-[#F9F9F9] group-hover:w-20 transition-all"></div>
+</a>
+</div>
+</div>
+</div>
+<img alt="watermark" class="absolute -bottom-20 -right-20 w-1/3 opacity-[0.03] pointer-events-none" src="https://lh3.googleusercontent.com/aida-public/AB6AXuA9MpVXkkX9y3Q_Se_xUanS6w5p15bpo-B_mSEXVouJ0-V4stob2SLDcZ6bWOAJYDWK0fRxeiroHyw9gyc6lQ4wqWjNQVopzVTVzavgA9q4G_Jns1je7kyRMW9YZ8Pnm15y4fyR0LH8MTgR8r1_qhAsptFz0lEtXTkHQSYk8XazLz62-PN057iWfrwBk7eVgsTC1VvA0TDbXPbaKXpLPfLNNriXU2Oqpl9NhJc7ZOJNFjG0LIT3s4SDSER5NlbOjdVgl_TyBjuq3AU"/>
+</section>
+<!-- The Lab Section (Modified to dark premium theme for design cohesion) -->
+<section id="lab" class="snap-section bg-[#181818] border-y border-[#F9F9F9]/5 text-[#F9F9F9] py-stack-xl">
+<div class="content-layer px-margin-mobile md:px-margin-desktop max-w-container-max mx-auto architectural-grid w-full h-full">
+<div class="col-span-12 lg:col-span-7 border-r border-[#F9F9F9]/10 md:py-margin-desktop pr-0 lg:pr-12 flex flex-col justify-center reveal">
+<p class="label-tiny mb-12 opacity-60">02 / Technical Superiority</p>
+<h2 class="text-6xl md:text-8xl font-display mb-12 text-[#F9F9F9]">The Lab.</h2>
+<p class="font-sans font-light text-2xl md:text-3xl max-w-xl leading-snug text-neutral-300">
+                        Architectural intent in every extraction. From layout to lighting, our environment is engineered for repeatability.
+                    </p>
+</div>
+<div class="col-span-12 lg:col-span-5 md:py-margin-desktop pl-0 lg:pl-12 flex flex-col justify-end reveal delay-200">
+<div class="mb-12 overflow-hidden aspect-[4/3] group">
+<img alt="Precision espresso equipment" class="w-full h-full object-cover grayscale contrast-125 transition-all duration-700 group-hover:grayscale-0 group-hover:scale-105" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBj6l-rRFFHMzvjVGWw_ggnajCN9iZfOSOH4bMhNK0PnTYkvujgACMXEHHwMSkbJOuUfkrQOwfHPmyiRf3-atkn0Y--pGjATz4V6-nVDR-NPFXXSeoolAsMVSFmAgmWeby5641gMgZz25zpA2VFFZZevqLirOs_fZG6-3NI0GKXSC-04MQxeBr5nHgL1OOqJhmkLGMnzzVUJiUVqkYCYdVK9_6D0y7TJYCknyE6ECS4vdWOt12U-OjXD4tHgv6uC-fkN6ktfcYdqDg"/>
+</div>
+<div class="space-y-12">
+<div class="h-px w-full bg-[#F9F9F9]/10 opacity-60"></div>
+<p class="font-sans font-light text-sm leading-relaxed opacity-80 text-neutral-300">
+                            The Modbar EP system paired with world-class grinding technology. We removed the barriers between the craft and the consumer.
+                        </p>
+<button class="label-tiny btn-dark-outline px-10 py-6 w-fit font-bold uppercase tracking-wider">
+                            Explore Hardware
+                        </button>
+</div>
+</div>
+</div>
+<img alt="watermark" class="absolute -top-40 -left-40 w-1/2 opacity-[0.02] pointer-events-none" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCt0ggYtu_Zco4jGCO3BnrAtZUSuiWNw-clZniMjWOPrRTjWAGqd_vtq29QwwlWK92aWQZcGhql7sEyQirmsBRWoYWHeN-qpDZTp_jD9oT7WoSvMhMwn5aH0ZVY8CJKqo6dkHNaFmZnfxgJu53-QsJpQg_DAkDxpyUqP5yIfayFSesbfum4D3Fv3sRrS_lEXr2-U4EokVPy62-X2jDTDHx8aCs_e96B1BrfznBzc6YjgbedpIkeLfANJenVt-Twa6yxH-muiQ1gObw"/>
+</section>
+<!-- Featured Beans Section -->
+<section class="bg-[#121212] py-stack-xl border-b border-[#F9F9F9]/5">
+<div class="px-margin-mobile md:px-margin-desktop max-w-container-max mx-auto">
+<div class="mb-16 flex flex-col md:flex-row md:items-end justify-between gap-8 reveal">
+<div>
+<p class="label-tiny mb-4 opacity-60">Curated Inventory</p>
+<h2 class="text-5xl md:text-7xl font-display text-[#F9F9F9]">Our Beans.</h2>
+</div>
+<a class="label-tiny border-b border-[#F9F9F9]/20 pb-2 nav-link-hover opacity-60" href="shop.html">View Full Collection</a>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-3 gap-gutter items-stretch">
+<!-- Product 1 -->
+<div class="group flex flex-col h-full border border-[#F9F9F9]/5 p-6 hover:border-[#F9F9F9]/20 transition-all bg-[#1a1a1a]/40 reveal delay-100">
+<div class="aspect-square bg-[#1a1a1a] product-image-container mb-6">
+<img alt="Sembilan Signature - 250g" class="w-full h-full object-cover grayscale" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDb1xpGK5YLtJgXI-Ej1XU8ac6A9zyZ3XMT2g1GnouDhIOXyC-Fh84tjYy6_XxxAxnRgIQNWAC7YknFDTODxK-LmO33YfLZkTikQ2NqiTIx13hRNaJ_l5JBC_6eXsTpsGE5SaZhf-jW8qhKaqWnrC6r0exbZgrfWGpxCAKsHrS3IGSDSs8d2qdXT1iynwNKSuA0ZasXNXXWld-R4vJZkRF5jPsQlHUonMDp1PeAJAQdY4q6g0xNazyE_dgGTy_s46dg1Fdd0H1og7w"/>
+<div class="product-overlay">
+<span class="label-tiny text-white font-bold tracking-widest">Sembilan • 250g</span>
+</div>
+</div>
+<div class="space-y-4 flex-grow flex flex-col justify-between">
+<div class="flex justify-between items-start gap-4">
+<h3 class="text-xl font-display text-[#F9F9F9] hover:text-[#c6c6c6] transition-colors"><a href="detailproduk.html?id=1">Sembilan Signature - 250g</a></h3>
+<p class="label-tiny text-[#F9F9F9] font-bold text-lg whitespace-nowrap">Rp. 185.000</p>
+</div>
+<p class="text-sm text-neutral-300 font-sans leading-relaxed">Our primary expression. Balanced profile with notes of dark chocolate and stone fruit.</p>
+<button onclick="addToBag(1, 'Sembilan Signature - 250g', 185000)" class="w-full py-5 btn-inversion label-tiny tracking-wider">ADD TO BAG</button>
+</div>
+</div>
+<!-- Product 2 -->
+<div class="group flex flex-col h-full border border-[#F9F9F9]/5 p-6 hover:border-[#F9F9F9]/20 transition-all bg-[#1a1a1a]/40 reveal delay-200">
+<div class="aspect-square bg-[#1a1a1a] product-image-container mb-6">
+<img alt="Reserve Selection - 500g" class="w-full h-full object-cover grayscale" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDxzEHoilVOpXhTCZhhT9rqfRl10fMRN6nT0Sg5959T6Rai8wMZ-RkwW4nTwCifueTQ2HHN9SCllckzH-rJfzUirOyb-KxCU1Jen63r6Eumm1Zs1MCwPKOVLCUm4rtCcZgVw3xt3TDqX7rzN-bYQf2jsGwmdtV7kowRyNmuviJTlF4rU4SeCl-2kRdUOuODyrbdGVMPYCMzhU_qc8lalidOUomVwq2o1mdwZz8g7S9PaR-CVWtQpwt3Mc-V0sdVEEcgKzI2FJqX7H0"/>
+<div class="product-overlay">
+<span class="label-tiny text-white font-bold tracking-widest">Reserve • 500g</span>
+</div>
+</div>
+<div class="space-y-4 flex-grow flex flex-col justify-between">
+<div class="flex justify-between items-start gap-4">
+<h3 class="text-xl font-display text-[#F9F9F9] hover:text-[#c6c6c6] transition-colors"><a href="detailproduk.html?id=2">Reserve Selection - 500g</a></h3>
+<p class="label-tiny text-[#F9F9F9] font-bold text-lg whitespace-nowrap">Rp. 340.000</p>
+</div>
+<p class="text-sm text-neutral-300 font-sans leading-relaxed">Seasonal micro-lots selected for technical complexity and distinctive floral acidity.</p>
+<button onclick="addToBag(2, 'Reserve Selection - 500g', 340000)" class="w-full py-5 btn-inversion label-tiny tracking-wider">ADD TO BAG</button>
+</div>
+</div>
+<!-- Product 3 -->
+<div class="group flex flex-col h-full border border-[#F9F9F9]/5 p-6 hover:border-[#F9F9F9]/20 transition-all bg-[#1a1a1a]/40 reveal delay-300">
+<div class="aspect-square bg-[#1a1a1a] product-image-container mb-6">
+<img alt="Drip Bag Box - 10pcs" class="w-full h-full object-cover grayscale" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBkJm3TT2rnwmbJ-0COkkYa1pWktQhKpWNrz2KKiOqAP6BVDe_yVk9i1cL5QxTjE-41Sjs99OwRXo6aPXden9RrK01e-LYsIHHwCfrK2VSqDRbAVZxyoaIZlWsn4Oc-QirAQmqI8tggoKwqPgHflSycVorHJ0sh9FVctz8ALSkTjk6P21vOzCdOGYX5vDePCMvB_1oBpZP-zUN_nuKDuhL-GfVm2e5ss0CV46eHJpr22u9FA7emdZk4n43InJBb79eKn9Qp2djXdN4"/>
+<div class="product-overlay">
+<span class="label-tiny text-white font-bold tracking-widest">Drip • 10pcs</span>
+</div>
+</div>
+<div class="space-y-4 flex-grow flex flex-col justify-between">
+<div class="flex justify-between items-start gap-4">
+<h3 class="text-xl font-display text-[#F9F9F9] hover:text-[#c6c6c6] transition-colors"><a href="detailproduk.html?id=3">Drip Bag Box - 10pcs</a></h3>
+<p class="label-tiny text-[#F9F9F9] font-bold text-lg whitespace-nowrap">Rp. 120.000</p>
+</div>
+<p class="text-sm text-neutral-300 font-sans leading-relaxed">Precision engineering in a portable format. Nitrogen-flushed for maximum freshness.</p>
+<button onclick="addToBag(3, 'Drip Bag Box - 10pcs', 120000)" class="w-full py-5 btn-inversion label-tiny tracking-wider">ADD TO BAG</button>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Visit Section -->
+<section id="visit" class="snap-section bg-[#121212]">
+<div class="bg-zoom-image" style="background-image: url('https://lh3.googleusercontent.com/aida/AP1WRLv7olZyxkGvr_JPGc8W0FNVQEVf-TEoc86wJFAOz88IOS2fU__1PHRqrm5U03va8UfQaRW2a77G73_GWauW9cARdwQsvqUdcAysQLxu9GIVL-lMB-TH3-iI960PwfAhQPxEs9LGK9FJYAX45HHONwilt5CQKJMntQe65Zzmu_TsLxyE-uoTO3XjRtHBnb_NxYPq0WVGThRxVYm9To_H2uE0624KoFz5QuSkZkdOOHQPjSEtJ3ywsivduXc'); filter: grayscale(100%) brightness(20%);"></div>
+<!-- Subtle ambient radial gradient overlay to add depth and focus -->
+<div class="absolute inset-0 bg-[radial-gradient(circle_at_center,transparent_30%,#121212_90%)] pointer-events-none z-[1]"></div>
+<div class="content-layer px-margin-mobile md:px-margin-desktop max-w-container-max mx-auto architectural-grid z-10">
+<div class="col-span-12 mb-10">
+<h2 class="text-display-hero font-display italic text-[#F9F9F9] tracking-tight">Showroom</h2>
+</div>
+<div class="col-span-12 lg:col-span-5 lg:col-start-8 bg-black/60 backdrop-blur-xl border border-[#F9F9F9]/15 text-[#F9F9F9] p-6 md:p-10 flex flex-col justify-between transition-all duration-500 hover:border-[#F9F9F9]/30 hover:shadow-[0_20px_50px_rgba(0,0,0,0.5)] transform hover:-translate-y-1 reveal">
+<div>
+<div class="flex items-center justify-between mb-6">
+<p class="label-tiny opacity-60">03 / Experience</p>
+<span class="w-2 h-2 rounded-full bg-green-500 animate-pulse"></span>
+</div>
+<h3 class="text-2xl md:text-3xl font-display mb-4 text-[#F9F9F9] leading-snug">Non-Commercial Service.</h3>
+<p class="font-sans font-light text-sm md:text-base mb-8 leading-relaxed text-neutral-300">
+                            We do not operate as a traditional cafe. Every beverage is complimentary for tasting. A space dedicated solely to the appreciation of the bean.
+                        </p>
+</div>
+<div class="space-y-4 pt-6 border-t border-[#F9F9F9]/10">
+<div class="flex justify-between items-baseline gap-4">
+<span class="label-tiny opacity-60 text-xs shrink-0">Hours</span>
+<span class="font-sans font-light text-sm md:text-base text-right text-neutral-200">Mon – Fri / 11:00 – 18:00</span>
+</div>
+<div class="flex justify-between items-baseline gap-4">
+<span class="label-tiny opacity-60 text-xs shrink-0">Location</span>
+<span class="font-sans font-light text-xs md:text-sm text-right text-neutral-200 leading-normal">
+                                Jl. Jombang No. 16,<br/>Malang, East Java, ID
+                            </span>
+</div>
+<div class="pt-4">
+<a href="https://maps.google.com" target="_blank" class="w-full inline-flex justify-center items-center gap-2 py-3 border border-[#F9F9F9]/20 hover:border-[#F9F9F9] hover:bg-[#F9F9F9] hover:text-[#121212] transition-all duration-300 label-tiny font-bold tracking-wider text-[11px]">
+    GET DIRECTIONS 
+    <span class="material-symbols-outlined text-xs">open_in_new</span>
+</a>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Footer Section -->
+<footer class="bg-[#121212] pt-stack-xl pb-12 flex flex-col justify-end">
+<div class="w-full px-margin-mobile md:px-margin-desktop max-w-container-max mx-auto">
+<div class="flex flex-col md:flex-row flex-wrap justify-between gap-y-12 gap-x-8 mb-16 w-full">
+<div class="flex flex-col gap-6">
+<h4 class="label-tiny opacity-60">SHOP</h4>
+<div class="flex flex-col gap-2">
+<a class="label-tiny nav-link-hover opacity-60" href="shop.html">calculator</a>
+<a class="label-tiny nav-link-hover opacity-60" href="shop.html">espresso</a>
+<a class="label-tiny nav-link-hover opacity-60" href="shop.html">filter</a>
+<a class="label-tiny nav-link-hover opacity-60" href="keranjang.html">find your order</a>
+</div>
+</div>
+<div class="flex flex-col gap-6">
+<h4 class="label-tiny opacity-60">COMMUNITY</h4>
+<div class="flex flex-col gap-2">
+<a class="label-tiny nav-link-hover opacity-60" href="#">brew guide</a>
+<a class="label-tiny nav-link-hover opacity-60" href="#">events</a>
+<a class="label-tiny nav-link-hover opacity-60" href="#">partners &amp; wholesale</a>
+<a class="label-tiny nav-link-hover opacity-60" href="#">sourcing</a>
+</div>
+</div>
+<div class="flex flex-col gap-6">
+<h4 class="label-tiny opacity-60">CONTACT</h4>
+<div class="flex flex-col gap-2">
+<a class="label-tiny nav-link-hover opacity-60" href="#">about us</a>
+<a class="label-tiny nav-link-hover opacity-60" href="#">our founders</a>
+<a class="label-tiny nav-link-hover opacity-60" href="#">instagram</a>
+<a class="label-tiny nav-link-hover opacity-60" href="#">email</a>
+</div>
+</div>
+<div class="flex flex-col gap-6">
+<h4 class="label-tiny opacity-60">VISIT US</h4>
+<div class="flex flex-col gap-6">
+<p class="label-tiny leading-relaxed opacity-70">
+                                JL. JOMBANG NO. 16<br/>
+                                MALANG, EAST JAVA 65115<br/>
+                                INDONESIA
+                            </p>
+<div class="flex flex-col gap-2">
+<p class="label-tiny opacity-60">OPERATING HOURS</p>
+<p class="label-tiny opacity-70">PICKUP: MON-FRI, 11AM - 6PM</p>
+<p class="label-tiny opacity-70">TASTING: MON-FRI, 12PM - 4PM</p>
+<p class="label-tiny opacity-70">CLOSED ON WEEKENDS</p>
+</div>
+</div>
+</div>
+</div>
+<div class="border-t border-[#F9F9F9]/10 flex flex-col md:flex-row justify-between items-center gap-8 pt-12 w-full">
+<div class="flex items-center gap-6">
+<img alt="Logo" class="h-8 w-auto" src="https://lh3.googleusercontent.com/aida-public/AB6AXuA5Zl4WTYXRM8SeVHW73IhchoB-59p6vOOk_zUD-x01Lz1LAaph09x0HTbpTSAK-YCie5KpEsXbfZOOHWunBhIRYyrtFSt9C8woWaAC60SEIOwKZnrNS1JuRrLKQh4ExgGDOXuV72Pd2C8lXKQKA7-Snma9rxoY0BbLYPuXSGoe-8CFY7Rf_R1uvkJAqPsEs9uYQ3Wa02ptoD3GcOvZjpQ61YAPC-_N_VZqm9lQmrs9OLlkBCs5CIH3uO_ZPWX2XaaeieKzKpqLGik"/>
+<p class="label-tiny opacity-60">© 2024-2026 TOKO KOPI SEMBILAN</p>
+</div>
+<div class="flex gap-8">
+<a class="label-tiny nav-link-hover opacity-60" href="#">PRIVACY</a>
+<a class="label-tiny nav-link-hover opacity-60" href="#">TERMS</a>
+<a class="label-tiny nav-link-hover opacity-60" href="#">WHOLESALE</a>
+<a class="label-tiny nav-link-hover opacity-60" href="#">CONTACT</a>
+</div>
+</div>
+</div>
+</footer>
+</div>
+
+<script>
+    // Toggle Mobile Navigation Drawer
+    function toggleMobileMenu() {
+        const menu = document.getElementById('mobile-menu');
+        if (menu) {
+            if (menu.classList.contains('translate-x-full')) {
+                menu.classList.remove('translate-x-full');
+                menu.classList.add('translate-x-0');
+                document.body.classList.add('overflow-hidden');
+            } else {
+                menu.classList.remove('translate-x-0');
+                menu.classList.add('translate-x-full');
+                document.body.classList.remove('overflow-hidden');
+            }
+        }
+    }
+
+    // Dynamic Navbar styling on scroll
+    window.addEventListener('scroll', () => {
+        const nav = document.getElementById('main-nav');
+        const navContainer = document.getElementById('main-nav-container');
+        if (nav && navContainer) {
+            if (window.scrollY > 50) {
+                nav.classList.remove('bg-transparent', 'border-transparent');
+                nav.classList.add('bg-[#121212]/90', 'backdrop-blur-md', 'shadow-2xl', 'border-b', 'border-[#F9F9F9]/10');
+                navContainer.classList.remove('py-8');
+                navContainer.classList.add('py-4');
+            } else {
+                nav.classList.remove('bg-[#121212]/90', 'backdrop-blur-md', 'shadow-2xl', 'border-b', 'border-[#F9F9F9]/10');
+                nav.classList.add('bg-transparent', 'border-transparent');
+                navContainer.classList.remove('py-4');
+                navContainer.classList.add('py-8');
+            }
+        }
+    });
+
+    // Simple state management for Cart
+    function getCart() {
+        return JSON.parse(localStorage.getItem('cart')) || [];
+    }
+
+    function saveCart(cart) {
+        localStorage.setItem('cart', JSON.stringify(cart));
+        updateCartCount();
+    }
+
+    function updateCartCount() {
+        const cart = getCart();
+        const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
+        const cartCountEl = document.getElementById('cart-count');
+        if (cartCountEl) {
+            if (totalItems > 0) {
+                cartCountEl.textContent = totalItems;
+                cartCountEl.classList.remove('hidden');
+            } else {
+                cartCountEl.classList.add('hidden');
+            }
+        }
+    }
+
+    function addToBag(id, name, price) {
+        let cart = getCart();
+        let existingItem = cart.find(item => item.id === id);
+        
+        if (existingItem) {
+            existingItem.quantity += 1;
+        } else {
+            cart.push({
+                id: id,
+                name: name,
+                price: price,
+                quantity: 1,
+                image: "https://lh3.googleusercontent.com/aida-public/AB6AXuDb1xpGK5YLtJgXI-Ej1XU8ac6A9zyZ3XMT2g1GnouDhIOXyC-Fh84tjYy6_XxxAxnRgIQNWAC7YknFDTODxK-LmO33YfLZkTikQ2NqiTIx13hRNaJ_l5JBC_6eXsTpsGE5SaZhf-jW8qhKaqWnrC6r0exbZgrfWGpxCAKsHrS3IGSDSs8d2qdXT1iynwNKSuA0ZasXNXXWld-R4vJZkRF5jPsQlHUonMDp1PeAJAQdY4q6g0xNazyE_dgGTy_s46dg1Fdd0H1og7w" // Default fallback image
+            });
+        }
+        
+        saveCart(cart);
+        showToast(`"${name}" ditambahkan ke keranjang.`);
+    }
+
+    function showToast(message) {
+        const toast = document.getElementById('cart-toast');
+        const msgEl = document.getElementById('toast-message');
+        if (toast && msgEl) {
+            msgEl.textContent = message;
+            toast.classList.remove('translate-y-20', 'opacity-0');
+            toast.classList.add('translate-y-0', 'opacity-100');
+            
+            setTimeout(() => {
+                toast.classList.remove('translate-y-0', 'opacity-100');
+                toast.classList.add('translate-y-20', 'opacity-0');
+            }, 3000);
+        }
+    }
+
+    // Scroll Reveal Observer
+    document.addEventListener('DOMContentLoaded', () => {
+        updateCartCount();
+
+        const revealElements = document.querySelectorAll('.reveal');
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('active');
+                    // Stop observing once active to keep the premium state
+                    observer.unobserve(entry.target);
+                }
+            });
+        }, {
+            threshold: 0.15,
+            rootMargin: "0px 0px -50px 0px"
+        });
+
+        revealElements.forEach(el => observer.observe(el));
+    });
+</script>
+</body></html>

@@ -1,0 +1,446 @@
+<!DOCTYPE html>
+<html class="dark" lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    <title>Order Confirmed | Toko Kopi Sembilan</title>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@100;300;400;700;900&amp;family=Playfair+Display:ital,wght@0,700;0,900;1,700&amp;display=swap" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+    <script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "secondary-container": "#1a1a1a",
+                        "on-background": "#F9F9F9",
+                        "inverse-surface": "#F9F9F9",
+                        "surface-tint": "#c6c6c6",
+                        "background": "#121212",
+                        "surface": "#121212",
+                        "primary": "#F9F9F9",
+                        "on-primary": "#121212",
+                        "outline": "#444444"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0px",
+                        "lg": "0px",
+                        "xl": "0px",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "margin-mobile": "24px",
+                        "container-max": "1440px",
+                        "stack-xl": "120px",
+                        "gutter": "32px",
+                        "stack-sm": "8px",
+                        "margin-desktop": "80px",
+                        "stack-md": "24px",
+                        "unit": "4px",
+                        "stack-lg": "64px"
+                    },
+                    "fontFamily": {
+                        "display": ["Playfair Display", "serif"],
+                        "sans": ["Hanken Grotesk", "sans-serif"],
+                        "headline-lg": ["Playfair Display"],
+                        "button": ["Hanken Grotesk"],
+                        "display-lg-mobile": ["Playfair Display"],
+                        "display-lg": ["Playfair Display"],
+                        "headline-md": ["Playfair Display"],
+                        "body-lg": ["Hanken Grotesk"],
+                        "body-md": ["Hanken Grotesk"],
+                        "label-caps": ["Hanken Grotesk"]
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 200, 'GRAD' 0, 'opsz' 24;
+        }
+        html {
+            scroll-behavior: smooth;
+        }
+        body {
+            background-color: #121212;
+            color: #F9F9F9;
+            -webkit-font-smoothing: antialiased;
+            scrollbar-width: thin;
+            scrollbar-color: #444 #121212;
+            font-family: 'Hanken Grotesk', sans-serif;
+        }
+        
+        .label-tiny {
+            font-size: 11px;
+            font-weight: 500;
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+        }
+        @media (min-width: 768px) {
+            .label-tiny {
+                font-size: 12px;
+                letter-spacing: 0.25em;
+            }
+        }
+
+        .nav-link-hover {
+            transition: color 0.3s ease, opacity 0.3s ease;
+        }
+        .nav-link-hover:hover {
+            color: #F9F9F9;
+            opacity: 1;
+        }
+    </style>
+</head>
+<body class="overflow-x-hidden">
+
+<nav class="fixed top-0 left-0 w-full z-50 bg-transparent border-b border-transparent transition-all duration-500" id="main-nav">
+<div class="flex justify-between items-center w-full px-margin-mobile md:px-margin-desktop py-8 max-w-container-max mx-auto transition-all duration-500" id="main-nav-container">
+<div class="flex items-center gap-6">
+<a href="home.html" class="flex items-center gap-4">
+<img alt="Toko Kopi Sembilan Logogram" class="h-8 w-auto mix-blend-difference" src="https://lh3.googleusercontent.com/aida-public/AB6AXuA9MpVXkkX9y3Q_Se_xUanS6w5p15bpo-B_mSEXVouJ0-V4stob2SLDcZ6bWOAJYDWK0fRxeiroHyw9gyc6lQ4wqWjNQVopzVTVzavgA9q4G_Jns1je7kyRMW9YZ8Pnm15y4fyR0LH8MTgR8r1_qhAsptFz0lEtXTkHQSYk8XazLz62-PN057iWfrwBk7eVgsTC1VvA0TDbXPbaKXpLPfLNNriXU2Oqpl9NhJc7ZOJNFjG0LIT3s4SDSER5NlbOjdVgl_TyBjuq3AU"/>
+<span class="label-tiny hidden sm:block mix-blend-difference font-semibold">Toko Kopi Sembilan</span>
+</a>
+</div>
+<div class="hidden lg:flex gap-12 items-center mix-blend-difference">
+<a class="label-tiny nav-link-hover opacity-60 pb-1" href="home.html">Home</a>
+<a class="label-tiny nav-link-hover opacity-60 pb-1" href="shop.html">Shop</a>
+<a class="label-tiny nav-link-hover opacity-60 hover:opacity-100 transition-opacity pb-1" href="home.html#story">About</a>
+<a class="label-tiny nav-link-hover opacity-60 hover:opacity-100 transition-opacity pb-1" href="home.html#lab">Lab</a>
+<a class="label-tiny nav-link-hover opacity-60 hover:opacity-100 transition-opacity pb-1" href="home.html#visit">Visit</a>
+</div>
+<div class="flex gap-8 items-center mix-blend-difference relative">
+<a href="admindashboard.html" class="material-symbols-outlined text-xl hover:opacity-60 transition-opacity" title="Dashboard Admin">person</a>
+<a href="keranjang.html" class="material-symbols-outlined text-xl hover:opacity-60 transition-opacity relative" title="Keranjang Belanja">
+    shopping_bag
+    <span id="cart-count" class="absolute -top-2 -right-2 bg-red-600 text-white text-[10px] w-4 h-4 rounded-full flex items-center justify-center font-bold hidden">0</span>
+</a>
+<button onclick="toggleMobileMenu()" class="lg:hidden material-symbols-outlined text-xl hover:opacity-60 transition-opacity z-50">menu</button>
+</div>
+</div>
+</nav>
+
+<!-- Mobile Navigation Drawer -->
+<div id="mobile-menu" class="fixed inset-0 bg-[#121212] z-[55] flex flex-col justify-between p-8 transition-transform duration-500 translate-x-full">
+    <div class="flex justify-between items-center py-6 border-b border-[#F9F9F9]/5">
+        <span class="label-tiny opacity-60">Menu</span>
+        <button onclick="toggleMobileMenu()" class="material-symbols-outlined text-xl hover:opacity-60 transition-opacity">close</button>
+    </div>
+    <div class="flex flex-col gap-8 text-4xl font-display italic my-auto">
+        <a onclick="toggleMobileMenu()" class="hover:text-neutral-400 transition-colors" href="home.html">Home</a>
+        <a onclick="toggleMobileMenu()" class="hover:text-neutral-400 transition-colors" href="shop.html">Shop</a>
+        <a onclick="toggleMobileMenu()" class="hover:text-neutral-400 transition-colors" href="home.html#story">About</a>
+        <a onclick="toggleMobileMenu()" class="hover:text-neutral-400 transition-colors" href="home.html#lab">Lab</a>
+        <a onclick="toggleMobileMenu()" class="hover:text-neutral-400 transition-colors" href="home.html#visit">Visit</a>
+    </div>
+    <div class="pt-8 border-t border-[#F9F9F9]/5 flex justify-between items-center">
+        <a onclick="toggleMobileMenu()" href="admindashboard.html" class="label-tiny flex items-center gap-2 opacity-80 hover:opacity-100 transition-opacity"><span class="material-symbols-outlined text-base">person</span> Account</a>
+        <a onclick="toggleMobileMenu()" href="keranjang.html" class="label-tiny flex items-center gap-2 opacity-80 hover:opacity-100 transition-opacity"><span class="material-symbols-outlined text-base">shopping_bag</span> Bag</a>
+    </div>
+</div>
+
+<main class="mt-32 min-h-screen px-margin-mobile md:px-margin-desktop py-stack-xl max-w-container-max mx-auto">
+    <!-- Hero Confirmation -->
+    <section class="pb-12 border-b border-[#F9F9F9]/15 mb-12">
+        <div class="grid grid-cols-12 gap-gutter items-end">
+            <div class="col-span-12 md:col-span-8">
+                <p id="order-tx-id" class="label-tiny opacity-60 mb-2">Transaction ID: TK9-000000</p>
+                <h1 class="font-display text-5xl md:text-7xl uppercase italic leading-none">Order Confirmed</h1>
+            </div>
+            <div class="col-span-12 md:col-span-4 md:text-right mt-6 md:mt-0">
+                <p class="font-sans text-neutral-300 text-sm max-w-xs md:ml-auto leading-relaxed">
+                    Your specialty beans are currently scheduled for roasting. We roast with absolute precision.
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Tracking & Details -->
+    <section class="grid grid-cols-12 gap-gutter">
+        <!-- Left: Tracking Visual -->
+        <div class="col-span-12 lg:col-span-5 border-b lg:border-b-0 lg:border-r border-[#F9F9F9]/10 pb-12 lg:pb-0 lg:pr-12">
+            <h2 class="label-tiny opacity-60 mb-8">Status Architecture</h2>
+            <div class="relative space-y-0">
+                <!-- Phase 1: Order Placed (Solid White) -->
+                <div class="flex items-start">
+                    <div class="flex flex-col items-center mr-4 h-full">
+                        <div class="w-2.5 h-2.5 bg-[#F9F9F9]"></div>
+                        <div class="w-[1px] h-24 bg-[#F9F9F9]/30"></div>
+                    </div>
+                    <div class="pb-8">
+                        <p class="label-tiny text-[#F9F9F9] font-bold">01. Order Placed</p>
+                        <p id="order-date" class="font-sans text-xs text-neutral-400 mt-1">October 24, 2024 — 09:12 AM</p>
+                    </div>
+                </div>
+                <!-- Phase 2: Payment Verified -->
+                <div class="flex items-start">
+                    <div class="flex flex-col items-center mr-4 h-full">
+                        <div class="w-2.5 h-2.5 bg-[#F9F9F9]"></div>
+                        <div class="w-[1px] h-24 bg-[#F9F9F9]/10"></div>
+                    </div>
+                    <div class="pb-8">
+                        <p class="label-tiny text-[#F9F9F9] font-bold">02. Payment Verified</p>
+                        <p class="font-sans text-xs text-neutral-400 mt-1">Success via Integrated Gateway</p>
+                    </div>
+                </div>
+                <!-- Phase 3: Roasting & Packing -->
+                <div class="flex items-start">
+                    <div class="flex flex-col items-center mr-4 h-full">
+                        <div class="w-2.5 h-2.5 bg-green-500 animate-pulse"></div>
+                        <div class="w-[1px] h-24 bg-[#F9F9F9]/10"></div>
+                    </div>
+                    <div class="pb-8">
+                        <div class="inline-block bg-green-950/60 text-green-400 border border-green-800 px-2 py-0.5 mb-2 label-tiny text-[9px] font-bold">CURRENT PHASE</div>
+                        <p class="label-tiny text-[#F9F9F9] font-bold">03. In Roast Schedule</p>
+                        <p class="font-sans text-xs text-neutral-400 mt-1">Roasting profile calibration at Malang Roastery. Est. dispatch: 24h.</p>
+                    </div>
+                </div>
+                <!-- Phase 4: Dispatched -->
+                <div class="flex items-start">
+                    <div class="flex flex-col items-center mr-4 h-full">
+                        <div class="w-2.5 h-2.5 border border-[#444444] bg-[#121212]"></div>
+                    </div>
+                    <div>
+                        <p class="label-tiny opacity-40">04. Dispatched with Tracking</p>
+                        <p class="font-sans text-xs text-neutral-500 mt-1">Standard Shipping</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Right: Order Details -->
+        <div class="col-span-12 lg:col-span-7 lg:pl-12 space-y-12">
+            <div id="order-items-wrapper" class="space-y-6">
+                <!-- Injected dynamically -->
+            </div>
+
+            <!-- Totals & Address -->
+            <div class="border-t border-[#F9F9F9]/10 pt-8 space-y-8">
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6 font-sans text-sm">
+                    <div>
+                        <span class="label-tiny opacity-60 block mb-2">Subtotal</span>
+                        <span id="order-subtotal" class="font-semibold">Rp. 0</span>
+                    </div>
+                    <div>
+                        <span class="label-tiny opacity-60 block mb-2">Shipping</span>
+                        <span id="order-shipping" class="font-semibold">Rp. 0</span>
+                    </div>
+                    <div>
+                        <span class="label-tiny opacity-60 block mb-2">Total Paid</span>
+                        <span id="order-total" class="font-display text-2xl">Rp. 0</span>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8 border-t border-[#F9F9F9]/10 pt-8 text-sm">
+                    <div>
+                        <span class="label-tiny opacity-60 block mb-2">Ship To</span>
+                        <address id="order-shipping-address" class="not-italic text-neutral-300 leading-relaxed">
+                            Aditya Pratama<br/>
+                            Jl. Senopati No. 9, Lt. 3<br/>
+                            Jakarta, 12190
+                        </address>
+                    </div>
+                    <div>
+                        <span class="label-tiny opacity-60 block mb-2">Payment Method</span>
+                        <p id="order-payment-method" class="text-neutral-300">Bank Transfer</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Action Buttons -->
+            <div class="flex flex-col sm:flex-row gap-4 pt-4">
+                <button onclick="window.print()" class="flex-grow bg-[#F9F9F9] text-[#121212] py-4 font-bold hover:bg-transparent hover:text-[#F9F9F9] border border-transparent hover:border-[#F9F9F9]/25 transition-all duration-300 active:scale-95 label-tiny">
+                    Print Order / Invoice
+                </button>
+                <a href="shop.html" class="flex-grow border border-[#F9F9F9]/25 hover:border-[#F9F9F9] text-[#F9F9F9] py-4 text-center font-bold hover:bg-[#F9F9F9] hover:text-[#121212] transition-all duration-300 active:scale-95 label-tiny">
+                    Back to Shop
+                </a>
+            </div>
+        </div>
+    </section>
+</main>
+
+<!-- Footer Section -->
+<footer class="bg-[#121212] pt-stack-xl pb-12 flex flex-col justify-end border-t border-[#F9F9F9]/5 mt-stack-xl">
+<div class="w-full px-margin-mobile md:px-margin-desktop max-w-container-max mx-auto">
+<div class="flex flex-col md:flex-row flex-wrap justify-between gap-y-12 gap-x-8 mb-16 w-full">
+<div class="flex flex-col gap-6">
+<h4 class="label-tiny opacity-60">SHOP</h4>
+<div class="flex flex-col gap-2">
+<a class="label-tiny nav-link-hover opacity-60" href="shop.html">calculator</a>
+<a class="label-tiny nav-link-hover opacity-60" href="shop.html">espresso</a>
+<a class="label-tiny nav-link-hover opacity-60" href="shop.html">filter</a>
+<a class="label-tiny nav-link-hover opacity-60" href="keranjang.html">find your order</a>
+</div>
+</div>
+<div class="flex flex-col gap-6">
+<h4 class="label-tiny opacity-60">COMMUNITY</h4>
+<div class="flex flex-col gap-2">
+<a class="label-tiny nav-link-hover opacity-60" href="#">brew guide</a>
+<a class="label-tiny nav-link-hover opacity-60" href="#">events</a>
+<a class="label-tiny nav-link-hover opacity-60" href="#">partners &amp; wholesale</a>
+<a class="label-tiny nav-link-hover opacity-60" href="#">sourcing</a>
+</div>
+</div>
+<div class="flex flex-col gap-6">
+<h4 class="label-tiny opacity-60">CONTACT</h4>
+<div class="flex flex-col gap-2">
+<a class="label-tiny nav-link-hover opacity-60" href="#">about us</a>
+<a class="label-tiny nav-link-hover opacity-60" href="#">our founders</a>
+<a class="label-tiny nav-link-hover opacity-60" href="#">instagram</a>
+<a class="label-tiny nav-link-hover opacity-60" href="#">email</a>
+</div>
+</div>
+<div class="flex flex-col gap-6">
+<h4 class="label-tiny opacity-60">VISIT US</h4>
+<div class="flex flex-col gap-6">
+<p class="label-tiny leading-relaxed opacity-70">
+                                JL. JOMBANG NO. 16<br/>
+                                MALANG, EAST JAVA 65115<br/>
+                                INDONESIA
+                            </p>
+<div class="flex flex-col gap-2">
+<p class="label-tiny opacity-60">OPERATING HOURS</p>
+<p class="label-tiny opacity-70">PICKUP: MON-FRI, 11AM - 6PM</p>
+<p class="label-tiny opacity-70">TASTING: MON-FRI, 12PM - 4PM</p>
+<p class="label-tiny opacity-70">CLOSED ON WEEKENDS</p>
+</div>
+</div>
+</div>
+</div>
+<div class="border-t border-[#F9F9F9]/10 flex flex-col md:flex-row justify-between items-center gap-8 pt-12 w-full">
+<div class="flex items-center gap-6">
+<img alt="Logo" class="h-8 w-auto" src="https://lh3.googleusercontent.com/aida-public/AB6AXuA5Zl4WTYXRM8SeVHW73IhchoB-59p6vOOk_zUD-x01Lz1LAaph09x0HTbpTSAK-YCie5KpEsXbfZOOHWunBhIRYyrtFSt9C8woWaAC60SEIOwKZnrNS1JuRrLKQh4ExgGDOXuV72Pd2C8lXKQKA7-Snma9rxoY0BbLYPuXSGoe-8CFY7Rf_R1uvkJAqPsEs9uYQ3Wa02ptoD3GcOvZjpQ61YAPC-_N_VZqm9lQmrs9OLlkBCs5CIH3uO_ZPWX2XaaeieKzKpqLGik"/>
+<p class="label-tiny opacity-60">© 2024-2026 TOKO KOPI SEMBILAN</p>
+</div>
+<div class="flex gap-8">
+<a class="label-tiny nav-link-hover opacity-60" href="#">PRIVACY</a>
+<a class="label-tiny nav-link-hover opacity-60" href="#">TERMS</a>
+<a class="label-tiny nav-link-hover opacity-60" href="#">WHOLESALE</a>
+<a class="label-tiny nav-link-hover opacity-60" href="#">CONTACT</a>
+</div>
+</div>
+</div>
+</footer>
+
+<script>
+    // Toggle Mobile Navigation Drawer
+    function toggleMobileMenu() {
+        const menu = document.getElementById('mobile-menu');
+        if (menu) {
+            if (menu.classList.contains('translate-x-full')) {
+                menu.classList.remove('translate-x-full');
+                menu.classList.add('translate-x-0');
+                document.body.classList.add('overflow-hidden');
+            } else {
+                menu.classList.remove('translate-x-0');
+                menu.classList.add('translate-x-full');
+                document.body.classList.remove('overflow-hidden');
+            }
+        }
+    }
+
+    // Dynamic Navbar styling on scroll
+    window.addEventListener('scroll', () => {
+        const nav = document.getElementById('main-nav');
+        const navContainer = document.getElementById('main-nav-container');
+        if (nav && navContainer) {
+            if (window.scrollY > 50) {
+                nav.classList.remove('bg-transparent', 'border-transparent');
+                nav.classList.add('bg-[#121212]/90', 'backdrop-blur-md', 'shadow-2xl', 'border-b', 'border-[#F9F9F9]/10');
+                navContainer.classList.remove('py-8');
+                navContainer.classList.add('py-4');
+            } else {
+                nav.classList.remove('bg-[#121212]/90', 'backdrop-blur-md', 'shadow-2xl', 'border-b', 'border-[#F9F9F9]/10');
+                nav.classList.add('bg-transparent', 'border-transparent');
+                navContainer.classList.remove('py-4');
+                navContainer.classList.add('py-8');
+            }
+        }
+    });
+
+    function getCart() {
+        return JSON.parse(localStorage.getItem('cart')) || [];
+    }
+
+    function updateCartCount() {
+        const cart = getCart();
+        const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
+        const cartCountEl = document.getElementById('cart-count');
+        if (cartCountEl) {
+            if (totalItems > 0) {
+                cartCountEl.textContent = totalItems;
+                cartCountEl.classList.remove('hidden');
+            } else {
+                cartCountEl.classList.add('hidden');
+            }
+        }
+    }
+
+    function formatRupiah(num) {
+        return 'Rp. ' + num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+    }
+
+    // Load and render lastOrder
+    function renderOrder() {
+        const lastOrder = JSON.parse(localStorage.getItem('lastOrder'));
+        if (!lastOrder) {
+            // Render Fallback if no order found
+            document.getElementById('order-tx-id').textContent = 'Transaction ID: TK9-000000';
+            document.getElementById('order-items-wrapper').innerHTML = `
+                <div class="border border-[#F9F9F9]/10 p-6 text-center">
+                    <p class="font-sans text-neutral-400 text-sm">No recent transactions found.</p>
+                </div>
+            `;
+            return;
+        }
+
+        document.getElementById('order-tx-id').textContent = `Transaction ID: ${lastOrder.txId}`;
+        document.getElementById('order-date').textContent = `${lastOrder.date} — Integrated Gateway`;
+        
+        let itemsHtml = '';
+        lastOrder.items.forEach(item => {
+            const itemTotal = item.price * item.quantity;
+            itemsHtml += `
+                <div class="flex gap-6 items-center border border-[#F9F9F9]/5 p-4 bg-[#1a1a1a]/20">
+                    <div class="w-16 h-20 bg-[#1a1a1a] border border-[#F9F9F9]/10 overflow-hidden flex-shrink-0">
+                        <img class="w-full h-full object-cover grayscale brightness-90" src="${item.image || 'https://lh3.googleusercontent.com/aida-public/AB6AXuDb1xpGK5YLtJgXI-Ej1XU8ac6A9zyZ3XMT2g1GnouDhIOXyC-Fh84tjYy6_XxxAxnRgIQNWAC7YknFDTODxK-LmO33YfLZkTikQ2NqiTIx13hRNaJ_l5JBC_6eXsTpsGE5SaZhf-jW8qhKaqWnrC6r0exbZgrfWGpxCAKsHrS3IGSDSs8d2qdXT1iynwNKSuA0ZasXNXXWld-R4vJZkRF5jPsQlHUonMDp1PeAJAQdY4q6g0xNazyE_dgGTy_s46dg1Fdd0H1og7w'}" alt="${item.name}">
+                    </div>
+                    <div class="flex-grow flex flex-col justify-between">
+                        <div class="flex justify-between items-start">
+                            <h3 class="font-display text-base uppercase italic leading-tight">${item.name}</h3>
+                            <span class="label-tiny text-[10px] opacity-60">x${item.quantity}</span>
+                        </div>
+                        <div class="flex justify-between items-end mt-4">
+                            <span class="label-tiny text-[9px] opacity-40">Original Pack</span>
+                            <span class="font-sans text-xs font-semibold">${formatRupiah(itemTotal)}</span>
+                        </div>
+                    </div>
+                </div>
+            `;
+        });
+
+        document.getElementById('order-items-wrapper').innerHTML = itemsHtml;
+        document.getElementById('order-subtotal').textContent = formatRupiah(lastOrder.subtotal);
+        document.getElementById('order-shipping').textContent = lastOrder.shipping === 0 ? "FREE" : formatRupiah(lastOrder.shipping);
+        document.getElementById('order-total').textContent = formatRupiah(lastOrder.total);
+
+        const addr = lastOrder.address;
+        document.getElementById('order-shipping-address').innerHTML = `
+            ${addr.firstName} ${addr.lastName}<br/>
+            ${addr.address}<br/>
+            ${addr.city}, ${addr.postalCode}<br/>
+            ${addr.email}
+        `;
+        document.getElementById('order-payment-method').textContent = addr.paymentMethod;
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+        updateCartCount();
+        renderOrder();
+    });
+</script>
+</body>
+</html>

@@ -1,0 +1,45 @@
+========================================================================
+REAL ENGLISH COPYWRITING BLUEPRINT FOR HOME.BLADE.PHP
+========================================================================
+
+------------------------------------------------------------------------
+1. HERO SECTION (Top of the Page)
+------------------------------------------------------------------------
+- Old Location Text : "Malang, Indonesia"
+- New Location Text : "Tuban, Indonesia"
+- New Premium Tagline: "Precision Roasting.<br/>Pure Expression."
+- New Sub-tagline   : "Est. MMXXIV — Specialty Coffee Roastery & SCA Certified Profiles"
+
+------------------------------------------------------------------------
+2. STORY SECTION (01 / The Origin)
+------------------------------------------------------------------------
+- Old Headline : "Specialty for Everyone."
+- New Headline : "SCA Certified Specialty Coffee Roastery."
+- Old Paragraph: "Toko Kopi Sembilan was born from a fundamental inquiry into the accessibility of excellence. We believe the highest grade of coffee should not be an exclusive privilege."
+- New Paragraph: "Toko Kopi Sembilan arrives in Tuban as a sanctuary for specialty coffee roasting. We dedicate ourselves to the highest standards of architectural craftsmanship, meticulously sourcing select green beans and sculpting their sensory profiles with uncompromised precision for coffee connoisseurs across Indonesia."
+
+------------------------------------------------------------------------
+3. THE LAB SECTION (02 / Technical Superiority)
+------------------------------------------------------------------------
+- Old Headline   : "The Lab."
+- New Headline   : "The Roastery Lab."
+- Old Paragraph 1: "Architectural intent in every extraction. From layout to lighting, our environment is engineered for repeatability."
+- New Paragraph 1: "Every roasting profile is meticulously engineered using a scientific approach and rigorous thermodynamic control systems to guarantee optimal flavor consistency and repeatability in every single batch."
+- Old Paragraph 2: "The Modbar EP system paired with world-class grinding technology. We removed the barriers between the craft and the consumer."
+- New Paragraph 2: "From estate-level green bean selection to rigorous post-roast cupping protocols, we ensure our premium single-origin offerings are perfectly tailored to meet and exceed your highest extraction expectations."
+- Button Text    : "EXPLORE COLLECTION" (Links to the Shop page)
+
+------------------------------------------------------------------------
+4. VISIT SECTION (03 / Showroom & Experience)
+------------------------------------------------------------------------
+- Old Headline : "Showroom" / "Non-Commercial Service."
+- New Headline : "Tuban Roastery Showroom."
+- Old Paragraph: "We do not operate as a traditional cafe. Every beverage is complimentary for tasting. A space dedicated solely to the appreciation of the bean."
+- New Paragraph: "Far more than a traditional coffee shop, our Tuban showroom is a space dedicated entirely to sensory exploration. It is a curated environment where you can consult on wholesale or retail bean requirements, taste our finest roasted profiles, or engage directly in discussions about the specialty coffee ecosystem."
+- Mandatory Real-Time Operational Data:
+  * Address: Jl. Pemuda Kutorejo Gg. II No.230, Kutorejo, Tuban, East Java, 62311
+  * Contact: +62 853-3668-8839
+  * Operating Hours: 
+    - Tue – Thu, Sat – Sun: 10:00 – 15:00 & 17:00 – 23:00
+    - Fri: 14:00 – 23:00
+    - Mon: CLOSED
