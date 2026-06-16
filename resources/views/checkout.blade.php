@@ -114,6 +114,14 @@
                         @endauth
                         
                         <div class="col-span-full flex flex-col gap-2">
+                            <label class="label-tiny text-[10px] opacity-60">Phone Number / Nomor HP</label>
+                            <input id="phone" name="phone" value="{{ auth()->check() ? (auth()->user()->phone ?? old('phone')) : old('phone') }}" class="w-full py-3 px-4 outline-none text-sm placeholder:opacity-20 bg-transparent border border-[#444444] text-[#F9F9F9] focus:border-[#F9F9F9] transition-all font-sans" placeholder="ENTER PHONE NUMBER" required type="text">
+                            @error('phone')
+                                <span class="text-xs text-red-500 uppercase tracking-widest">{{ $message }}</span>
+                            @enderror
+                        </div>
+
+                        <div class="col-span-full flex flex-col gap-2">
                             <label class="label-tiny text-[10px] opacity-60">Shipping Address</label>
                             <textarea id="address" name="address" class="w-full py-3 px-4 outline-none text-sm placeholder:opacity-20 resize-none min-h-[80px]" placeholder="STREET, BUILDING, UNIT" required>{{ auth()->check() ? (auth()->user()->address ?? old('address')) : old('address') }}</textarea>
                             @error('address')
@@ -301,6 +309,7 @@
         const firstName = document.getElementById('first-name')?.value || '';
         const lastName = document.getElementById('last-name')?.value || '';
         const email = document.getElementById('email')?.value || '';
+        const phone = document.getElementById('phone')?.value || '';
         const address = document.getElementById('address')?.value || '';
         const cityName = document.getElementById('city')?.value || '';
         const postalCode = document.getElementById('postal-code')?.value || '';
@@ -335,6 +344,7 @@
                         `Detail Penerima:\n` +
                         `Nama: ${firstName} ${lastName}\n` +
                         `Email: ${email}\n` +
+                        `Nomor HP: ${phone}\n` +
                         `Alamat: ${address}\n` +
                         `Kota: ${cityName}\n` +
                         `Kode Pos: ${postalCode}\n` +
@@ -559,7 +569,7 @@
         }
 
         // Bind input events to dynamically update WhatsApp message draft
-        const inputFields = ['first-name', 'last-name', 'email', 'address', 'city', 'postal-code', 'area-search'];
+        const inputFields = ['first-name', 'last-name', 'email', 'phone', 'address', 'city', 'postal-code', 'area-search'];
         inputFields.forEach(id => {
             const el = document.getElementById(id);
             if (el) {

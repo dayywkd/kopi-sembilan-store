@@ -15,6 +15,7 @@ class Order extends Model
         'first_name',
         'last_name',
         'email',
+        'phone',
         'shipping_address',
         'city',
         'postal_code',

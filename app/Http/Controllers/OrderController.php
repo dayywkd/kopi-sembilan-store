@@ -207,6 +207,7 @@ class OrderController extends Controller
                 'first_name' => $request->first_name,
                 'last_name' => $request->last_name,
                 'email' => $request->email,
+                'phone' => $request->phone,
                 'shipping_address' => $request->address,
                 'city' => $request->city,
                 'postal_code' => $request->postal_code,
@@ -228,6 +229,7 @@ class OrderController extends Controller
             // Update profile address if logged in
             if (\Illuminate\Support\Facades\Auth::check()) {
                 \Illuminate\Support\Facades\Auth::user()->update([
+                    'phone' => $request->phone,
                     'address' => $request->address,
                     'city' => $request->city,
                     'postal_code' => $request->postal_code,

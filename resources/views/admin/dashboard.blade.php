@@ -90,6 +90,9 @@
                         <div class="col-span-3">
                             <div class="font-bold text-sm text-[#F9F9F9] group-hover:text-inherit">{{ $order->first_name }} {{ $order->last_name }}</div>
                             <div class="text-xs opacity-60">{{ $order->email }}</div>
+                            @if($order->phone)
+                                <div class="text-[11px] text-neutral-400 font-mono tracking-normal">{{ $order->phone }}</div>
+                            @endif
                         </div>
                         <div class="col-span-2 text-sm opacity-80">{{ $order->created_at->timezone('Asia/Jakarta')->format('M d, H:i') }}</div>
                         <div class="col-span-2 text-right font-semibold text-sm text-neutral-200">{!! $order->formatted_total_paid !!}</div>

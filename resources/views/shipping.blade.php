@@ -137,7 +137,7 @@
                     @elseif ($order->status === 'Shipped')
                         Paket Anda telah diserahkan ke kurir dan sedang dalam perjalanan.
                     @else
-                        Paket telah tiba. Nikmati kopi terbaik Anda! ☕
+                        Paket telah tiba. Nikmati kopi terbaik Anda! 
                     @endif
                 </p>
             </div>
@@ -193,7 +193,7 @@
             <div>
                 <p class="label-tiny text-emerald-300 mb-1">Pesanan Selesai</p>
                 <p class="font-sans text-sm text-emerald-200/80 leading-relaxed">
-                    Paket telah tiba di tangan Anda. Terima kasih telah mempercayai <strong>Toko Kopi Sembilan</strong>. Selamat menikmati! ☕
+                    Paket telah tiba di tangan Anda. Terima kasih telah mempercayai <strong>Toko Kopi Sembilan</strong>. Selamat menikmati!
                 </p>
             </div>
         </div>

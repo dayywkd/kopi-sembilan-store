@@ -195,7 +195,8 @@
         <div class="meta-col">
             <strong>PESANAN UNTUK:</strong><br>
             {{ $order->first_name }} {{ $order->last_name }}<br>
-            {{ $order->email }}
+            {{ $order->email }}<br>
+            @if($order->phone) Telp: {{ $order->phone }} @endif
         </div>
         <div class="meta-col">
             <strong>NOMOR TRANSAKSI:</strong> #{{ $order->transaction_id }}<br>
@@ -268,6 +269,9 @@
                 <p><strong>{{ $order->first_name }} {{ $order->last_name }}</strong></p>
                 <p>{{ $order->shipping_address }}</p>
                 <p>{{ $order->city }} - {{ $order->postal_code }}</p>
+                @if($order->phone)
+                    <p>Telp: {{ $order->phone }}</p>
+                @endif
                 @if($order->biteship_area_name)
                     <p style="font-size: 11px; opacity: 0.8;">Area: {{ $order->biteship_area_name }}</p>
                 @endif
