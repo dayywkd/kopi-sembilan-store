@@ -25,7 +25,7 @@ return new class extends Migration
             $table->decimal('subtotal', 12, 2);
             $table->decimal('shipping_cost', 12, 2);
             $table->decimal('total_paid', 12, 2);
-            $table->enum('status', ['Paid', 'Packing', 'Shipped'])->default('Paid');
+            $table->enum('status', ['Awaiting Payment', 'Paid', 'Packing', 'Shipped'])->default('Awaiting Payment');
             $table->timestamps();
         });
     }

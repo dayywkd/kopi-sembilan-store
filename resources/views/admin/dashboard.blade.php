@@ -57,9 +57,9 @@
             <div class="grid grid-cols-12 gap-4 px-6 py-4 bg-[#1a1a1a]/60 border-b border-[#444444] label-tiny opacity-60 text-xs font-bold">
                 <div class="col-span-2">Order ID</div>
                 <div class="col-span-3">Customer</div>
-                <div class="col-span-3">Date & Time</div>
+                <div class="col-span-2">Date &amp; Time</div>
                 <div class="col-span-2 text-right">Total Paid</div>
-                <div class="col-span-2 text-center">Status</div>
+                <div class="col-span-3 text-center">Status &amp; Action</div>
             </div>
             
             <!-- Table Rows -->
@@ -67,25 +67,56 @@
                 @forelse ($orders as $order)
                     @php
                         $statusClass = 'border-[#444444] text-neutral-400 bg-transparent';
-                        if ($order->status === 'Paid') {
-                            $statusClass = 'border-[#F9F9F9] text-[#121212] bg-[#F9F9F9]';
+                        if ($order->status === 'Awaiting Payment') {
+                            $statusClass = 'border-amber-600/50 text-amber-400 bg-amber-950/20';
+                        } elseif ($order->status === 'Paid') {
+                            $statusClass = 'border-blue-600/50 text-blue-300 bg-blue-950/20';
                         } elseif ($order->status === 'Packing') {
-                            $statusClass = 'border-yellow-600/50 text-yellow-500 bg-yellow-950/20';
+                            $statusClass = 'border-yellow-600/50 text-yellow-400 bg-yellow-950/20';
                         } elseif ($order->status === 'Shipped') {
-                            $statusClass = 'border-green-600/50 text-green-500 bg-green-950/20';
+                            $statusClass = 'border-green-600/50 text-green-400 bg-green-950/20';
+                        } elseif ($order->status === 'Delivered') {
+                            $statusClass = 'border-emerald-600/50 text-emerald-300 bg-emerald-950/20';
                         }
                     @endphp
                     
-                    <div class="grid grid-cols-12 gap-4 px-6 py-5 order-row items-center cursor-pointer" onclick="openTrackingModal('{{ $order->transaction_id }}', '{{ $order->status }}')">
-                        <div class="col-span-2 font-mono text-sm font-semibold text-neutral-200">#{{ $order->transaction_id }}</div>
+                    <div class="grid grid-cols-12 gap-4 px-6 py-5 order-row items-center cursor-pointer" onclick="openTrackingModal('{{ $order->transaction_id }}', '{{ $order->status }}', '{{ $order->tracking_number }}')">
+                        <div class="col-span-2 font-mono text-sm font-semibold text-neutral-200 flex flex-col gap-1">
+                            <span>#{{ $order->transaction_id }}</span>
+                            @if($order->tracking_number)
+                                <span class="text-[10px] text-neutral-400 font-mono tracking-normal lowercase">resi: {{ $order->tracking_number }}</span>
+                            @endif
+                        </div>
                         <div class="col-span-3">
                             <div class="font-bold text-sm text-[#F9F9F9] group-hover:text-inherit">{{ $order->first_name }} {{ $order->last_name }}</div>
                             <div class="text-xs opacity-60">{{ $order->email }}</div>
                         </div>
-                        <div class="col-span-3 text-sm opacity-80">{{ $order->created_at->timezone('Asia/Jakarta')->format('M d, H:i') }}</div>
-                        <div class="col-span-2 text-right font-semibold text-sm text-neutral-200">Rp. {{ number_format($order->total_paid, 0, ',', '.') }}</div>
-                        <div class="col-span-2 flex justify-center">
+                        <div class="col-span-2 text-sm opacity-80">{{ $order->created_at->timezone('Asia/Jakarta')->format('M d, H:i') }}</div>
+                        <div class="col-span-2 text-right font-semibold text-sm text-neutral-200">{!! $order->formatted_total_paid !!}</div>
+                        <div class="col-span-3 flex items-center justify-center gap-2">
                             <span class="px-3 py-1 border text-[9px] uppercase font-bold tracking-widest {{ $statusClass }}">{{ $order->status }}</span>
+                            <a href="{{ route('admin.order.print', $order->transaction_id) }}" target="_blank"
+                               onclick="event.stopPropagation()"
+                               class="p-1.5 border border-neutral-600 text-neutral-400 hover:bg-white hover:text-black hover:border-transparent transition-colors flex items-center justify-center"
+                               title="Cetak Resi & Invoice">
+                                <span class="material-symbols-outlined text-[15px]">print</span>
+                            </a>
+                            @if ($order->status === 'Awaiting Payment')
+                                <a href="{{ route('order.payment', $order->transaction_id) }}" target="_blank"
+                                   onclick="event.stopPropagation()"
+                                   class="p-1.5 border border-amber-600/40 text-amber-500 hover:bg-amber-950/40 transition-colors flex items-center justify-center"
+                                   title="Lihat halaman pembayaran">
+                                    <span class="material-symbols-outlined text-[15px]">open_in_new</span>
+                                </a>
+                                <form action="{{ route('admin.order.update_status') }}" method="POST" class="inline" onclick="event.stopPropagation()">
+                                    @csrf
+                                    <input type="hidden" name="transaction_id" value="{{ $order->transaction_id }}">
+                                    <input type="hidden" name="status" value="Paid">
+                                    <button type="submit" class="px-2.5 py-1 bg-green-600 hover:bg-green-700 text-white text-[9px] font-bold uppercase tracking-wider transition-colors">
+                                        Verifikasi Lunas
+                                    </button>
+                                </form>
+                            @endif
                         </div>
                     </div>
                 @empty
@@ -136,10 +167,17 @@
             <div>
                 <label class="label-tiny text-[10px] opacity-60 block mb-2 font-bold">Order Status</label>
                 <select name="status" id="modal-status-select" class="w-full py-3 px-4 outline-none text-sm uppercase bg-transparent border border-[#444444]">
-                    <option class="bg-background text-[#F9F9F9]" value="Paid">Paid</option>
-                    <option class="bg-background text-[#F9F9F9]" value="Packing">Packing</option>
-                    <option class="bg-background text-[#F9F9F9]" value="Shipped">Shipped</option>
+                    <option class="bg-background text-[#F9F9F9]" value="Awaiting Payment">Awaiting Payment</option>
+                    <option class="bg-background text-[#F9F9F9]" value="Paid">Paid — Terverifikasi</option>
+                    <option class="bg-background text-[#F9F9F9]" value="Packing">Packing — Sedang Dikemas</option>
+                    <option class="bg-background text-[#F9F9F9]" value="Shipped">Shipped — Dikirim</option>
+                    <option class="bg-background text-[#F9F9F9]" value="Delivered">Delivered — Sampai</option>
                 </select>
+            </div>
+            
+            <div id="tracking-number-field" class="hidden">
+                <label class="label-tiny text-[10px] opacity-60 block mb-2 font-bold">Nomor Resi Pengiriman</label>
+                <input type="text" name="tracking_number" id="modal-tracking-input" class="w-full py-3 px-4 outline-none text-sm uppercase bg-transparent border border-[#444444] placeholder:opacity-40" placeholder="MASUKKAN NOMOR RESI...">
             </div>
             
             <div class="pt-4">
@@ -156,11 +194,28 @@
 <script>
     let currentEditingOrderId = null;
 
-    function openTrackingModal(transactionId, currentStatus) {
+    function toggleTrackingField() {
+        const statusSelect = document.getElementById('modal-status-select');
+        const trackingField = document.getElementById('tracking-number-field');
+        if (statusSelect.value === 'Shipped' || statusSelect.value === 'Delivered') {
+            trackingField.classList.remove('hidden');
+        } else {
+            trackingField.classList.add('hidden');
+        }
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+        document.getElementById('modal-status-select').addEventListener('change', toggleTrackingField);
+    });
+
+    function openTrackingModal(transactionId, currentStatus, trackingNumber = '') {
         currentEditingOrderId = transactionId;
         document.getElementById('modal-order-id').innerText = `ORDER: #${transactionId}`;
         document.getElementById('modal-transaction-id-input').value = transactionId;
         document.getElementById('modal-status-select').value = currentStatus;
+        document.getElementById('modal-tracking-input').value = trackingNumber || '';
+        
+        toggleTrackingField();
 
         const modal = document.getElementById('tracking-modal');
         modal.classList.remove('hidden');

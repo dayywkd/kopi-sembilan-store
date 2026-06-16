@@ -14,7 +14,7 @@ class HomeController extends Controller
     public function index()
     {
         // Mengambil 3 produk terbaru untuk ditampilkan sebagai produk unggulan (Featured Products)
-        $featuredProducts = Product::with('category')
+        $featuredProducts = Product::with(['category', 'reviews'])
             ->where('status', '!=', 'SOLD OUT')
             ->latest()
             ->take(3)

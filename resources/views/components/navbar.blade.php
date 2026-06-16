@@ -14,7 +14,15 @@
             <a class="label-tiny nav-link-hover opacity-60 hover:opacity-100 transition-opacity pb-1" href="{{ Route::is('home') ? '#visit' : route('home') . '#visit' }}">Visit</a>
         </div>
         <div class="flex gap-8 items-center mix-blend-difference relative">
-            <a href="{{ route('admin.dashboard') }}" class="material-symbols-outlined text-xl hover:opacity-60 transition-opacity" title="Dashboard Admin">person</a>
+            @auth
+                @if (Auth::user()->role === 'admin')
+                    <a href="{{ route('admin.dashboard') }}" class="material-symbols-outlined text-xl hover:opacity-60 transition-opacity" title="Dashboard Admin">person</a>
+                @else
+                    <a href="{{ route('customer.dashboard') }}" class="material-symbols-outlined text-xl hover:opacity-60 transition-opacity" title="Dashboard Pelanggan">person</a>
+                @endif
+            @else
+                <a href="{{ route('login') }}" class="material-symbols-outlined text-xl hover:opacity-60 transition-opacity" title="Login / Daftar">person</a>
+            @endauth
             <a href="{{ route('cart.index') }}" class="material-symbols-outlined text-xl hover:opacity-60 transition-opacity relative" title="Keranjang Belanja">
                 shopping_bag
                 <span id="cart-count" class="absolute -top-2 -right-2 bg-red-600 text-white text-[10px] w-4 h-4 rounded-full flex items-center justify-center font-bold hidden">0</span>
@@ -37,7 +45,15 @@
         <a onclick="toggleMobileMenu()" class="hover:text-neutral-400 transition-colors" href="{{ route('home') }}#visit">Visit</a>
     </div>
     <div class="pt-8 border-t border-[#F9F9F9]/5 flex justify-between items-center">
-        <a onclick="toggleMobileMenu()" href="{{ route('admin.dashboard') }}" class="label-tiny flex items-center gap-2 opacity-80 hover:opacity-100 transition-opacity"><span class="material-symbols-outlined text-base">person</span> Account</a>
+        @auth
+            @if (Auth::user()->role === 'admin')
+                <a onclick="toggleMobileMenu()" href="{{ route('admin.dashboard') }}" class="label-tiny flex items-center gap-2 opacity-80 hover:opacity-100 transition-opacity"><span class="material-symbols-outlined text-base">person</span> Admin Panel</a>
+            @else
+                <a onclick="toggleMobileMenu()" href="{{ route('customer.dashboard') }}" class="label-tiny flex items-center gap-2 opacity-80 hover:opacity-100 transition-opacity"><span class="material-symbols-outlined text-base">person</span> Account</a>
+            @endif
+        @else
+            <a onclick="toggleMobileMenu()" href="{{ route('login') }}" class="label-tiny flex items-center gap-2 opacity-80 hover:opacity-100 transition-opacity"><span class="material-symbols-outlined text-base">person</span> Login</a>
+        @endauth
         <a onclick="toggleMobileMenu()" href="{{ route('cart.index') }}" class="label-tiny flex items-center gap-2 opacity-80 hover:opacity-100 transition-opacity"><span class="material-symbols-outlined text-base">shopping_bag</span> Bag</a>
     </div>
 </div>

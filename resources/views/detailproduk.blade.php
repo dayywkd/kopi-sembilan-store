@@ -62,10 +62,19 @@
                     <h1 class="font-serif-italic italic text-4xl md:text-5xl font-display text-on-background leading-tight">
                         {{ $product->name }}
                     </h1>
-                    <div class="pt-2">
+                    <div class="pt-2 flex items-center gap-4">
                         <span id="product-price-display" class="font-headline-md text-2xl font-display font-semibold text-neutral-200">
                             Rp {{ number_format($product->price, 0, ',', '.') }}
                         </span>
+                        <a href="#reviews-section" class="flex items-center gap-1.5 hover:opacity-80 transition-opacity">
+                            <div class="flex text-yellow-400">
+                                @php $rating = round($product->average_rating); @endphp
+                                @for ($i = 1; $i <= 5; $i++)
+                                    <span class="material-symbols-outlined text-[14px] {{ $i <= $rating ? 'text-yellow-400' : 'text-[#F9F9F9]/20' }}" style="font-variation-settings: 'FILL' {{ $i <= $rating ? 1 : 0 }}, 'wght' 200, 'GRAD' 0, 'opsz' 24">star</span>
+                                @endfor
+                            </div>
+                            <span class="text-xs text-neutral-400 font-sans">({{ $product->reviews_count }})</span>
+                        </a>
                     </div>
                 </div>
                 
@@ -142,6 +151,43 @@
                     <a class="font-label-caps border-b border-[#F9F9F9]/10 pb-1 hover:opacity-50 transition-opacity" href="#">BREW GUIDE</a>
                 </div>
             </div>
+        </div>
+    </section>
+
+    <!-- Reviews Section -->
+    <section id="reviews-section" class="border-t border-[#F9F9F9]/10 py-16 px-margin-mobile md:px-margin-desktop bg-[#121212]">
+        <div class="max-w-4xl mx-auto">
+            <div class="flex justify-between items-baseline border-b border-[#F9F9F9]/10 pb-6 mb-8">
+                <h3 class="font-display text-3xl uppercase italic">Ulasan Pelanggan</h3>
+                <span class="font-sans text-xs text-neutral-400">Total Ulasan: {{ $product->reviews_count }}</span>
+            </div>
+            
+            @if ($product->reviews->isEmpty())
+                <p class="text-neutral-500 font-sans text-sm italic">Belum ada ulasan untuk produk ini. Ulasan baru dapat ditulis setelah Anda membeli produk ini dan melakukan konfirmasi penerimaan pesanan pada halaman pelacakan.</p>
+            @else
+                <div class="space-y-6">
+                    @foreach ($product->reviews as $review)
+                        <div class="border border-[#F9F9F9]/10 p-6 bg-[#1a1a1a]/25">
+                            <div class="flex justify-between items-start mb-3">
+                                <div>
+                                    <h5 class="font-bold text-sm text-[#F9F9F9]">{{ $review->customer_name }}</h5>
+                                    <span class="text-[10px] text-neutral-500 font-sans">{{ $review->created_at->timezone('Asia/Jakarta')->format('d M Y, H:i') }} WIB</span>
+                                </div>
+                                <div class="flex text-yellow-400">
+                                    @for ($i = 1; $i <= 5; $i++)
+                                        <span class="material-symbols-outlined text-[14px] {{ $i <= $review->rating ? 'text-yellow-400' : 'text-[#F9F9F9]/20' }}" style="font-variation-settings: 'FILL' {{ $i <= $review->rating ? 1 : 0 }}, 'wght' 200, 'GRAD' 0, 'opsz' 24">star</span>
+                                    @endfor
+                                </div>
+                            </div>
+                            @if ($review->comment)
+                                <p class="text-xs text-neutral-300 font-sans leading-relaxed">"{{ $review->comment }}"</p>
+                            @else
+                                <p class="text-xs text-neutral-500 font-sans italic">Hanya memberikan rating bintang.</p>
+                            @endif
+                        </div>
+                    @endforeach
+                </div>
+            @endif
         </div>
     </section>
 

@@ -22,6 +22,11 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'address',
+        'city',
+        'postal_code',
+        'biteship_area_id',
+        'biteship_area_name',
     ];
 
     /**

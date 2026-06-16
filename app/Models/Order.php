@@ -23,7 +23,10 @@ class Order extends Model
         'subtotal',
         'shipping_cost',
         'total_paid',
-        'status'
+        'status',
+        'biteship_area_id',
+        'biteship_area_name',
+        'tracking_number'
     ];
 
     /**
@@ -32,5 +35,25 @@ class Order extends Model
     public function items(): HasMany
     {
         return $this->hasMany(OrderItem::class);
+    }
+
+    /**
+     * Accessor untuk mendapatkan format Rupiah dengan menyorot 3 digit kode unik terakhir (Opsi C).
+     */
+    public function getFormattedTotalPaidAttribute()
+    {
+        $amount = (int) $this->total_paid;
+        $base = floor($amount / 1000) * 1000;
+        $unique = $amount % 1000;
+        
+        $baseFormatted = number_format($base, 0, ',', '.');
+        $baseStr = substr($baseFormatted, 0, -4);
+        $uniqueStr = str_pad($unique, 3, '0', STR_PAD_LEFT);
+        
+        if ($base >= 1000) {
+            return 'Rp. ' . $baseStr . '.' . '<span class="font-bold text-[#F9F9F9] bg-white/10 px-1.5 py-0.5 rounded">' . $uniqueStr . '</span>';
+        } else {
+            return 'Rp. <span class="font-bold text-[#F9F9F9] bg-white/10 px-1.5 py-0.5 rounded">' . $uniqueStr . '</span>';
+        }
     }
 }

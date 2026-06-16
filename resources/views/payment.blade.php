@@ -1,0 +1,488 @@
+@extends('layouts.app')
+
+@section('title', 'Pembayaran — ' . $order->transaction_id . ' | Toko Kopi Sembilan')
+
+@section('styles')
+<style>
+    .label-tiny {
+        font-size: 11px;
+        font-weight: 500;
+        letter-spacing: 0.15em;
+        text-transform: uppercase;
+    }
+    @media (min-width: 768px) {
+        .label-tiny { font-size: 12px; letter-spacing: 0.25em; }
+    }
+
+    /* Countdown timer */
+    @keyframes countdown-pulse {
+        0%, 100% { opacity: 1; }
+        50% { opacity: 0.6; }
+    }
+    .countdown-active { animation: countdown-pulse 2s ease-in-out infinite; }
+
+    /* Copy success animation */
+    @keyframes copy-flash {
+        0% { background: #F9F9F9; color: #121212; }
+        100% { background: transparent; color: #F9F9F9; }
+    }
+    .copy-flash { animation: copy-flash 0.4s ease; }
+
+    /* Tab indicator */
+    .payment-tab { transition: all 0.3s ease; }
+    .payment-tab.active {
+        background: #F9F9F9;
+        color: #121212;
+    }
+
+    /* Step indicator */
+    .step-num {
+        width: 28px;
+        height: 28px;
+        border-radius: 50%;
+        border: 1px solid #444;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 11px;
+        font-weight: 700;
+        flex-shrink: 0;
+        font-family: 'DM Mono', monospace;
+    }
+
+    /* Shimmer animation for unique code highlight */
+    @keyframes shimmer {
+        0% { background-position: -200% center; }
+        100% { background-position: 200% center; }
+    }
+    .unique-code-badge {
+        background: linear-gradient(90deg, rgba(249,249,249,0.05) 0%, rgba(249,249,249,0.15) 50%, rgba(249,249,249,0.05) 100%);
+        background-size: 200% auto;
+        animation: shimmer 3s linear infinite;
+    }
+
+    /* QRIS card glow */
+    .qris-card {
+        box-shadow: 0 0 40px rgba(249, 249, 249, 0.04);
+        transition: box-shadow 0.3s ease;
+    }
+    .qris-card:hover {
+        box-shadow: 0 0 60px rgba(249, 249, 249, 0.08);
+    }
+
+    /* Amount display */
+    .amount-display {
+        font-feature-settings: "tnum";
+        letter-spacing: 0.02em;
+    }
+
+    /* Verified badge pulse */
+    @keyframes badge-glow {
+        0%, 100% { box-shadow: 0 0 0 0 rgba(34, 197, 94, 0.4); }
+        50% { box-shadow: 0 0 0 6px rgba(34, 197, 94, 0); }
+    }
+    .badge-glow { animation: badge-glow 2s ease infinite; }
+</style>
+@endsection
+
+@section('content')
+<main class="mt-32 min-h-screen px-margin-mobile md:px-margin-desktop py-stack-xl max-w-container-max mx-auto">
+
+    {{-- Header --}}
+    <section class="mb-12 border-b border-[#F9F9F9]/15 pb-8">
+        <div class="grid grid-cols-12 items-end gap-4">
+            <div class="col-span-12 md:col-span-8">
+                <span class="label-tiny opacity-50 block mb-2">
+                    <span class="text-amber-400">●</span>&nbsp; Menunggu Pembayaran
+                </span>
+                <h1 class="font-display text-5xl md:text-7xl uppercase italic leading-none">
+                    @if ($order->payment_method === 'QRIS')
+                        Scan &amp; Pay
+                    @else
+                        Transfer &amp; Konfirmasi
+                    @endif
+                </h1>
+            </div>
+            <div class="col-span-12 md:col-span-4 md:text-right">
+                <p class="label-tiny opacity-40 leading-relaxed">
+                    Order <span class="text-[#F9F9F9] opacity-100">{{ $order->transaction_id }}</span>
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <div class="grid grid-cols-12 gap-gutter">
+
+        {{-- LEFT: Payment Instructions --}}
+        <div class="col-span-12 lg:col-span-7 space-y-8">
+
+            {{-- Payment Method Tabs (if Awaiting Payment) --}}
+            @if ($order->payment_method === 'Bank Transfer')
+                {{-- === BANK TRANSFER SECTION === --}}
+                <div class="space-y-6">
+                    <div class="border-b border-[#F9F9F9]/10 pb-3">
+                        <h2 class="label-tiny opacity-60">01 / Instruksi Transfer</h2>
+                    </div>
+
+                    {{-- Alert Banner --}}
+                    <div class="bg-amber-950/40 border border-amber-700/60 p-5 flex gap-4 items-start">
+                        <span class="material-symbols-outlined text-amber-400 text-[22px] flex-shrink-0 mt-0.5">info</span>
+                        <div>
+                            <p class="label-tiny text-amber-300 mb-1">Penting: Kode Unik Transfer</p>
+                            <p class="font-sans text-xs text-amber-200/80 leading-relaxed">
+                                Transfer dengan jumlah <strong>tepat</strong> termasuk 3 digit kode unik di akhir angka. Ini memudahkan verifikasi pesanan Anda secara otomatis.
+                            </p>
+                        </div>
+                    </div>
+
+                    {{-- Rekening BCA --}}
+                    <div class="border border-[#F9F9F9]/10 bg-[#1a1a1a]/60 p-7 space-y-6">
+                        <div class="flex items-center justify-between border-b border-[#F9F9F9]/10 pb-5">
+                            <div>
+                                <p class="label-tiny opacity-50 mb-1">Bank Tujuan</p>
+                                <div class="flex items-center gap-3">
+                                    <div class="bg-[#005BAC] text-white font-black text-lg px-3 py-1 font-sans" style="letter-spacing:0.05em">BCA</div>
+                                    <span class="font-display text-2xl italic">Bank Central Asia</span>
+                                </div>
+                            </div>
+                            <span class="material-symbols-outlined text-[#F9F9F9]/30 text-4xl">account_balance</span>
+                        </div>
+
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            {{-- Nomor Rekening --}}
+                            <div>
+                                <p class="label-tiny opacity-50 mb-2">No. Rekening</p>
+                                <div class="flex items-center gap-3">
+                                    <p id="rek-number" class="font-sans text-2xl font-bold tracking-widest text-[#F9F9F9]">1234567890</p>
+                                    <button onclick="copyToClipboard('1234567890', 'btn-copy-rek')" id="btn-copy-rek" class="p-1.5 border border-[#444] hover:border-[#F9F9F9] transition-colors group" title="Salin nomor rekening">
+                                        <span class="material-symbols-outlined text-[16px] opacity-50 group-hover:opacity-100 transition-opacity">content_copy</span>
+                                    </button>
+                                </div>
+                            </div>
+
+                            {{-- Atas Nama --}}
+                            <div>
+                                <p class="label-tiny opacity-50 mb-2">Atas Nama</p>
+                                <p class="font-sans text-lg font-semibold text-[#F9F9F9]">Toko Kopi Sembilan</p>
+                            </div>
+                        </div>
+
+                        {{-- Jumlah Transfer --}}
+                        <div class="bg-[#121212] border border-[#F9F9F9]/10 p-6">
+                            <p class="label-tiny opacity-50 mb-3">Jumlah Transfer <span class="text-amber-400">(Harus Tepat)</span></p>
+                            <div class="flex items-end justify-between gap-4">
+                                <div>
+                                    <p class="font-sans text-xs opacity-50 mb-1">Total termasuk kode unik</p>
+                                    <div class="font-display text-4xl md:text-5xl text-[#F9F9F9] amount-display leading-none">
+                                        {!! $order->formatted_total_paid !!}
+                                    </div>
+                                </div>
+                                <button onclick="copyToClipboard('{{ $order->total_paid }}', 'btn-copy-amount')" id="btn-copy-amount" class="px-4 py-3 border border-[#444] hover:border-[#F9F9F9] text-xs font-sans font-semibold uppercase tracking-widest transition-colors flex items-center gap-2 whitespace-nowrap">
+                                    <span class="material-symbols-outlined text-[16px]">content_copy</span>
+                                    Salin Nominal
+                                </button>
+                            </div>
+                        </div>
+
+                        {{-- Berita / Keterangan Transfer --}}
+                        <div>
+                            <p class="label-tiny opacity-50 mb-3">Berita / Keterangan Transfer</p>
+                            <div class="flex items-center gap-3 bg-[#121212] border border-[#F9F9F9]/10 px-5 py-4">
+                                <code class="font-mono text-sm text-[#F9F9F9] flex-grow">{{ $order->transaction_id }}</code>
+                                <button onclick="copyToClipboard('{{ $order->transaction_id }}', 'btn-copy-id')" id="btn-copy-id" class="p-1.5 border border-[#444] hover:border-[#F9F9F9] transition-colors group flex-shrink-0">
+                                    <span class="material-symbols-outlined text-[16px] opacity-50 group-hover:opacity-100 transition-opacity">content_copy</span>
+                                </button>
+                            </div>
+                            <p class="font-sans text-[10px] opacity-40 mt-2 leading-relaxed">
+                                Cantumkan kode pesanan di atas sebagai berita/keterangan transfer agar pesanan Anda dapat diverifikasi secara otomatis.
+                            </p>
+                        </div>
+                    </div>
+
+                    {{-- Steps --}}
+                    <div class="border-b border-[#F9F9F9]/10 pb-3 mt-10">
+                        <h2 class="label-tiny opacity-60">02 / Langkah Pembayaran</h2>
+                    </div>
+
+                    <div class="space-y-4">
+                        @foreach ([
+                            ['Buka aplikasi m-banking atau ATM Bank BCA Anda.', 'phone_android'],
+                            ['Pilih menu Transfer → ke Rekening BCA.', 'compare_arrows'],
+                            ['Masukkan nomor rekening <strong class="text-[#F9F9F9]">1234567890</strong>.', 'dialpad'],
+                            ['Masukkan nominal transfer <strong class="text-amber-400">PERSIS TEPAT</strong> sesuai yang tertera (termasuk 3 digit kode unik).', 'payments'],
+                            ['Isi berita transfer dengan kode pesanan: <strong class="font-mono text-[#F9F9F9]">{{ $order->transaction_id }}</strong>', 'edit_note'],
+                            ['Konfirmasi dan selesaikan transfer. Simpan bukti transfer Anda.', 'check_circle'],
+                        ] as $i => [$step, $icon])
+                        <div class="flex items-start gap-4 py-4 border-b border-[#F9F9F9]/5 last:border-0">
+                            <div class="step-num bg-[#1a1a1a] text-[#F9F9F9]/60">{{ $i + 1 }}</div>
+                            <div class="flex-grow">
+                                <p class="font-sans text-sm text-[#F9F9F9]/80 leading-relaxed">{!! $step !!}</p>
+                            </div>
+                            <span class="material-symbols-outlined text-[#F9F9F9]/20 text-[20px] flex-shrink-0">{{ $icon }}</span>
+                        </div>
+                        @endforeach
+                    </div>
+
+                    {{-- Konfirmasi via WhatsApp --}}
+                    <div class="border-b border-[#F9F9F9]/10 pb-3 mt-10">
+                        <h2 class="label-tiny opacity-60">03 / Konfirmasi Pembayaran</h2>
+                    </div>
+
+                    <div class="bg-[#1a1a1a]/40 border border-[#F9F9F9]/10 p-6 space-y-5">
+                        <p class="font-sans text-sm text-[#F9F9F9]/70 leading-relaxed">
+                            Setelah transfer, kirim bukti pembayaran ke WhatsApp kami agar pesanan diproses lebih cepat.
+                        </p>
+                        <a id="wa-confirm-btn" href="#" target="_blank" rel="noopener noreferrer"
+                           class="w-full flex items-center justify-center gap-3 bg-[#25D366] text-white font-semibold py-4 text-sm uppercase tracking-widest hover:bg-[#128C7E] transition-colors duration-300 active:scale-[0.98]">
+                            <svg class="fill-current" style="width:20px;height:20px;" viewBox="0 0 24 24">
+                                <path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946C.06 5.348 5.397.01 12.008.01c3.202.001 6.212 1.246 8.477 3.514 2.266 2.268 3.507 5.28 3.505 8.484-.004 6.657-5.34 11.997-11.953 11.997-2.005-.001-3.973-.502-5.724-1.455L0 24zm6.59-4.846c1.6.95 3.498 1.452 5.43 1.453 5.414 0 9.82-4.402 9.823-9.817.002-2.624-1.02-5.09-2.88-6.953-1.862-1.863-4.33-2.887-6.954-2.889-5.422 0-9.827 4.404-9.831 9.82-.001 1.943.506 3.841 1.47 5.509l-.965 3.526 3.61-.947zm11.231-6.793c-.302-.152-1.791-.883-2.073-.985-.282-.102-.489-.152-.696.152-.207.304-.799.985-.979 1.187-.18.203-.361.228-.663.077-1.127-.565-1.928-1.01-2.697-2.327-.2-.343.2-.319.574-1.066.06-.122.03-.228-.015-.319-.045-.091-.489-1.18-.671-1.616-.177-.428-.356-.369-.489-.376-.127-.007-.272-.008-.418-.008-.145 0-.382.054-.582.273-.2.22-.763.746-.763 1.82 0 1.073.782 2.107.891 2.254.11.147 1.54 2.349 3.729 3.291.52.224.926.358 1.242.459.522.167 1.002.143 1.379.087.42-.063 1.291-.527 1.472-1.034.18-.506.18-.94.127-1.034-.053-.09-.203-.152-.505-.304z"/>
+                            </svg>
+                            Kirim Bukti Transfer via WhatsApp
+                        </a>
+                        <p class="font-sans text-[10px] text-center opacity-30 uppercase tracking-wider">
+                            Pesanan akan diproses setelah pembayaran terverifikasi oleh tim kami (maks. 1×24 jam)
+                        </p>
+                    </div>
+                </div>
+
+            @elseif ($order->payment_method === 'QRIS')
+                {{-- === QRIS SECTION === --}}
+                <div class="space-y-6">
+                    <div class="border-b border-[#F9F9F9]/10 pb-3">
+                        <h2 class="label-tiny opacity-60">01 / Scan QRIS</h2>
+                    </div>
+
+                    {{-- QRIS Card --}}
+                    <div class="qris-card border border-[#F9F9F9]/15 bg-[#1a1a1a]/60 p-8 text-center space-y-6">
+                        {{-- Total to Pay --}}
+                        <div>
+                            <p class="label-tiny opacity-50 mb-2">Total Pembayaran</p>
+                            <div class="font-display text-5xl md:text-6xl text-[#F9F9F9] amount-display">
+                                {!! $order->formatted_total_paid !!}
+                            </div>
+                            <p class="font-sans text-xs opacity-40 mt-2">Pastikan nominal sesuai sebelum scan</p>
+                        </div>
+
+                        {{-- QRIS Image --}}
+                        <div class="relative inline-block">
+                            <div class="w-56 h-56 md:w-64 md:h-64 mx-auto bg-white p-3 border-4 border-white shadow-2xl">
+                                <img src="{{ asset('images/qris-toko.png') }}"
+                                     alt="QRIS Toko Kopi Sembilan"
+                                     class="w-full h-full object-contain">
+                            </div>
+                            <div class="absolute -top-2 -right-2 bg-[#25D366] text-white px-2 py-0.5 label-tiny text-[9px] badge-glow">
+                                AKTIF
+                            </div>
+                        </div>
+
+                        {{-- QRIS Provider Note --}}
+                        <div class="flex items-center justify-center gap-2 opacity-50">
+                            <span class="material-symbols-outlined text-[16px]">qr_code_2</span>
+                            <p class="label-tiny text-[9px]">QRIS berlaku untuk semua aplikasi dompet digital & mobile banking</p>
+                        </div>
+                    </div>
+
+                    {{-- Steps QRIS --}}
+                    <div class="border-b border-[#F9F9F9]/10 pb-3">
+                        <h2 class="label-tiny opacity-60">02 / Cara Pembayaran QRIS</h2>
+                    </div>
+                    <div class="space-y-4">
+                        @foreach ([
+                            ['Buka aplikasi pembayaran Anda (GoPay, OVO, Dana, ShopeePay, m-banking, dll.)', 'phone_android'],
+                            ['Pilih menu <strong class="text-[#F9F9F9]">Scan QR</strong> atau <strong class="text-[#F9F9F9]">QRIS</strong>.', 'qr_code_scanner'],
+                            ['Arahkan kamera ke QR code di atas.', 'photo_camera'],
+                            ['Pastikan nominal pembayaran sesuai: <strong class="font-mono text-amber-400">Rp. ' . number_format($order->total_paid, 0, ',', '.') . '</strong>', 'payments'],
+                            ['Konfirmasi pembayaran dan selesai!', 'check_circle'],
+                        ] as $i => [$step, $icon])
+                        <div class="flex items-start gap-4 py-4 border-b border-[#F9F9F9]/5 last:border-0">
+                            <div class="step-num bg-[#1a1a1a] text-[#F9F9F9]/60">{{ $i + 1 }}</div>
+                            <p class="font-sans text-sm text-[#F9F9F9]/80 leading-relaxed flex-grow">{!! $step !!}</p>
+                            <span class="material-symbols-outlined text-[#F9F9F9]/20 text-[20px] flex-shrink-0">{{ $icon }}</span>
+                        </div>
+                        @endforeach
+                    </div>
+
+                    {{-- Konfirmasi via WhatsApp --}}
+                    <div class="border-b border-[#F9F9F9]/10 pb-3 mt-6">
+                        <h2 class="label-tiny opacity-60">03 / Sudah Bayar? Konfirmasi ke Kami</h2>
+                    </div>
+                    <div class="bg-[#1a1a1a]/40 border border-[#F9F9F9]/10 p-6 space-y-5">
+                        <p class="font-sans text-sm text-[#F9F9F9]/70 leading-relaxed">
+                            Kirim bukti pembayaran QRIS ke WhatsApp kami agar pesanan segera diproses.
+                        </p>
+                        <a id="wa-confirm-btn" href="#" target="_blank" rel="noopener noreferrer"
+                           class="w-full flex items-center justify-center gap-3 bg-[#25D366] text-white font-semibold py-4 text-sm uppercase tracking-widest hover:bg-[#128C7E] transition-colors duration-300 active:scale-[0.98]">
+                            <svg class="fill-current" style="width:20px;height:20px;" viewBox="0 0 24 24">
+                                <path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946C.06 5.348 5.397.01 12.008.01c3.202.001 6.212 1.246 8.477 3.514 2.266 2.268 3.507 5.28 3.505 8.484-.004 6.657-5.34 11.997-11.953 11.997-2.005-.001-3.973-.502-5.724-1.455L0 24zm6.59-4.846c1.6.95 3.498 1.452 5.43 1.453 5.414 0 9.82-4.402 9.823-9.817.002-2.624-1.02-5.09-2.88-6.953-1.862-1.863-4.33-2.887-6.954-2.889-5.422 0-9.827 4.404-9.831 9.82-.001 1.943.506 3.841 1.47 5.509l-.965 3.526 3.61-.947zm11.231-6.793c-.302-.152-1.791-.883-2.073-.985-.282-.102-.489-.152-.696.152-.207.304-.799.985-.979 1.187-.18.203-.361.228-.663.077-1.127-.565-1.928-1.01-2.697-2.327-.2-.343.2-.319.574-1.066.06-.122.03-.228-.015-.319-.045-.091-.489-1.18-.671-1.616-.177-.428-.356-.369-.489-.376-.127-.007-.272-.008-.418-.008-.145 0-.382.054-.582.273-.2.22-.763.746-.763 1.82 0 1.073.782 2.107.891 2.254.11.147 1.54 2.349 3.729 3.291.52.224.926.358 1.242.459.522.167 1.002.143 1.379.087.42-.063 1.291-.527 1.472-1.034.18-.506.18-.94.127-1.034-.053-.09-.203-.152-.505-.304z"/>
+                            </svg>
+                            Kirim Bukti QRIS via WhatsApp
+                        </a>
+                        <p class="font-sans text-[10px] text-center opacity-30 uppercase tracking-wider">
+                            Tim kami akan memverifikasi dan memulai proses roasting dalam 1×24 jam
+                        </p>
+                    </div>
+                </div>
+            @endif
+        </div>
+
+        {{-- RIGHT: Order Summary Sticky --}}
+        <div class="col-span-12 lg:col-span-5">
+            <div class="lg:sticky lg:top-28 space-y-6">
+
+                {{-- Order Summary Card --}}
+                <div class="border border-[#F9F9F9]/10 bg-[#1a1a1a]/40 backdrop-blur-xl p-8 space-y-8">
+                    <h3 class="label-tiny opacity-60 border-b border-[#F9F9F9]/10 pb-4">Ringkasan Pesanan</h3>
+
+                    {{-- Items --}}
+                    <div class="space-y-5">
+                        @foreach ($order->items as $item)
+                        <div class="flex gap-4 items-center">
+                            <div class="w-14 h-18 bg-[#1a1a1a] border border-[#F9F9F9]/10 overflow-hidden flex-shrink-0" style="height:72px;width:56px;">
+                                @if ($item->product && ($item->product->image_path ?? $item->product->image) && file_exists(public_path('storage/' . ($item->product->image_path ?? $item->product->image))))
+                                    <img class="w-full h-full object-cover grayscale brightness-90"
+                                         src="{{ asset('storage/' . ($item->product->image_path ?? $item->product->image)) }}"
+                                         alt="{{ $item->product_name }}">
+                                @elseif ($item->product && filter_var($item->product->image_path ?? $item->product->image, FILTER_VALIDATE_URL))
+                                    <img class="w-full h-full object-cover grayscale brightness-90"
+                                         src="{{ $item->product->image_path ?? $item->product->image }}"
+                                         alt="{{ $item->product_name }}">
+                                @else
+                                    <img class="w-full h-full object-cover grayscale brightness-90"
+                                         src="https://lh3.googleusercontent.com/aida-public/AB6AXuDb1xpGK5YLtJgXI-Ej1XU8ac6A9zyZ3XMT2g1GnouDhIOXyC-Fh84tjYy6_XxxAxnRgIQNWAC7YknFDTODxK-LmO33YfLZkTikQ2NqiTIx13hRNaJ_l5JBC_6eXsTpsGE5SaZhf-jW8qhKaqWnrC6r0exbZgrfWGpxCAKsHrS3IGSDSs8d2qdXT1iynwNKSuA0ZasXNXXWld-R4vJZkRF5jPsQlHUonMDp1PeAJAQdY4q6g0xNazyE_dgGTy_s46dg1Fdd0H1og7w"
+                                         alt="{{ $item->product_name }}">
+                                @endif
+                            </div>
+                            <div class="flex-grow min-w-0">
+                                <h4 class="font-display text-sm uppercase italic leading-tight truncate">{{ $item->product_name }}</h4>
+                                <p class="label-tiny text-[9px] opacity-50 mt-1">{{ $item->grind_size }} | QTY: {{ $item->quantity }}</p>
+                                <span class="font-sans text-xs font-semibold mt-1 block">
+                                    Rp. {{ number_format($item->price * $item->quantity, 0, ',', '.') }}
+                                </span>
+                            </div>
+                        </div>
+                        @endforeach
+                    </div>
+
+                    {{-- Totals --}}
+                    <div class="border-t border-[#F9F9F9]/10 pt-6 space-y-3 font-sans text-sm">
+                        <div class="flex justify-between">
+                            <span class="opacity-50">Subtotal</span>
+                            <span class="font-semibold">Rp. {{ number_format($order->subtotal, 0, ',', '.') }}</span>
+                        </div>
+                        <div class="flex justify-between">
+                            <span class="opacity-50">Ongkos Kirim</span>
+                            <span class="font-semibold">
+                                {{ $order->shipping_cost == 0 ? 'GRATIS' : 'Rp. ' . number_format($order->shipping_cost, 0, ',', '.') }}
+                            </span>
+                        </div>
+                        <div class="flex justify-between pt-4 border-t border-[#F9F9F9]/10">
+                            <span class="label-tiny font-bold">Total Bayar</span>
+                            <div class="text-right">
+                                <div class="font-display text-2xl leading-none">{!! $order->formatted_total_paid !!}</div>
+                                @if ($order->payment_method === 'Bank Transfer')
+                                <p class="font-sans text-[9px] opacity-40 mt-1">Termasuk kode unik verifikasi</p>
+                                @endif
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                {{-- Shipping Info --}}
+                <div class="border border-[#F9F9F9]/10 bg-[#1a1a1a]/40 p-6 space-y-4">
+                    <h3 class="label-tiny opacity-60">Info Pengiriman</h3>
+                    <div class="font-sans text-sm space-y-2 text-[#F9F9F9]/70">
+                        <p class="font-semibold text-[#F9F9F9]">{{ $order->first_name }} {{ $order->last_name }}</p>
+                        <p>{{ $order->email }}</p>
+                        <p class="text-xs leading-relaxed mt-2">
+                            {{ $order->shipping_address }}<br>
+                            {{ $order->city }}{{ $order->postal_code ? ', ' . $order->postal_code : '' }}
+                        </p>
+                    </div>
+                </div>
+
+                {{-- CTA to Tracking Page --}}
+                <a href="{{ route('order.tracking', $order->transaction_id) }}"
+                   class="w-full flex items-center justify-center gap-2 border border-[#F9F9F9]/20 py-4 text-[#F9F9F9]/60 hover:text-[#F9F9F9] hover:border-[#F9F9F9]/40 transition-all label-tiny text-[10px]">
+                    <span class="material-symbols-outlined text-[16px]">track_changes</span>
+                    Lihat Status Pesanan
+                </a>
+            </div>
+        </div>
+    </div>
+</main>
+@endsection
+
+@section('scripts')
+<script>
+    // WhatsApp confirmation link builder
+    function buildWALink() {
+        const txId = '{{ $order->transaction_id }}';
+        const name = '{{ $order->first_name }} {{ $order->last_name }}';
+        const total = '{{ number_format($order->total_paid, 0, ",", ".") }}';
+        const method = '{{ $order->payment_method }}';
+        const phoneOwner = '6285855180131';
+
+        let message = '';
+        if (method === 'Bank Transfer') {
+            message =
+                `Halo Toko Kopi Sembilan! 👋\n\n` +
+                `Saya ingin mengkonfirmasi pembayaran pesanan:\n` +
+                `━━━━━━━━━━━━━━━━━━━\n` +
+                `🧾 No. Pesanan : *${txId}*\n` +
+                `👤 Nama        : ${name}\n` +
+                `💳 Metode      : Bank Transfer BCA\n` +
+                `💰 Nominal     : Rp. ${total}\n` +
+                `━━━━━━━━━━━━━━━━━━━\n\n` +
+                `[Bukti transfer terlampir]\n\n` +
+                `Mohon segera diverifikasi. Terima kasih! 🙏`;
+        } else {
+            message =
+                `Halo Toko Kopi Sembilan! 👋\n\n` +
+                `Saya ingin mengkonfirmasi pembayaran QRIS:\n` +
+                `━━━━━━━━━━━━━━━━━━━\n` +
+                `🧾 No. Pesanan : *${txId}*\n` +
+                `👤 Nama        : ${name}\n` +
+                `💳 Metode      : QRIS\n` +
+                `💰 Nominal     : Rp. ${total}\n` +
+                `━━━━━━━━━━━━━━━━━━━\n\n` +
+                `[Bukti pembayaran QRIS terlampir]\n\n` +
+                `Mohon segera diproses. Terima kasih! 🙏`;
+        }
+
+        const waBtn = document.getElementById('wa-confirm-btn');
+        if (waBtn) {
+            waBtn.href = `https://wa.me/${phoneOwner}?text=${encodeURIComponent(message)}`;
+        }
+    }
+
+    // Copy to clipboard function
+    function copyToClipboard(text, btnId) {
+        navigator.clipboard.writeText(text).then(() => {
+            const btn = document.getElementById(btnId);
+            if (!btn) return;
+
+            const originalHtml = btn.innerHTML;
+            btn.innerHTML = `<span class="material-symbols-outlined text-[16px] text-green-400">check</span>`;
+            btn.classList.add('border-green-500');
+
+            setTimeout(() => {
+                btn.innerHTML = originalHtml;
+                btn.classList.remove('border-green-500');
+            }, 2000);
+        }).catch(() => {
+            // Fallback for older browsers
+            const el = document.createElement('textarea');
+            el.value = text;
+            document.body.appendChild(el);
+            el.select();
+            document.execCommand('copy');
+            document.body.removeChild(el);
+        });
+    }
+
+    // Initialize on DOMContentLoaded
+    document.addEventListener('DOMContentLoaded', () => {
+        buildWALink();
+    });
+</script>
+@endsection

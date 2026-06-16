@@ -150,7 +150,18 @@
                             <h4 class="font-headline-md text-xl font-display text-on-background uppercase tracking-tight mt-1">{{ $product->name }}</h4>
                         </div>
                         <div class="flex justify-between items-end">
-                            <span class="font-label-caps text-on-background font-bold text-sm">RP. {{ number_format($product->price, 0, ',', '.') }}</span>
+                            <div class="flex flex-col gap-1">
+                                <span class="font-label-caps text-on-background font-bold text-sm">RP. {{ number_format($product->price, 0, ',', '.') }}</span>
+                                <div class="flex items-center gap-1.5">
+                                    <div class="flex text-yellow-400">
+                                        @php $rating = round($product->average_rating); @endphp
+                                        @for ($i = 1; $i <= 5; $i++)
+                                            <span class="material-symbols-outlined text-[11px] {{ $i <= $rating ? 'text-yellow-400' : 'text-[#F9F9F9]/20' }}" style="font-variation-settings: 'FILL' {{ $i <= $rating ? 1 : 0 }}, 'wght' 200, 'GRAD' 0, 'opsz' 24">star</span>
+                                        @endfor
+                                    </div>
+                                    <span class="text-[10px] text-neutral-400 font-sans">({{ $product->reviews_count }})</span>
+                                </div>
+                            </div>
                             @if ($product->status === 'SOLD OUT')
                                 <span class="font-label-caps text-red-500 text-xs font-bold">SOLD OUT</span>
                             @else

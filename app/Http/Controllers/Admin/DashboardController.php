@@ -13,12 +13,15 @@ class DashboardController extends Controller
      */
     public function index()
     {
-        $orders = Order::latest()->get();
+        // Urutkan pesanan berstatus 'Awaiting Payment' di paling atas (PRD V6)
+        $orders = Order::orderByRaw("CASE WHEN status = 'Awaiting Payment' THEN 0 ELSE 1 END")
+            ->orderBy('created_at', 'desc')
+            ->get();
 
-        // Hitung statistik secara dinamis dari database orders
+        // Hitung statistik secara dinamis dari database orders sesuai PRD V6
         $awaitingRoast = Order::whereIn('status', ['Paid', 'Packing'])->count();
         $shippedVolume = Order::where('status', 'Shipped')->count();
-        $totalRevenue = Order::sum('total_paid');
+        $totalRevenue = Order::where('status', 'Paid')->sum('total_paid');
         $avgFulfillment = '1.8 hrs'; // Dummy constant sesuai spesifikasi UI
 
         return view('admin.dashboard', compact(
@@ -37,15 +40,32 @@ class DashboardController extends Controller
     {
         $request->validate([
             'transaction_id' => ['required', 'string', 'exists:orders,transaction_id'],
-            'status' => ['required', 'string', 'in:Paid,Packing,Shipped'],
+            'status' => ['required', 'string', 'in:Awaiting Payment,Paid,Packing,Shipped,Delivered'],
+            'tracking_number' => ['nullable', 'string', 'max:100'],
         ]);
 
         $order = Order::where('transaction_id', $request->transaction_id)->firstOrFail();
-        $order->update([
-            'status' => $request->status
-        ]);
+        
+        $updateData = [
+            'status' => $request->status,
+        ];
+
+        if ($request->filled('tracking_number')) {
+            $updateData['tracking_number'] = $request->tracking_number;
+        }
+
+        $order->update($updateData);
 
         return redirect()->route('admin.dashboard')
             ->with('status_updated', "Status pesanan #{$order->transaction_id} berhasil diubah menjadi {$request->status}.");
+    }
+
+    /**
+     * Tampilkan halaman cetak resi / invoice untuk pesanan.
+     */
+    public function printReceipt($transaction_id)
+    {
+        $order = Order::with('items')->where('transaction_id', $transaction_id)->firstOrFail();
+        return view('admin.print_receipt', compact('order'));
     }
 }

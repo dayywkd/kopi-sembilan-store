@@ -223,9 +223,20 @@
                     </div>
                     <div class="space-y-4 flex-grow flex flex-col justify-between">
                         <div class="flex justify-between items-start gap-4">
-                            <h3 class="text-xl font-display text-[#F9F9F9] hover:text-[#c6c6c6] transition-colors">
-                                <a href="{{ route('product.show', $product->slug) }}">{{ $product->name }}</a>
-                            </h3>
+                            <div class="flex flex-col gap-1.5">
+                                <h3 class="text-xl font-display text-[#F9F9F9] hover:text-[#c6c6c6] transition-colors">
+                                    <a href="{{ route('product.show', $product->slug) }}">{{ $product->name }}</a>
+                                </h3>
+                                <div class="flex items-center gap-1.5">
+                                    <div class="flex text-yellow-400">
+                                        @php $rating = round($product->average_rating); @endphp
+                                        @for ($i = 1; $i <= 5; $i++)
+                                            <span class="material-symbols-outlined text-[11px] {{ $i <= $rating ? 'text-yellow-400' : 'text-[#F9F9F9]/20' }}" style="font-variation-settings: 'FILL' {{ $i <= $rating ? 1 : 0 }}, 'wght' 200, 'GRAD' 0, 'opsz' 24">star</span>
+                                        @endfor
+                                    </div>
+                                    <span class="text-[10px] text-neutral-400 font-sans">({{ $product->reviews_count }})</span>
+                                </div>
+                            </div>
                             <p class="label-tiny text-[#F9F9F9] font-bold text-lg whitespace-nowrap">Rp. {{ number_format($product->price, 0, ',', '.') }}</p>
                         </div>
                         <p class="text-sm text-neutral-300 font-sans leading-relaxed">{{ $product->sensory_notes }}</p>

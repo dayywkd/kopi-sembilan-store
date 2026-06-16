@@ -135,10 +135,17 @@
                     </ul>
                 </nav>
             </div>
-            <div class="p-8 border-t border-[#444444]">
+            <div class="p-8 border-t border-[#444444] flex flex-col gap-4">
                 <a href="{{ route('home') }}" class="flex items-center gap-4 text-[#F9F9F9]/60 hover:text-[#F9F9F9] transition-colors">
+                    <span class="material-symbols-outlined">home</span>
+                    <span class="label-tiny">View Store</span>
+                </a>
+                <form action="{{ route('logout') }}" method="POST" id="logout-form" class="hidden">
+                    @csrf
+                </form>
+                <a href="#" onclick="event.preventDefault(); document.getElementById('logout-form').submit();" class="flex items-center gap-4 text-[#F9F9F9]/60 hover:text-red-400 transition-colors">
                     <span class="material-symbols-outlined">logout</span>
-                    <span class="label-tiny">Exit System</span>
+                    <span class="label-tiny">Logout</span>
                 </a>
             </div>
         </aside>

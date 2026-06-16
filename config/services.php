@@ -35,4 +35,15 @@ return [
         ],
     ],
 
+    'rajaongkir' => [
+        'api_key' => env('RAJAONGKIR_API_KEY'),
+        'mock' => env('RAJAONGKIR_MOCK', false),
+    ],
+
+    'biteship' => [
+        'api_key' => env('BITESHIP_API_KEY'),
+        'base_url' => env('BITESHIP_BASE_URL', 'https://api.biteship.com/v1'),
+        'mock' => env('BITESHIP_MOCK', false),
+    ],
+
 ];
