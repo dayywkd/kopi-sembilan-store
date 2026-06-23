@@ -16,266 +16,291 @@
             letter-spacing: 0.25em;
         }
     }
-    .order-row {
-        transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-    }
-    .order-row:hover {
-        background-color: #F9F9F9;
-        color: #121212;
-    }
-    .rigid-border {
-        border: 1px solid rgba(249, 249, 249, 0.1);
-        transition: border-color 0.3s ease;
-    }
-    .rigid-border-t {
-        border-top: 1px solid rgba(249, 249, 249, 0.1);
-    }
-    .rigid-border-b {
-        border-bottom: 1px solid rgba(249, 249, 249, 0.1);
-    }
     .product-card {
-        transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+        transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+        border: 1px solid #e5e7eb;
     }
     .product-card:hover {
-        border-color: rgba(249, 249, 249, 0.4);
-        box-shadow: 0 20px 45px rgba(0, 0, 0, 0.5);
         transform: translateY(-4px);
+        box-shadow: 0 12px 30px rgba(0, 0, 0, 0.05);
     }
-    .no-scrollbar::-webkit-scrollbar {
-        display: none;
+    .btn-dark {
+        background-color: #121212;
+        color: #ffffff;
+        border: 1px solid #121212;
+        transition: all 0.3s ease;
     }
-    .no-scrollbar {
-        -ms-overflow-style: none;
-        scrollbar-width: none;
+    .btn-dark:hover {
+        background-color: transparent;
+        border-color: #121212;
+        color: #121212;
     }
-    select {
-        background-image: none !important;
-    }
-    @keyframes fadeInUp {
-        0% {
-            opacity: 0;
-            transform: translateY(24px);
-        }
-        100% {
-            opacity: 1;
-            transform: translateY(0);
-        }
-    }
-    .animate-fade-in-up {
-        opacity: 0;
-        animation: fadeInUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    .filter-active {
+        font-weight: 700;
+        border-bottom: 2px solid #121212;
+        padding-bottom: 4px;
+        color: #121212 !important;
     }
 </style>
 @endsection
 
 @section('content')
-<main class="pt-32 flex min-h-screen">
-    <!-- SideNavBar (Filter Shell) -->
-    <aside class="hidden lg:flex flex-col sticky top-32 h-[calc(100vh-128px)] px-margin-desktop gap-stack-md border-r border-[#F9F9F9]/10 w-80 overflow-y-auto no-scrollbar animate-fade-in-up" style="animation-delay: 100ms;">
-        <div class="mb-stack-lg">
-            <h3 class="font-label-caps text-label-caps tracking-widest text-on-background mb-unit text-xs font-bold">CATEGORIES</h3>
-            <p class="text-[10px] uppercase tracking-widest text-on-surface-variant mb-stack-md opacity-60">FILTER BY COLLECTION</p>
-            
-            <ul id="category-list" class="flex flex-col gap-unit font-label-caps text-label-caps tracking-widest text-xs">
-                <!-- ALL COFFEE -->
-                <li class="category-item cursor-pointer py-2 whitespace-nowrap {{ $defaultCategory === 'ALL' ? 'text-on-background font-bold underline underline-offset-8' : 'text-on-surface-variant hover:text-on-background hover:translate-x-1 transition-all' }}" data-category="ALL">
-                    ALL COFFEE
-                </li>
-                @foreach ($categories as $category)
-                    <!-- Dynamic Categories -->
-                    <li class="category-item cursor-pointer py-2 whitespace-nowrap {{ $defaultCategory === $category->slug ? 'text-on-background font-bold underline underline-offset-8' : 'text-on-surface-variant hover:text-on-background hover:translate-x-1 transition-all' }}" data-category="{{ $category->name }}">
-                        {{ $category->name }}
-                    </li>
-                @endforeach
-            </ul>
-        </div>
-        <div class="mb-stack-lg">
-            <h3 class="font-label-caps text-label-caps tracking-widest text-on-background mb-stack-md text-xs font-bold">ROAST LEVEL</h3>
-            <div class="flex flex-col gap-stack-sm text-xs text-on-surface-variant">
-                <div class="py-1 uppercase">Light</div>
-                <div class="py-1 uppercase">Medium-Light</div>
-                <div class="py-1 uppercase">Medium</div>
-                <div class="py-1 uppercase">Medium-Dark</div>
-            </div>
-        </div>
-    </aside>
-
-    <!-- Main Product Grid -->
-    <section class="flex-1 px-margin-mobile md:px-margin-desktop py-stack-md">
-        <!-- Breadcrumbs & Sort Header -->
-        <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-4 mb-stack-lg rigid-border-b pb-stack-md animate-fade-in-up" style="animation-delay: 50ms;">
-            <div class="flex items-baseline gap-2">
-                <h1 class="font-headline-lg text-headline-lg text-3xl font-display uppercase italic">OUR COFFEE</h1>
-                <span id="results-count" class="hidden md:inline font-label-caps text-label-caps text-on-surface-variant text-xs ml-stack-md opacity-60">/ {{ $products->count() }} RESULTS</span>
-            </div>
-            
-            <!-- Search Bar -->
-            <div class="relative w-full lg:max-w-xs">
-                <span class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
-                    <span class="material-symbols-outlined text-on-surface-variant/60 text-lg">search</span>
-                </span>
-                <input type="text" id="search-input" placeholder="SEARCH COFFEE..." class="w-full bg-transparent border border-[#F9F9F9]/10 pl-10 pr-4 py-2 font-label-caps text-xs tracking-wider text-on-background placeholder:text-on-surface-variant/40 focus:outline-none focus:border-on-background focus:ring-0 transition-colors" />
-            </div>
-            
-            <!-- Sort Dropdown -->
-            <div class="flex items-center gap-stack-md justify-between lg:justify-end">
-                <span class="font-label-caps text-label-caps text-on-surface-variant text-xs opacity-60">SORT BY:</span>
-                <select id="sort-select" class="bg-transparent border-none font-label-caps text-xs text-on-background focus:ring-0 cursor-pointer appearance-none">
-                    <option class="bg-background text-on-background" value="newest">NEWEST</option>
-                    <option class="bg-background text-on-background" value="price-low-high">PRICE LOW-HIGH</option>
-                    <option class="bg-background text-on-background" value="alphabetical">ALPHABETICAL</option>
-                </select>
-            </div>
+@php
+    $categoryImages = [
+        'single-origin' => 'images/products/geisha_obsidian.jpg',
+        'espresso-blends' => 'images/products/sembilan_zero.jpg',
+        'roast-profile' => 'images/products/nebula_eclipse.jpg',
+        'gear' => 'images/products/copper_dripper.jpg',
+        'subscriptions' => 'images/products/subscription.jpg',
+    ];
+@endphp
+<main class="pt-32 min-h-screen bg-white">
+    <div class="max-w-7xl mx-auto px-margin-mobile md:px-margin-desktop py-4">
+        
+        <!-- Centered Header -->
+        <div class="text-center mb-10">
+            <nav class="text-xs text-neutral-400 mb-3 uppercase tracking-widest">
+                <a href="{{ route('home') }}" class="hover:text-brand-dark transition-colors">Home</a>
+                <span class="mx-2">&middot;</span>
+                <span class="text-neutral-600 font-semibold">Speciality Coffee</span>
+            </nav>
+            <h1 class="font-display text-4xl md:text-5xl italic font-bold text-brand-dark">Speciality Coffee</h1>
         </div>
 
-        <!-- Grid -->
-        <div id="product-grid" class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-gutter">
-            @forelse ($products as $index => $product)
-                <!-- Product Card -->
-                <div class="rigid-border group flex flex-col bg-surface-container-lowest product-card p-6 animate-fade-in-up" 
-                     style="animation-delay: {{ 150 + ($index * 50) }}ms;"
-                     data-name="{{ $product->name }}" 
-                     data-category="{{ $product->category->name }} • {{ $product->roast_level }}" 
-                     data-price="{{ (int)$product->price }}" 
-                     data-date="{{ $index + 1 }}" 
-                     data-collection="{{ $product->category->name }}">
-                    
-                    <div class="relative aspect-[4/5] overflow-hidden bg-[#1a1a1a] mb-6">
-                        <img alt="{{ $product->name }}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 grayscale" src="https://lh3.googleusercontent.com/aida-public/AB6AXuD8VV0074LU9iw6f5wVnCpg4qzJqHNeseWpVVjqbmkDPmv0jvlt5cO4M0-OHxXvotDuZBsjPgu_veF_GNR39-ElX3KTw34lpdpCjU9ZeDhgpnuMuoQGWDmKnOympxZcy8aXJ-77djRB7CXEfNAsrxu82pLZ1dmNwbNIRmakbm1lvahQehEw3uKh3cdNBjy0ZEB2txi3h1-cXrhLcxjRJzxzGyed10xBH05kTNFqcDfdl1rqg3oabxY-dsSNAQyJgfkhWi4jbjyaVb8"/>
+        <!-- Circular Category Navigation -->
+        <div class="flex flex-wrap items-center justify-center gap-6 md:gap-10 my-10">
+            @foreach ($categories as $cat)
+                @php
+                    $imgPath = $categoryImages[$cat->slug] ?? 'images/products/aurora_medium.jpg';
+                    $isActive = (string)$defaultCategory === (string)$cat->id;
+                    // Jika kategori sudah aktif, mengklik ulang akan membatalkan filter (kembali ke ALL)
+                    $targetUrl = $isActive 
+                        ? route('shop', request()->except('category')) 
+                        : route('shop', array_merge(request()->except('category'), ['category' => $cat->id]));
+                @endphp
+                <a href="{{ $targetUrl }}" class="group flex flex-col items-center">
+                    <div class="w-20 h-20 md:w-24 md:h-24 rounded-full bg-neutral-50 border {{ $isActive ? 'border-2 border-[#121212] ring-4 ring-neutral-100' : 'border-neutral-200 hover:border-[#121212]/50' }} flex items-center justify-center overflow-hidden transition-all duration-300">
+                        <img src="{{ asset($imgPath) }}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" alt="{{ $cat->name }}">
                     </div>
-                    
-                    <div class="flex-grow flex flex-col justify-between gap-4">
-                        <div>
-                            <span class="font-label-caps text-on-surface-variant uppercase tracking-widest text-[10px] opacity-60">{{ $product->category->name }} • {{ $product->roast_level }}</span>
-                            <h4 class="font-headline-md text-xl font-display text-on-background uppercase tracking-tight mt-1">{{ $product->name }}</h4>
-                        </div>
-                        <div class="flex justify-between items-end">
-                            <div class="flex flex-col gap-1">
-                                <span class="font-label-caps text-on-background font-bold text-sm">RP. {{ number_format($product->price, 0, ',', '.') }}</span>
-                                <div class="flex items-center gap-1.5">
-                                    <div class="flex text-yellow-400">
+                    <span class="text-[10px] md:text-[11px] tracking-widest uppercase mt-3 transition-colors duration-300 {{ $isActive ? 'font-bold text-[#121212] border-b border-[#121212] pb-0.5' : 'font-medium text-neutral-400 group-hover:text-[#121212]' }}">
+                        {{ $cat->name }}
+                    </span>
+                </a>
+            @endforeach
+        </div>
+
+        <!-- Filter & Sort Bar -->
+        <div class="flex justify-between items-center py-6 border-b border-neutral-200 mb-10 mt-6">
+            <div class="text-sm font-bold text-brand-dark uppercase tracking-wider">
+                {{ $products->count() }} Products
+            </div>
+            <button onclick="openFilterDrawer()" class="flex items-center justify-between border border-neutral-300 px-6 py-3 hover:border-brand-dark transition-all duration-200 text-xs font-bold uppercase tracking-wider text-brand-dark w-44">
+                <div class="flex items-center gap-2">
+                    <span class="material-symbols-outlined text-sm">tune</span>
+                    <span>Filter & Sort</span>
+                </div>
+                <span class="material-symbols-outlined text-sm">add</span>
+            </button>
+        </div>
+
+        <!-- Hasil Pencarian -->
+        @if (request()->filled('search'))
+            <div class="bg-neutral-50 border border-neutral-200 px-6 py-4 flex justify-between items-center mb-8">
+                <div class="text-sm text-neutral-600">
+                    Hasil pencarian untuk: <span class="font-bold text-[#121212]">"{{ request('search') }}"</span>
+                </div>
+                <a href="{{ route('shop', request()->except('search')) }}" class="text-xs text-neutral-500 hover:text-[#121212] flex items-center gap-1 font-semibold uppercase tracking-widest">
+                    <span class="material-symbols-outlined text-sm">close</span> Bersihkan Pencarian
+                </a>
+            </div>
+        @endif
+
+        <!-- Grid Katalog -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
+            @forelse ($products as $product)
+                <!-- Product Card -->
+                <div class="product-card bg-white p-6 flex flex-col justify-between h-full">
+                    <div>
+                        <a href="{{ route('product.show', $product->slug) }}" class="block aspect-square overflow-hidden bg-brand-cream mb-6 border border-neutral-100">
+                            @if($product->image_path)
+                                <img alt="{{ $product->name }}" class="w-full h-full object-cover" src="{{ asset($product->image_path) }}"/>
+                            @else
+                                <div class="w-full h-full flex items-center justify-center text-neutral-300 text-xs tracking-widest font-mono">NO IMAGE</div>
+                            @endif
+                        </a>
+                        <div class="flex justify-between items-start gap-4">
+                            <div>
+                                <span class="text-[10px] text-neutral-400 uppercase tracking-widest font-mono">{{ $product->category->name }}</span>
+                                <h2 class="text-lg font-bold text-[#121212] hover:text-brand-accent transition-colors mt-1 leading-tight">
+                                    <a href="{{ route('product.show', $product->slug) }}">{{ $product->name }}</a>
+                                </h2>
+                                <!-- Rating -->
+                                <div class="flex items-center gap-1.5 mt-2">
+                                    <div class="flex text-brand-accent">
                                         @php $rating = round($product->average_rating); @endphp
                                         @for ($i = 1; $i <= 5; $i++)
-                                            <span class="material-symbols-outlined text-[11px] {{ $i <= $rating ? 'text-yellow-400' : 'text-[#F9F9F9]/20' }}" style="font-variation-settings: 'FILL' {{ $i <= $rating ? 1 : 0 }}, 'wght' 200, 'GRAD' 0, 'opsz' 24">star</span>
+                                            <span class="material-symbols-outlined text-[12px]" style="font-variation-settings: 'FILL' {{ $i <= $rating ? 1 : 0 }}, 'wght' 300, 'GRAD' 0, 'opsz' 24">star</span>
                                         @endfor
                                     </div>
-                                    <span class="text-[10px] text-neutral-400 font-sans">({{ $product->reviews_count }})</span>
+                                    <span class="text-[10px] text-neutral-400 font-mono">({{ $product->reviews_count }})</span>
                                 </div>
                             </div>
-                            @if ($product->status === 'SOLD OUT')
-                                <span class="font-label-caps text-red-500 text-xs font-bold">SOLD OUT</span>
-                            @else
-                                <a class="font-label-caps text-on-surface-variant underline underline-offset-4 hover:text-on-background text-xs transition-colors" href="{{ route('product.show', $product->slug) }}">VIEW</a>
-                            @endif
+                            <p class="text-sm font-bold text-[#121212] whitespace-nowrap">Rp {{ number_format($product->price, 0, ',', '.') }}</p>
                         </div>
+                        
+                        <div class="mt-4 border-t border-neutral-100 pt-4 space-y-2 text-xs text-neutral-500">
+                            @if($product->is_best_seller)
+                                <span class="inline-block bg-brand-cream text-brand-accent text-[10px] px-2 py-0.5 font-bold uppercase tracking-wider mb-2 border border-brand-accent/20">Best Seller</span>
+                            @endif
+                            <div class="flex justify-between">
+                                <span class="opacity-70">Altitude:</span>
+                                <span class="font-medium text-neutral-700">{{ $product->altitude }}</span>
+                            </div>
+                            <div class="flex justify-between">
+                                <span class="opacity-70">Roast Level:</span>
+                                <span class="font-medium text-neutral-700">{{ $product->roast_level }}</span>
+                            </div>
+                            <p class="mt-2 line-clamp-2 leading-relaxed italic">"{{ $product->sensory_notes }}"</p>
+                        </div>
+                    </div>
+                    
+                    <div class="pt-6">
+                        <button onclick="addToBag({{ $product->id }}, '{{ $product->name }}', {{ $product->price }}, '{{ (is_array($product->sizes) && count($product->sizes) > 0) ? $product->sizes[0]['size'] : '100gr' }}')" 
+                                class="w-full py-3.5 btn-dark label-tiny tracking-wider text-[11px] font-bold">
+                            ADD TO BAG
+                        </button>
                     </div>
                 </div>
             @empty
-                <!-- Handled dynamically by JS below -->
+                <div class="col-span-full text-center py-16 bg-neutral-50 border border-dashed border-neutral-200">
+                    <p class="label-tiny text-neutral-400">Tidak ada produk kopi yang sesuai dengan filter Anda.</p>
+                </div>
             @endforelse
         </div>
-    </section>
+    </div>
 </main>
+
+<!-- Drawer Overlay -->
+<div id="filter-drawer-overlay" class="fixed inset-0 bg-black/40 backdrop-blur-sm z-50 transition-opacity duration-300 hidden opacity-0" onclick="closeFilterDrawer()"></div>
+
+<!-- Drawer Content -->
+<div id="filter-drawer" class="fixed top-0 right-0 h-full w-full max-w-md bg-white z-50 shadow-2xl transform translate-x-full transition-transform duration-300 flex flex-col">
+    <!-- Header -->
+    <div class="p-6 border-b border-neutral-100 flex items-center justify-between">
+        <div>
+            <h2 class="font-display text-2xl font-bold text-brand-dark">Filter & Sort</h2>
+            <p class="text-xs text-neutral-400 mt-1 uppercase tracking-wider">{{ $products->count() }} Products</p>
+        </div>
+        <button onclick="closeFilterDrawer()" class="text-neutral-400 hover:text-brand-dark transition-colors flex items-center justify-center">
+            <span class="material-symbols-outlined text-2xl">close</span>
+        </button>
+    </div>
+
+    <!-- Form Content -->
+    <form id="filter-form" action="{{ route('shop') }}" method="GET" class="flex-grow overflow-y-auto p-6 space-y-6">
+        <!-- Sort By Dropdown -->
+        <div>
+            <label class="block text-xs uppercase tracking-wider font-bold text-neutral-500 mb-2">Sort By</label>
+            <select name="sort" class="w-full py-3 px-4 outline-none text-xs uppercase bg-white border border-neutral-300 text-brand-dark focus:border-brand-accent">
+                <option value="best_seller" {{ $defaultSort === 'best_seller' ? 'selected' : '' }}>Best Seller / Featured</option>
+                <option value="newest" {{ $defaultSort === 'newest' ? 'selected' : '' }}>Terbaru</option>
+                <option value="price_asc" {{ $defaultSort === 'price_asc' ? 'selected' : '' }}>Harga: Termurah</option>
+                <option value="price_desc" {{ $defaultSort === 'price_desc' ? 'selected' : '' }}>Harga: Termahal</option>
+            </select>
+        </div>
+
+        <!-- Kategori Section (Collapsible) -->
+        <div class="border-t border-neutral-100 pt-4">
+            <button type="button" onclick="toggleSection('category-filters')" class="w-full flex items-center justify-between text-xs uppercase tracking-wider font-bold text-brand-dark py-2">
+                <span>Kategori</span>
+                <span id="category-filters-chevron" class="material-symbols-outlined text-sm transition-transform duration-200">expand_more</span>
+            </button>
+            <div id="category-filters" class="mt-3 space-y-2.5 pl-1 transition-all duration-300">
+                <label class="flex items-center gap-3 cursor-pointer">
+                    <input type="radio" name="category" value="ALL" {{ $defaultCategory === 'ALL' ? 'checked' : '' }} class="text-brand-accent focus:ring-brand-accent border-neutral-300">
+                    <span class="text-xs font-semibold text-neutral-600 uppercase tracking-wider">Semua Kopi</span>
+                </label>
+                @foreach ($categories as $category)
+                    <label class="flex items-center gap-3 cursor-pointer">
+                        <input type="radio" name="category" value="{{ $category->id }}" {{ (string)$defaultCategory === (string)$category->id ? 'checked' : '' }} class="text-brand-accent focus:ring-brand-accent border-neutral-300">
+                        <span class="text-xs font-semibold text-neutral-600 uppercase tracking-wider">{{ $category->name }}</span>
+                    </label>
+                @endforeach
+            </div>
+        </div>
+
+        <!-- Ukuran / Berat Section (Collapsible) -->
+        <div class="border-t border-neutral-100 pt-4">
+            <button type="button" onclick="toggleSection('weight-filters')" class="w-full flex items-center justify-between text-xs uppercase tracking-wider font-bold text-brand-dark py-2">
+                <span>Ukuran / Berat</span>
+                <span id="weight-filters-chevron" class="material-symbols-outlined text-sm transition-transform duration-200">expand_more</span>
+            </button>
+            <div id="weight-filters" class="mt-3 space-y-2.5 pl-1 transition-all duration-300">
+                <label class="flex items-center gap-3 cursor-pointer">
+                    <input type="radio" name="weight" value="ALL" {{ $defaultWeight === 'ALL' ? 'checked' : '' }} class="text-brand-accent focus:ring-brand-accent border-neutral-300">
+                    <span class="text-xs font-semibold text-neutral-600 uppercase tracking-wider">Semua Ukuran</span>
+                </label>
+                @foreach (['100g', '200g', '250g', '500g', '1kg'] as $wOption)
+                    <label class="flex items-center gap-3 cursor-pointer">
+                        <input type="radio" name="weight" value="{{ $wOption }}" {{ $defaultWeight === $wOption ? 'checked' : '' }} class="text-brand-accent focus:ring-brand-accent border-neutral-300">
+                        <span class="text-xs font-semibold text-neutral-600 uppercase tracking-wider">{{ $wOption }}</span>
+                    </label>
+                @endforeach
+            </div>
+        </div>
+    </form>
+
+    <!-- Sticky Drawer Footer -->
+    <div class="p-6 border-t border-neutral-100 bg-white space-y-4">
+        <button type="submit" form="filter-form" class="w-full py-4 bg-brand-dark hover:bg-brand-accent text-white font-bold text-xs uppercase tracking-widest transition-all rounded-full">
+            Apply Filters
+        </button>
+        <div class="text-center">
+            <a href="{{ route('shop') }}" class="text-xs font-semibold text-neutral-500 hover:text-brand-dark transition-colors underline uppercase tracking-wider">
+                Remove all filters
+            </a>
+        </div>
+    </div>
+</div>
 @endsection
 
 @section('scripts')
 <script>
-    const searchInput = document.getElementById('search-input');
-    const sortSelect = document.getElementById('sort-select');
-    const productGrid = document.getElementById('product-grid');
-    const resultsCount = document.getElementById('results-count');
-    const categoryItems = document.querySelectorAll('.category-item');
-    
-    // Menyimpan data card original
-    const originalCards = Array.from(document.querySelectorAll('.product-card'));
-    
-    // Inisialisasi Kategori Aktif dari route default Laravel
-    @php
-        $activeCatName = 'ALL';
-        if ($defaultCategory !== 'ALL') {
-            $cat = $categories->where('slug', $defaultCategory)->first();
-            if ($cat) {
-                $activeCatName = $cat->name;
-            }
-        }
-    @endphp
-    let activeCategory = '{{ $activeCatName }}';
-    
-    // Tambah pesan "No results"
-    let noResultsMessage = document.getElementById('no-results-message');
-    if (!noResultsMessage) {
-        noResultsMessage = document.createElement('div');
-        noResultsMessage.id = 'no-results-message';
-        noResultsMessage.className = 'col-span-full py-16 text-center text-on-surface-variant font-label-caps text-xs tracking-widest hidden';
-        noResultsMessage.innerHTML = 'NO PRODUCTS FOUND';
-        productGrid.appendChild(noResultsMessage);
+    function openFilterDrawer() {
+        const overlay = document.getElementById('filter-drawer-overlay');
+        const drawer = document.getElementById('filter-drawer');
+        overlay.classList.remove('hidden');
+        setTimeout(() => {
+            overlay.classList.remove('opacity-0');
+            drawer.classList.remove('translate-x-full');
+        }, 10);
     }
-    
-    function filterAndSort() {
-        const query = searchInput.value.toLowerCase().trim();
-        const sortBy = sortSelect.value;
-        
-        let visibleCards = originalCards.filter(card => {
-            const name = card.getAttribute('data-name').toLowerCase();
-            const categoryText = card.getAttribute('data-category').toLowerCase();
-            const cardCollection = card.getAttribute('data-collection') || '';
-            
-            const matchesSearch = name.includes(query) || categoryText.includes(query);
-            const matchesCategory = activeCategory === 'ALL' || cardCollection === activeCategory;
-            const matches = matchesSearch && matchesCategory;
-            
-            if (matches) {
-                card.style.display = '';
-            } else {
-                card.style.display = 'none';
-            }
-            return matches;
-        });
-        
-        // Sortir
-        if (sortBy === 'newest') {
-            visibleCards.sort((a, b) => parseInt(a.getAttribute('data-date')) - parseInt(b.getAttribute('data-date')));
-        } else if (sortBy === 'price-low-high') {
-            visibleCards.sort((a, b) => parseInt(a.getAttribute('data-price')) - parseInt(b.getAttribute('data-price')));
-        } else if (sortBy === 'alphabetical') {
-            visibleCards.sort((a, b) => a.getAttribute('data-name').localeCompare(b.getAttribute('data-name')));
-        }
-        
-        // Render ulang ke grid
-        visibleCards.forEach(card => {
-            productGrid.appendChild(card);
-        });
-        
-        // Update hitung hasil
-        resultsCount.textContent = `/ ${visibleCards.length} RESULT${visibleCards.length !== 1 ? 'S' : ''}`;
-        
-        // Tampilkan/sembunyikan pesan kosong
-        if (visibleCards.length === 0) {
-            noResultsMessage.classList.remove('hidden');
+
+    function closeFilterDrawer() {
+        const overlay = document.getElementById('filter-drawer-overlay');
+        const drawer = document.getElementById('filter-drawer');
+        overlay.classList.add('opacity-0');
+        drawer.classList.add('translate-x-full');
+        setTimeout(() => {
+            overlay.classList.add('hidden');
+        }, 300);
+    }
+
+    function toggleSection(id) {
+        const section = document.getElementById(id);
+        const chevron = document.getElementById(id + '-chevron');
+        if (section.classList.contains('hidden')) {
+            section.classList.remove('hidden');
+            chevron.classList.remove('rotate-180');
         } else {
-            noResultsMessage.classList.add('hidden');
+            section.classList.add('hidden');
+            chevron.classList.add('rotate-180');
         }
     }
-    
-    if (searchInput && sortSelect && productGrid && resultsCount) {
-        searchInput.addEventListener('input', filterAndSort);
-        sortSelect.addEventListener('change', filterAndSort);
-        
-        // Click handler untuk Kategori Sidebar
-        categoryItems.forEach(item => {
-            item.addEventListener('click', () => {
-                categoryItems.forEach(el => {
-                    el.className = 'category-item cursor-pointer py-2 whitespace-nowrap text-on-surface-variant hover:text-on-background hover:translate-x-1 transition-all';
-                });
-                item.className = 'category-item cursor-pointer py-2 whitespace-nowrap text-on-background font-bold underline underline-offset-8';
-                
-                activeCategory = item.getAttribute('data-category');
-                filterAndSort();
-            });
-        });
-        
-        // Jalankan filter pertama kali
-        filterAndSort();
-    }
+
+    // Close drawer on ESC key
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape') closeFilterDrawer();
+    });
 </script>
 @endsection

@@ -24,12 +24,28 @@ class DashboardController extends Controller
         $totalRevenue = Order::where('status', 'Paid')->sum('total_paid');
         $avgFulfillment = '1.8 hrs'; // Dummy constant sesuai spesifikasi UI
 
+        // Muat produk untuk pengelolaan Best Seller
+        $products = \App\Models\Product::orderBy('name')->get();
+
+        // Muat kurir yang saat ini aktif
+        $activeCouriersString = \App\Models\Setting::getValue('active_couriers', 'jne,jnt');
+        $activeCouriers = explode(',', $activeCouriersString);
+
+        // Muat pelanggan (non-admin)
+        $customers = \App\Models\User::where(function($query) {
+            $query->where('role', '!=', 'admin')
+                  ->orWhereNull('role');
+        })->orderBy('created_at', 'desc')->get();
+
         return view('admin.dashboard', compact(
             'orders', 
             'awaitingRoast', 
             'shippedVolume', 
             'totalRevenue', 
-            'avgFulfillment'
+            'avgFulfillment',
+            'products',
+            'activeCouriers',
+            'customers'
         ));
     }
 
@@ -67,5 +83,41 @@ class DashboardController extends Controller
     {
         $order = Order::with('items')->where('transaction_id', $transaction_id)->firstOrFail();
         return view('admin.print_receipt', compact('order'));
+    }
+
+    /**
+     * Mengaktifkan/menonaktifkan status Best Seller dari produk.
+     */
+    public function toggleBestSeller($id)
+    {
+        $product = \App\Models\Product::findOrFail($id);
+        $product->is_best_seller = !$product->is_best_seller;
+        $product->save();
+
+        return response()->json([
+            'success' => true,
+            'is_best_seller' => $product->is_best_seller,
+            'message' => 'Status Best Seller untuk ' . $product->name . ' berhasil diperbarui.'
+        ]);
+    }
+
+    /**
+     * Memperbarui pengaturan kurir aktif Biteship.
+     */
+    public function updateCouriers(Request $request)
+    {
+        $request->validate([
+            'couriers' => ['required', 'array'],
+        ]);
+
+        $couriersString = implode(',', $request->couriers);
+
+        \App\Models\Setting::updateOrCreate(
+            ['key' => 'active_couriers'],
+            ['value' => $couriersString]
+        );
+
+        return redirect()->route('admin.dashboard')
+            ->with('status_updated', 'Pengaturan kurir aktif berhasil diperbarui.');
     }
 }

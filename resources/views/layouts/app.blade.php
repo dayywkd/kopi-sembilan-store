@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html class="dark" lang="en">
+<html class="light" lang="en">
 <head>
     <meta charset="utf-8"/>
     <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
@@ -19,15 +19,21 @@
             theme: {
                 extend: {
                     "colors": {
-                        "secondary-container": "#1a1a1a",
-                        "on-background": "#F9F9F9",
-                        "inverse-surface": "#F9F9F9",
-                        "surface-tint": "#c6c6c6",
-                        "background": "#121212",
-                        "surface": "#121212",
-                        "primary": "#F9F9F9",
-                        "on-primary": "#121212",
-                        "outline": "#444444"
+                        "secondary-container": "#F9F9F9",
+                        "on-background": "#121212",
+                        "inverse-surface": "#121212",
+                        "surface-tint": "#121212",
+                        "background": "#FFFFFF",
+                        "surface": "#FFFFFF",
+                        "primary": "#121212",
+                        "on-primary": "#FFFFFF",
+                        "outline": "#E5E7EB",
+                        "brand-dark": "#121212",
+                        "brand-accent": "#121212",
+                        "brand-cream": "#F9F9F9",
+                        "brand-light": "#FFFFFF",
+                        "brand-gray": "#F9F9F9",
+                        "brand-outline": "#E5E7EB"
                     },
                     "borderRadius": {
                         "DEFAULT": "0px",
@@ -71,11 +77,11 @@
             scroll-behavior: smooth;
         }
         body {
-            background-color: #121212;
-            color: #F9F9F9;
+            background-color: #FFFFFF;
+            color: #121212;
             -webkit-font-smoothing: antialiased;
             scrollbar-width: thin;
-            scrollbar-color: #444 #121212;
+            scrollbar-color: #E5E7EB #FFFFFF;
             font-family: 'Hanken Grotesk', sans-serif;
         }
         .scroll-container {
@@ -102,8 +108,8 @@
 <body class="overflow-x-hidden">
 
     <!-- Cart Notification / Toast -->
-    <div id="cart-toast" class="fixed bottom-8 right-8 bg-[#F9F9F9] text-[#121212] px-6 py-4 z-50 transform translate-y-20 opacity-0 transition-all duration-300 pointer-events-none flex items-center gap-4 shadow-2xl border border-white/10">
-        <span class="material-symbols-outlined text-green-600">check_circle</span>
+    <div id="cart-toast" class="fixed bottom-8 right-8 bg-[#121212] text-[#FFFFFF] px-6 py-4 z-50 transform translate-y-20 opacity-0 transition-all duration-300 pointer-events-none flex items-center gap-4 shadow-2xl border border-black/10">
+        <span class="material-symbols-outlined text-green-500">check_circle</span>
         <span class="label-tiny font-bold" id="toast-message">Item added to bag</span>
     </div>
 
@@ -136,21 +142,40 @@
             }
         }
 
+        function openSearchOverlay() {
+            const overlay = document.getElementById('search-overlay');
+            if (overlay) {
+                overlay.classList.remove('hidden');
+                setTimeout(() => {
+                    overlay.classList.remove('opacity-0');
+                    const input = document.getElementById('search-overlay-input');
+                    if (input) input.focus();
+                }, 50);
+                document.body.classList.add('overflow-hidden');
+            }
+        }
+
+        function closeSearchOverlay() {
+            const overlay = document.getElementById('search-overlay');
+            if (overlay) {
+                overlay.classList.add('opacity-0');
+                setTimeout(() => {
+                    overlay.classList.add('hidden');
+                }, 300);
+                document.body.classList.remove('overflow-hidden');
+            }
+        }
+
         // Dynamic Navbar styling on scroll
         window.addEventListener('scroll', () => {
             const nav = document.getElementById('main-nav');
-            const navContainer = document.getElementById('main-nav-container');
-            if (nav && navContainer) {
-                if (window.scrollY > 50) {
+            if (nav) {
+                if (window.scrollY > 10) {
                     nav.classList.remove('bg-transparent', 'border-transparent');
-                    nav.classList.add('bg-[#121212]/90', 'backdrop-blur-md', 'shadow-2xl', 'border-b', 'border-[#F9F9F9]/10');
-                    navContainer.classList.remove('py-8');
-                    navContainer.classList.add('py-4');
+                    nav.classList.add('bg-[#FFFFFF]/95', 'backdrop-blur-md', 'border-[#F2F2F2]', 'shadow-[0_1px_3px_rgba(0,0,0,0.02)]');
                 } else {
-                    nav.classList.remove('bg-[#121212]/90', 'backdrop-blur-md', 'shadow-2xl', 'border-b', 'border-[#F9F9F9]/10');
+                    nav.classList.remove('bg-[#FFFFFF]/95', 'backdrop-blur-md', 'border-[#F2F2F2]', 'shadow-[0_1px_3px_rgba(0,0,0,0.02)]');
                     nav.classList.add('bg-transparent', 'border-transparent');
-                    navContainer.classList.remove('py-4');
-                    navContainer.classList.add('py-8');
                 }
             }
         });

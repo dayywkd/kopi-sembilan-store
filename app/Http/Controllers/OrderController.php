@@ -141,12 +141,13 @@ class OrderController extends Controller
                             ];
                         }
 
+                        $activeCouriers = Setting::getValue('active_couriers', 'jne,jnt');
                         $response = Http::withHeaders([
                             'authorization' => $apiKey
                         ])->post($endpoint, [
                             'origin_postal_code' => $originPostalCode,
                             'destination_postal_code' => $destPostalCode,
-                            'couriers' => 'jne,jnt,sicepat,anteraja,tiki,pos,lion,idexpress,wahana,sap,ninja',
+                            'couriers' => $activeCouriers,
                             'items' => $items,
                         ]);
 
@@ -197,10 +198,7 @@ class OrderController extends Controller
                 $exists = Order::where('transaction_id', $transactionId)->exists();
             } while ($exists);
 
-            // Sisipkan info kurir langsung ke order_notes
-            $formattedCourier = strtoupper($request->courier) . ' - ' . ($verifiedService ?? $request->shipping_service);
-            $prefix = "[Kurir: {$formattedCourier}]";
-            $finalNotes = $request->order_notes ? $prefix . "\n" . $request->order_notes : $prefix;
+            $finalNotes = $request->order_notes;
 
             $order = Order::create([
                 'transaction_id' => $transactionId,
@@ -240,8 +238,15 @@ class OrderController extends Controller
 
             DB::commit();
 
+            // Kirim email konfirmasi ke pelanggan
+            try {
+                \Illuminate\Support\Facades\Mail::to($order->email)->send(new \App\Mail\OrderCreated($order));
+            } catch (\Exception $mailEx) {
+                Log::error('Mail Sending Failed: ' . $mailEx->getMessage());
+            }
+
             // Kembalikan respons redirect sukses ke halaman pembayaran
-            return redirect()->route('order.payment', $transactionId)
+            return redirect()->route('order.payment', $order->uuid)
                 ->with('checkout_success', 'Pesanan Anda berhasil dikonfirmasi.');
 
         } catch (\Exception $e) {
@@ -254,25 +259,19 @@ class OrderController extends Controller
         }
     }
 
-    /**
-     * Menampilkan halaman instruksi pembayaran.
-     */
-    public function payment($transaction_id)
+    public function payment($uuid)
     {
         $order = Order::with('items.product')
-            ->where('transaction_id', $transaction_id)
+            ->where('uuid', $uuid)
             ->firstOrFail();
 
         return view('payment', compact('order'));
     }
 
-    /**
-     * Menampilkan halaman pelacakan pesanan sukses.
-     */
-    public function tracking($transaction_id)
+    public function tracking($uuid)
     {
         $order = Order::with('items.product')
-            ->where('transaction_id', $transaction_id)
+            ->where('uuid', $uuid)
             ->firstOrFail();
 
         return view('shipping', compact('order'));
@@ -460,12 +459,13 @@ class OrderController extends Controller
             $destPostalCode = (int) $request->destination_postal_code;
             $originPostalCode = 62311; // Kode pos toko (Tuban)
 
+            $activeCouriers = Setting::getValue('active_couriers', 'jne,jnt');
             $response = Http::withHeaders([
                 'authorization' => $apiKey
             ])->post($endpoint, [
                 'origin_postal_code' => $originPostalCode,
                 'destination_postal_code' => $destPostalCode,
-                'couriers' => 'jne,jnt,sicepat,anteraja,tiki,pos,lion,idexpress,wahana,sap,ninja',
+                'couriers' => $activeCouriers,
                 'items' => $items,
             ]);
 
@@ -566,12 +566,9 @@ class OrderController extends Controller
         return [];
     }
 
-    /**
-     * Konfirmasi bahwa pesanan telah diterima oleh customer.
-     */
-    public function confirmDelivery($transaction_id)
+    public function confirmDelivery($uuid)
     {
-        $order = Order::where('transaction_id', $transaction_id)->firstOrFail();
+        $order = Order::where('uuid', $uuid)->firstOrFail();
         
         if ($order->status === 'Shipped') {
             $order->update([

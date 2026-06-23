@@ -15,12 +15,62 @@ class ProductController extends Controller
     public function index(Request $request)
     {
         $categories = Category::all();
-        $products = Product::with(['category', 'reviews'])->get();
         
-        // Membaca category filter default dari query parameter jika diakses dari luar (misal footer)
-        $defaultCategory = $request->query('category', 'ALL');
+        $query = Product::with(['category', 'reviews']);
 
-        return view('shop', compact('categories', 'products', 'defaultCategory'));
+        // Filter Category
+        if ($request->filled('category') && $request->category !== 'ALL') {
+            $query->where('category_id', $request->category);
+        }
+
+        // Filter Pencarian (Search)
+        if ($request->filled('search')) {
+            $searchTerm = $request->search;
+            $query->where(function($q) use ($searchTerm) {
+                $q->where('name', 'like', '%' . $searchTerm . '%')
+                  ->orWhere('sensory_notes', 'like', '%' . $searchTerm . '%');
+            });
+        }
+
+        // Sorting
+        $sort = $request->query('sort', 'best_seller');
+        if ($sort === 'price_asc') {
+            $query->orderBy('price', 'asc');
+        } elseif ($sort === 'price_desc') {
+            $query->orderBy('price', 'desc');
+        } elseif ($sort === 'newest') {
+            $query->orderBy('created_at', 'desc');
+        } elseif ($sort === 'best_seller') {
+            $query->orderByRaw('is_best_seller DESC')->orderBy('created_at', 'desc');
+        } else {
+            $query->orderByRaw('is_best_seller DESC')->orderBy('created_at', 'desc');
+        }
+
+        $products = $query->get();
+
+        // Filter Weight (PHP Collection filter)
+        if ($request->filled('weight') && $request->weight !== 'ALL') {
+            $weightFilter = $request->weight;
+            $products = $products->filter(function($product) use ($weightFilter) {
+                if (empty($product->sizes) || !is_array($product->sizes)) {
+                    return strtolower($weightFilter) === '250g' || strtolower($weightFilter) === '250gr';
+                }
+                foreach ($product->sizes as $sizeOption) {
+                    $sizeName = strtolower(str_replace(['gr', 'grams', ' '], ['g', 'g', ''], $sizeOption['size']));
+                    $filterName = strtolower(str_replace(['gr', 'grams', ' '], ['g', 'g', ''], $weightFilter));
+                    if ($sizeName === $filterName) {
+                        return true;
+                    }
+                }
+                return false;
+            });
+        }
+        
+        $defaultCategory = $request->query('category', 'ALL');
+        $defaultWeight = $request->query('weight', 'ALL');
+        $defaultSort = $sort;
+
+        return view('shop', compact('categories', 'products', 'defaultCategory', 'defaultWeight', 'defaultSort'));
     }
 
     /**

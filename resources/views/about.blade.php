@@ -5,8 +5,8 @@
 @section('styles')
 <style>
     .text-display-hero {
-        font-size: clamp(3rem, 10vw, 8rem);
-        line-height: 0.95;
+        font-size: clamp(2.5rem, 8vw, 6rem);
+        line-height: 1.0;
         font-weight: 700;
         letter-spacing: -0.04em;
     }
@@ -22,140 +22,166 @@
             letter-spacing: 0.25em;
         }
     }
-    .bg-zoom-image {
-        position: absolute;
-        inset: 0;
-        background-size: cover;
-        background-position: center;
-        filter: grayscale(100%) brightness(25%);
-        z-index: 0;
+    .btn-dark {
+        background-color: #121212;
+        color: #ffffff;
+        border: 1px solid #121212;
+        transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+        font-weight: 700;
     }
-    .content-layer {
-        position: relative;
-        z-index: 10;
-        width: 100%;
-    }
-    .architectural-grid {
-        display: grid;
-        grid-template-columns: repeat(12, 1fr);
-        gap: 24px;
-    }
-    .btn-dark-outline {
+    .btn-dark:hover {
         background-color: transparent;
-        color: #F9F9F9;
-        border: 1px solid #444444;
-        transition: all 0.3s ease;
-    }
-    .btn-dark-outline:hover {
-        background-color: #F9F9F9;
         color: #121212;
-        border-color: #F9F9F9;
         transform: translateY(-2px);
-    }
-    .snap-section {
-        min-height: 70vh;
-        width: 100%;
-        position: relative;
-        overflow: hidden;
-        display: flex;
-        align-items: center;
     }
 </style>
 @endsection
 
 @section('content')
-<!-- About Hero Section -->
-<section class="snap-section bg-[#121212] pt-32 pb-20">
-    <div class="bg-zoom-image" style="background-image: url('https://lh3.googleusercontent.com/aida/AP1WRLv7olZyxkGvr_JPGc8W0FNVQEVf-TEoc86wJFAOz88IOS2fU__1PHRqrm5U03va8UfQaRW2a77G73_GWauW9cARdwQsvqUdcAysQLxu9GIVL-lMB-TH3-iI960PwfAhQPxEs9LGK9FJYAX45HHONwilt5CQKJMntQe65Zzmu_TsLxyE-uoTO3XjRtHBnb_NxYPq0WVGThRxVYm9To_H2uE0624KoFz5QuSkZkdOOHQPjSEtJ3ywsivduXc'); opacity: 0.35;"></div>
-    <div class="absolute inset-0 bg-[radial-gradient(circle_at_center,transparent_30%,#121212_90%)] pointer-events-none z-[1]"></div>
-    <div class="content-layer px-margin-mobile md:px-margin-desktop text-center py-20">
-        <p class="label-tiny mb-8 opacity-60 reveal">Our Heritage</p>
-        <h1 class="text-display-hero font-display italic text-[#F9F9F9] reveal delay-100">Pure Precision.<br/>Our Journey.</h1>
-        <p class="label-tiny mt-10 opacity-60 reveal delay-200">Est. MMXXIV in Tuban — A Sanctuary for Specialty Coffee</p>
+<!-- Hero Section -->
+<section class="min-h-[60vh] flex items-center justify-center bg-neutral-50 pt-24 border-b border-neutral-200">
+    <div class="px-margin-mobile md:px-margin-desktop max-w-4xl mx-auto text-center py-16">
+        <p class="label-tiny mb-4 text-neutral-400">Our Heritage & Story</p>
+        <h1 class="text-display-hero font-display italic text-[#121212] mb-6">Murni & Presisi.<br/>Perjalanan Kami.</h1>
+        <p class="font-sans font-light text-sm md:text-base text-neutral-500 max-w-xl mx-auto leading-relaxed">
+            Est. MMXXIV in Tuban — Dedikasi penuh untuk membakar biji kopi pilihan dengan standar ketat SCA guna menyajikan profil rasa terbaik bagi para pecinta kopi di Indonesia.
+        </p>
     </div>
 </section>
 
-<!-- Section 1: The Genesis -->
-<section id="genesis" class="bg-[#121212] py-stack-xl overflow-hidden border-t border-[#F9F9F9]/5">
-    <div class="content-layer px-margin-mobile md:px-margin-desktop max-w-container-max mx-auto architectural-grid">
-        <div class="col-span-12 lg:col-span-5 flex flex-col justify-center reveal">
-            <p class="label-tiny mb-8 opacity-60">01 / The Origin</p>
-            <h2 class="text-5xl md:text-7xl font-display leading-tight mb-stack-md text-[#F9F9F9]">How It<br/>Started.</h2>
-            <p class="font-sans font-light text-lg md:text-xl leading-relaxed text-neutral-300 mt-6">
-                Toko Kopi Sembilan was founded in 2024 in the historical heart of Kutorejo, Tuban. Established by a collective of coffee purists, the roastery began as a humble, non-commercial showroom. It was created as a sanctuary where friends and local connoisseurs could gather, taste, and discuss the nuances of premium beans.
-            </p>
-        </div>
-        <div class="col-span-12 lg:col-span-6 lg:col-start-7 flex flex-col justify-center reveal delay-200">
-            <div class="mb-6 overflow-hidden aspect-[4/3] group border border-[#F9F9F9]/5">
-                <img alt="Coffee Roastery Heritage" class="w-full h-full object-cover grayscale contrast-125 transition-all duration-700 group-hover:grayscale-0 group-hover:scale-105" src="https://lh3.googleusercontent.com/aida-public/AB6AXuB6IIdl59MMJpuAvvPRdpWWiguAyNVLnXtzVptqMWVUfMWVpr8RGKDeNT01ETL3mmGIKOfoEB2-U6QfyTVRxNQODeB4ishs1U9ZzgYVCAqZbXqocFnIui3Hk5JVaSv9d2nCp5znNWfEFYxY2jDLp0P6_cCgq57_TQLYKMBd-l5-PDwamvtffIEqQ6qqjUJvW9svmuOZPSqZ2_LRHtQj7VVBdS2HksQQ7F4qqtxfEAKRVCRBzOKD_2SxFI_phTVVstSKexAySAErxWs"/>
+<!-- Our Story Section -->
+<section class="bg-white py-24 border-b border-neutral-100">
+    <div class="px-margin-mobile md:px-margin-desktop max-w-container-max mx-auto">
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
+            <div class="lg:col-span-5 space-y-6">
+                <p class="label-tiny text-neutral-400">01 / The Origin</p>
+                <h2 class="text-3xl md:text-4xl font-display font-bold text-[#121212] italic leading-tight">Bagaimana Semuanya Dimulai</h2>
+                <p class="text-sm text-neutral-500 leading-relaxed font-light">
+                    Toko Kopi Sembilan didirikan pada tahun 2024 di kawasan bersejarah Kutorejo, Tuban. Berawal dari komunitas kecil penyuka kopi spesialis, roastery kami berfokus untuk mengeksplorasi cita rasa asli dari biji kopi micro-lot Indonesia dan dunia. Kami percaya bahwa setiap biji kopi memiliki cerita unik yang dapat diungkapkan melalui sangraian yang presisi.
+                </p>
             </div>
-        </div>
-    </div>
-</section>
-
-<!-- Section 2: The Science -->
-<section id="science" class="bg-[#181818] py-stack-xl border-y border-[#F9F9F9]/5 text-[#F9F9F9]">
-    <div class="content-layer px-margin-mobile md:px-margin-desktop max-w-container-max mx-auto architectural-grid">
-        <div class="col-span-12 lg:col-span-6 flex flex-col justify-center reveal order-2 lg:order-1">
-            <div class="mb-6 overflow-hidden aspect-[4/3] group border border-[#F9F9F9]/5">
-                <img alt="Precision Roasting Equipment" class="w-full h-full object-cover grayscale contrast-125 transition-all duration-700 group-hover:grayscale-0 group-hover:scale-105" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBj6l-rRFFHMzvjVGWw_ggnajCN9iZfOSOH4bMhNK0PnTYkvujgACMXEHHwMSkbJOuUfkrQOwfHPmyiRf3-atkn0Y--pGjATz4V6-nVDR-NPFXXSeoolAsMVSFmAgmWeby5641gMgZz25zpA2VFFZZevqLirOs_fZG6-3NI0GKXSC-04MQxeBr5nHgL1OOqJhmkLGMnzzVUJiUVqkYCYdVK9_6D0y7TJYCknyE6ECS4vdWOt12U-OjXD4tHgv6uC-fkN6ktfcYdqDg"/>
+            <div class="lg:col-span-7 aspect-[16/10] overflow-hidden bg-neutral-100 border border-neutral-200">
+                <img alt="Heritage image" class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuB6IIdl59MMJpuAvvPRdpWWiguAyNVLnXtzVptqMWVUfMWVpr8RGKDeNT01ETL3mmGIKOfoEB2-U6QfyTVRxNQODeB4ishs1U9ZzgYVCAqZbXqocFnIui3Hk5JVaSv9d2nCp5znNWfEFYxY2jDLp0P6_cCgq57_TQLYKMBd-l5-PDwamvtffIEqQ6qqjUJvW9svmuOZPSqZ2_LRHtQj7VVBdS2HksQQ7F4qqtxfEAKRVCRBzOKD_2SxFI_phTVVstSKexAySAErxWs"/>
             </div>
-        </div>
-        <div class="col-span-12 lg:col-span-5 lg:col-start-8 flex flex-col justify-center reveal delay-200 order-1 lg:order-2 mb-12 lg:mb-0">
-            <p class="label-tiny mb-8 opacity-60">02 / Technical Superiority</p>
-            <h2 class="text-5xl md:text-7xl font-display leading-tight mb-stack-md text-[#F9F9F9]">SCA Certified<br/>Standards.</h2>
-            <p class="font-sans font-light text-lg md:text-xl leading-relaxed text-neutral-300 mt-6">
-                In 2025, we elevated our commitment by certifying our profiles with Specialty Coffee Association (SCA) standards. We established the Roastery Lab, implementing strict thermodynamic monitoring and cupping protocols. Every single batch is tracked scientificially to guarantee consistent extraction and pure flavor repeatability.
-            </p>
         </div>
     </div>
 </section>
 
-<!-- Section 3: Core Pillars -->
-<section id="pillars" class="bg-[#121212] py-stack-xl">
-    <div class="content-layer px-margin-mobile md:px-margin-desktop max-w-container-max mx-auto">
-        <div class="text-center mb-16 reveal">
-            <p class="label-tiny mb-4 opacity-60">Our Values</p>
-            <h2 class="text-5xl md:text-7xl font-display text-[#F9F9F9]">The Pillars of Sembilan.</h2>
+<!-- The Values Section -->
+<section class="bg-neutral-50 py-24 border-b border-neutral-100">
+    <div class="px-margin-mobile md:px-margin-desktop max-w-container-max mx-auto">
+        <div class="text-center max-w-2xl mx-auto mb-16 space-y-4">
+            <p class="label-tiny text-neutral-400">02 / Core Pillars</p>
+            <h2 class="text-3xl md:text-4xl font-display font-bold text-[#121212] italic">Pilar Toko Kopi Sembilan</h2>
         </div>
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-gutter items-stretch">
-            <div class="border border-[#F9F9F9]/5 p-8 bg-[#1a1a1a]/40 flex flex-col justify-between reveal delay-100">
-                <div>
-                    <h3 class="text-2xl font-display text-[#F9F9F9] mb-6">Meticulous Sourcing</h3>
-                    <p class="font-sans font-light text-neutral-300 leading-relaxed text-sm">
-                        We partner directly with farmers to source select micro-lots. Each bean is handpicked and graded to meet our strict specialty requirements.
-                    </p>
+        
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+            <div class="bg-white p-8 border border-neutral-200 space-y-4">
+                <h3 class="text-lg font-bold text-[#121212]">Sourcing Terpilih</h3>
+                <p class="text-xs text-neutral-500 leading-relaxed font-light">
+                    Kami bermitra secara bertanggung jawab dengan petani lokal untuk mendapatkan ceri kopi pilihan yang matang sempurna. Setiap lot biji kopi melewati proses kurasi ketat.
+                </p>
+            </div>
+            <div class="bg-white p-8 border border-neutral-200 space-y-4">
+                <h3 class="text-lg font-bold text-[#121212]">Standar SCA Certified</h3>
+                <p class="text-xs text-neutral-500 leading-relaxed font-light">
+                    Setiap profil sangrai dianalisis dan dievaluasi sesuai standar Specialty Coffee Association (SCA) untuk menjamin kualitas rasa serta konsistensi tingkat kematangan biji kopi.
+                </p>
+            </div>
+            <div class="bg-white p-8 border border-neutral-200 space-y-4">
+                <h3 class="text-lg font-bold text-[#121212]">Kemurnian Rasa</h3>
+                <p class="text-xs text-neutral-500 leading-relaxed font-light">
+                    Tujuan utama kami adalah menyajikan karakter rasa asli (*terroir*) dari setiap daerah asal kopi tanpa manipulasi tambahan, menghasilkan seduhan yang bersih dan kaya.
+                </p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Location & Contact Info Section -->
+<section class="bg-white py-24">
+    <div class="px-margin-mobile md:px-margin-desktop max-w-container-max mx-auto">
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 items-start">
+            <div class="lg:col-span-5 space-y-6">
+                <p class="label-tiny text-neutral-400">03 / Information</p>
+                <h2 class="text-3xl md:text-4xl font-display font-bold text-[#121212] italic leading-tight">Kontak & Lokasi Kami</h2>
+                <p class="text-sm text-neutral-500 leading-relaxed font-light">
+                    Hubungi tim roastery kami untuk pertanyaan seputar ketersediaan produk, kritik & saran, atau sekadar berdiskusi mengenai seduhan kopi favorit Anda.
+                </p>
+                
+                <div class="space-y-4 pt-6 border-t border-neutral-200 text-xs">
+                    <div class="flex justify-between items-baseline py-1">
+                        <span class="label-tiny text-neutral-400">Telepon</span>
+                        <a href="tel:+6285336688839" class="font-medium text-neutral-700 hover:text-black transition-colors">+62 853-3668-8839</a>
+                    </div>
+                    <div class="flex justify-between items-baseline py-1">
+                        <span class="label-tiny text-neutral-400">Email</span>
+                        <a href="mailto:owner@kopisembilan.com" class="font-medium text-neutral-700 hover:text-black transition-colors">owner@kopisembilan.com</a>
+                    </div>
+                    <div class="flex justify-between items-baseline py-1">
+                        <span class="label-tiny text-neutral-400">Instagram</span>
+                        <a href="https://www.instagram.com/tokokopisembilan" target="_blank" class="font-medium text-neutral-700 hover:text-black transition-colors">@tokokopisembilan</a>
+                    </div>
+                    <div class="flex justify-between items-baseline py-1">
+                        <span class="label-tiny text-neutral-400">Alamat</span>
+                        <span class="text-neutral-700 text-right font-medium leading-relaxed">
+                            Jl. Pemuda Kutorejo Gg. II No.230,<br>Kutorejo, Kec. Tuban, Kabupaten Tuban,<br>Jawa Timur 62311
+                        </span>
+                    </div>
                 </div>
             </div>
-            <div class="border border-[#F9F9F9]/5 p-8 bg-[#1a1a1a]/40 flex flex-col justify-between reveal delay-200">
-                <div>
-                    <h3 class="text-2xl font-display text-[#F9F9F9] mb-6">Thermodynamic Control</h3>
-                    <p class="font-sans font-light text-neutral-300 leading-relaxed text-sm">
-                        Using advanced roasting analytics, we control heat and air transfer precisely to roast every origin according to its optimum sensory profile.
-                    </p>
-                </div>
+            
+            <div class="lg:col-span-7 h-[350px] border border-neutral-200 overflow-hidden shadow-sm">
+                <iframe 
+                    src="https://maps.google.com/maps?q=Toko%20Kopi%20Sembilan%20Kutorejo%20Tuban&t=&z=15&ie=UTF8&iwloc=&output=embed" 
+                    class="w-full h-full border-0" 
+                    allowfullscreen="" 
+                    loading="lazy" 
+                    referrerpolicy="no-referrer-when-downgrade">
+                </iframe>
             </div>
-            <div class="border border-[#F9F9F9]/5 p-8 bg-[#1a1a1a]/40 flex flex-col justify-between reveal delay-300">
-                <div>
-                    <h3 class="text-2xl font-display text-[#F9F9F9] mb-6">Sensory Expression</h3>
-                    <p class="font-sans font-light text-neutral-300 leading-relaxed text-sm">
-                        Our ultimate goal is purity. We profile coffee to highlight the unadulterated terroir of its origin, delivering a clean and expressive extraction.
-                    </p>
-                </div>
+        </div>
+    </div>
+</section>
+
+<!-- FAQ Section -->
+<section id="faq" class="bg-white py-24 border-t border-neutral-100 scroll-mt-24">
+    <div class="px-margin-mobile md:px-margin-desktop max-w-4xl mx-auto">
+        <div class="text-center mb-16 space-y-4">
+            <p class="label-tiny text-neutral-400">04 / FAQ</p>
+            <h2 class="text-3xl md:text-4xl font-display font-bold text-[#121212] italic">Pertanyaan Umum (FAQ)</h2>
+        </div>
+        
+        <div class="space-y-6">
+            <div class="border-b border-neutral-200 pb-6">
+                <h3 class="text-base font-bold text-[#121212] mb-3">Bagaimana cara menyimpan biji kopi agar tetap segar?</h3>
+                <p class="text-xs text-neutral-500 leading-relaxed font-light">Simpan biji kopi di dalam wadah kedap udara yang buram di tempat yang sejuk dan gelap. Hindari menyimpan kopi di dalam kulkas atau freezer karena dapat merusak rasa dan aroma kopi akibat kondensasi.</p>
+            </div>
+            <div class="border-b border-neutral-200 pb-6">
+                <h3 class="text-base font-bold text-[#121212] mb-3">Apakah kopi yang dijual sudah dalam bentuk bubuk?</h3>
+                <p class="text-xs text-neutral-500 leading-relaxed font-light">Secara default kami menyajikan dalam bentuk biji utuh (whole beans) agar kesegarannya terjaga maksimal. Namun, Anda dapat memilih ukuran gilingan (kasar, sedang, atau halus) di halaman detail produk sebelum menambahkannya ke keranjang.</p>
+            </div>
+            <div class="border-b border-neutral-200 pb-6">
+                <h3 class="text-base font-bold text-[#121212] mb-3">Berapa lama proses pengiriman pesanan?</h3>
+                <p class="text-xs text-neutral-500 leading-relaxed font-light">Setiap pesanan yang masuk akan diproses dan dikemas dalam waktu 1-2 hari kerja. Untuk pengiriman, waktu sampainya tergantung pada kurir ekspedisi pilihan Anda (seperti JNE, J&T, atau SiCepat) dan lokasi pengiriman Anda.</p>
+            </div>
+            <div class="border-b border-neutral-200 pb-6">
+                <h3 class="text-base font-bold text-[#121212] mb-3">Apakah Toko Kopi Sembilan menerima kemitraan B2B?</h3>
+                <p class="text-xs text-neutral-500 leading-relaxed font-light">Tentu! Kami menyediakan program wholesale (grosir) untuk coffee shop, restoran, kantor, maupun hotel dengan harga khusus B2B. Silakan isi formulir pengajuan kerja sama di menu utama **Wholesale**.</p>
             </div>
         </div>
     </div>
 </section>
 
 <!-- Call to Action -->
-<section class="bg-[#181818] py-stack-xl border-t border-[#F9F9F9]/5 text-center">
-    <div class="content-layer px-margin-mobile md:px-margin-desktop max-w-2xl mx-auto reveal">
-        <h2 class="text-4xl md:text-6xl font-display mb-8 text-[#F9F9F9] italic">Taste the Precision.</h2>
-        <p class="font-sans font-light text-neutral-400 mb-12">
-            Explore our curated inventory of specialty beans, meticulously roasted for coffee enthusiasts.
+<section class="bg-neutral-50 py-20 text-center border-t border-neutral-200">
+    <div class="max-w-2xl mx-auto px-margin-mobile space-y-6">
+        <h2 class="text-3xl md:text-4xl font-display font-bold text-[#121212] italic">Nikmati Kopi Terbaik Hari Ini</h2>
+        <p class="text-xs text-neutral-500 leading-relaxed font-light">
+            Temukan koleksi biji kopi single origin dan blend unggulan kami yang dipanggang dengan penuh kehati-hatian.
         </p>
-        <a href="{{ route('shop') }}" class="inline-block label-tiny btn-dark-outline px-12 py-6 font-bold tracking-wider">
-            EXPLORE THE COLLECTION
+        <a href="{{ route('shop') }}" class="inline-block btn-dark px-12 py-5 label-tiny tracking-wider">
+            MULAI BELANJA
         </a>
     </div>
 </section>

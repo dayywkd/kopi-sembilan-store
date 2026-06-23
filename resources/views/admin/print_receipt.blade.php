@@ -1,3 +1,14 @@
+@php
+    $rawNotes = $order->order_notes;
+    $courierInfo = null;
+    $cleanNotes = $rawNotes;
+
+    // Jika ada pola [Kurir: XYZ] di notes (untuk pesanan lama)
+    if (preg_match('/^\[Kurir:\s*([^\]]+)\]\s*\r?\n?(.*)$/s', $rawNotes, $matches)) {
+        $courierInfo = $matches[1];
+        $cleanNotes = trim($matches[2]);
+    }
+@endphp
 <!DOCTYPE html>
 <html lang="id">
 <head>
@@ -195,13 +206,18 @@
         <div class="meta-col">
             <strong>PESANAN UNTUK:</strong><br>
             {{ $order->first_name }} {{ $order->last_name }}<br>
+            {{ $order->shipping_address }}<br>
+            {{ $order->city }}{{ $order->postal_code ? ', ' . $order->postal_code : '' }}<br>
             {{ $order->email }}<br>
             @if($order->phone) Telp: {{ $order->phone }} @endif
         </div>
         <div class="meta-col">
             <strong>NOMOR TRANSAKSI:</strong> #{{ $order->transaction_id }}<br>
             <strong>TANGGAL:</strong> {{ $order->created_at->timezone('Asia/Jakarta')->format('d M Y H:i') }} WIB<br>
-            <strong>METODE BAYAR:</strong> {{ $order->payment_method }}
+            <strong>METODE BAYAR:</strong> {{ $order->payment_method }}<br>
+            @if($courierInfo)
+                <strong>LAYANAN KURIR:</strong> {{ $courierInfo }}
+            @endif
         </div>
     </div>
 
@@ -218,7 +234,7 @@
         <tbody>
             @foreach($order->items as $item)
                 <tr>
-                    <td>{{ $item->product_name }}</td>
+                    <td>{{ $item->product_name }} ({{ $item->grind_size }})</td>
                     <td class="text-right">Rp. {{ number_format($item->price, 0, ',', '.') }}</td>
                     <td class="text-right">{{ $item->quantity }}</td>
                     <td class="text-right">Rp. {{ number_format($item->price * $item->quantity, 0, ',', '.') }}</td>
@@ -244,9 +260,9 @@
         </table>
     </div>
 
-    @if($order->order_notes)
+    @if($cleanNotes)
         <div class="section-title">Catatan Pembeli</div>
-        <p style="font-style: italic; margin: 5px 0 20px 0;">"{{ $order->order_notes }}"</p>
+        <p style="font-style: italic; margin: 5px 0 20px 0;">"{{ $cleanNotes }}"</p>
     @endif
 
     <div class="footer">
@@ -285,7 +301,7 @@
         </div>
 
         <div class="shipping-meta">
-            <div><strong>Kurir:</strong> JNE/Biteship (Fulfillment Manual)</div>
+            <div><strong>Kurir:</strong> {{ $courierInfo ?? 'JNE/Biteship (Fulfillment Manual)' }}</div>
             @if($order->tracking_number)
                 <div><strong>No. Resi:</strong> {{ $order->tracking_number }}</div>
             @else
@@ -293,9 +309,9 @@
             @endif
         </div>
         
-        @if($order->order_notes)
+        @if($cleanNotes)
             <div style="margin-top: 10px; font-size: 11px; border: 1px dashed #000; padding: 6px;">
-                <strong>Catatan Pengiriman:</strong> {{ $order->order_notes }}
+                <strong>Catatan Pengiriman:</strong> {{ $cleanNotes }}
             </div>
         @endif
     </div>

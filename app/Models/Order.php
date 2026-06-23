@@ -11,6 +11,7 @@ class Order extends Model
     use HasFactory;
 
     protected $fillable = [
+        'uuid',
         'transaction_id',
         'first_name',
         'last_name',
@@ -29,6 +30,17 @@ class Order extends Model
         'biteship_area_name',
         'tracking_number'
     ];
+
+    protected static function boot()
+    {
+        parent::boot();
+
+        static::creating(function ($model) {
+            if (empty($model->uuid)) {
+                $model->uuid = (string) \Illuminate\Support\Str::uuid();
+            }
+        });
+    }
 
     /**
      * Relasi ke model OrderItem (Satu pesanan memiliki banyak item produk terlampir)
@@ -52,9 +64,9 @@ class Order extends Model
         $uniqueStr = str_pad($unique, 3, '0', STR_PAD_LEFT);
         
         if ($base >= 1000) {
-            return 'Rp. ' . $baseStr . '.' . '<span class="font-bold text-[#F9F9F9] bg-white/10 px-1.5 py-0.5 rounded">' . $uniqueStr . '</span>';
+            return 'Rp. ' . $baseStr . '.' . '<span class="font-bold text-[#121212]">' . $uniqueStr . '</span>';
         } else {
-            return 'Rp. <span class="font-bold text-[#F9F9F9] bg-white/10 px-1.5 py-0.5 rounded">' . $uniqueStr . '</span>';
+            return 'Rp. <span class="font-bold text-[#121212]">' . $uniqueStr . '</span>';
         }
     }
 }

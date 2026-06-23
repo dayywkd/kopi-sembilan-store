@@ -22,7 +22,8 @@ class Product extends Model
         'roast_level',
         'altitude',
         'sensory_notes',
-        'status'
+        'status',
+        'is_best_seller'
     ];
 
     protected $casts = [

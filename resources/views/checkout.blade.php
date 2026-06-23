@@ -18,19 +18,19 @@
     }
     input[type="text"], input[type="email"], select, textarea {
         background: transparent !important;
-        border: 1px solid #444444 !important;
-        color: #F9F9F9 !important;
+        border: 1px solid #d1d5db !important;
+        color: #121212 !important;
         border-radius: 0px !important;
     }
     input[type="text"]:focus, input[type="email"]:focus, select:focus, textarea:focus {
         outline: none !important;
         box-shadow: none !important;
-        border-color: #F9F9F9 !important;
+        border-color: #121212 !important;
     }
     /* Style for dropdown options to make sure text is readable in select */
     select option {
-        background-color: #121212 !important;
-        color: #F9F9F9 !important;
+        background-color: #ffffff !important;
+        color: #121212 !important;
     }
 </style>
 @endsection
@@ -40,9 +40,9 @@
     <div class="grid grid-cols-12 gap-gutter">
         <!-- Left Side: Shipping & Payment -->
         <div class="col-span-12 lg:col-span-8">
-            <div class="mb-stack-lg border-b border-[#F9F9F9]/15 pb-6">
-                <h1 class="font-display text-5xl md:text-7xl uppercase italic mb-2">Checkout</h1>
-                <p class="label-tiny opacity-60">Complete your shipping and payment architecture</p>
+            <div class="mb-stack-lg border-b border-[#E5E7EB] pb-6">
+                <h1 class="font-display text-5xl md:text-7xl uppercase italic mb-2 text-[#121212]">Checkout</h1>
+                <p class="label-tiny text-neutral-500 font-semibold">Complete your shipping and payment architecture</p>
             </div>
             
             <!-- Tampilkan error umum jika ada -->
@@ -61,8 +61,8 @@
 
                 <!-- Section 1: Shipping Details -->
                 <section class="space-y-6">
-                    <div class="border-b border-[#F9F9F9]/10 pb-2 flex items-center justify-between">
-                        <h2 class="label-tiny opacity-60">01 / Shipping Details</h2>
+                    <div class="border-b border-[#E5E7EB] pb-2 flex items-center justify-between text-[#121212]">
+                        <h2 class="label-tiny text-neutral-500 font-semibold">01 / Shipping Details</h2>
                     </div>
                     
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -77,12 +77,12 @@
                             <input type="hidden" name="email" id="email" value="{{ auth()->user()->email }}">
                         @else
                             <!-- Guest Choice Banner -->
-                            <div class="col-span-full bg-[#1a1a1a]/60 border border-[#F9F9F9]/10 p-6 mb-2 flex flex-col md:flex-row md:items-center justify-between gap-4 font-sans">
+                            <div class="col-span-full bg-brand-cream border border-neutral-200 p-6 mb-2 flex flex-col md:flex-row md:items-center justify-between gap-4 font-sans text-[#121212]">
                                 <div>
-                                    <h4 class="font-display text-sm uppercase italic">Checkout as Guest / Tamu</h4>
-                                    <p class="text-xs opacity-60 mt-1">Silakan isi formulir di bawah untuk memesan langsung, atau masuk log untuk kemudahan otomatis.</p>
+                                    <h4 class="font-display text-sm uppercase italic font-bold">Checkout as Guest / Tamu</h4>
+                                    <p class="text-xs text-neutral-500 mt-1">Silakan isi formulir di bawah untuk memesan langsung, atau masuk log untuk kemudahan otomatis.</p>
                                 </div>
-                                <a href="{{ route('login') }}?redirect={{ urlencode(route('checkout')) }}" class="px-5 py-2.5 bg-[#F9F9F9] text-[#121212] font-semibold text-xs uppercase tracking-wider hover:bg-transparent hover:text-[#F9F9F9] border border-transparent hover:border-[#F9F9F9]/25 transition-all text-center duration-300">
+                                <a href="{{ route('login') }}?redirect={{ urlencode(route('checkout')) }}" class="px-5 py-2.5 bg-[#121212] text-white font-semibold text-xs uppercase tracking-wider hover:bg-brand-accent hover:border-brand-accent hover:text-white border border-transparent transition-all text-center duration-300">
                                     Masuk Log / Login
                                 </a>
                             </div>
@@ -115,7 +115,7 @@
                         
                         <div class="col-span-full flex flex-col gap-2">
                             <label class="label-tiny text-[10px] opacity-60">Phone Number / Nomor HP</label>
-                            <input id="phone" name="phone" value="{{ auth()->check() ? (auth()->user()->phone ?? old('phone')) : old('phone') }}" class="w-full py-3 px-4 outline-none text-sm placeholder:opacity-20 bg-transparent border border-[#444444] text-[#F9F9F9] focus:border-[#F9F9F9] transition-all font-sans" placeholder="ENTER PHONE NUMBER" required type="text">
+                            <input id="phone" name="phone" value="{{ auth()->check() ? (auth()->user()->phone ?? old('phone')) : old('phone') }}" class="w-full py-3 px-4 outline-none text-sm placeholder:opacity-40 font-sans" placeholder="08XXXXXXXXXX" required type="text">
                             @error('phone')
                                 <span class="text-xs text-red-500 uppercase tracking-widest">{{ $message }}</span>
                             @enderror
@@ -129,10 +129,10 @@
                             @enderror
                         </div>
                         
-                        <div class="col-span-full flex flex-col gap-2 relative">
-                            <label class="label-tiny text-[10px] opacity-60">Cari Wilayah (Kecamatan, Kota, atau Kode Pos)</label>
-                            <input id="area-search" type="text" class="w-full py-3 px-4 outline-none text-sm placeholder:opacity-20 bg-transparent border border-[#444444] text-[#F9F9F9] focus:border-[#F9F9F9] transition-all" placeholder="Ketik minimal 3 karakter untuk mencari wilayah..." autocomplete="off" value="{{ auth()->check() ? (auth()->user()->biteship_area_name ?? '') : '' }}" required>
-                            <div id="area-suggestions" class="absolute left-0 right-0 top-[100%] z-50 bg-[#121212] border border-[#444444] max-h-60 overflow-y-auto hidden">
+                        <div class="col-span-full flex flex-col gap-2 relative text-[#121212]">
+                            <label class="label-tiny text-[10px] text-neutral-500 font-semibold">Cari Wilayah (Kecamatan, Kota, atau Kode Pos)</label>
+                            <input id="area-search" type="text" class="w-full py-3 px-4 outline-none text-sm placeholder:opacity-40 bg-[#FFFFFF] border border-[#E5E7EB] text-[#121212] focus:border-brand-accent transition-all font-sans" placeholder="Ketik minimal 3 karakter untuk mencari wilayah..." autocomplete="off" value="{{ auth()->check() ? (auth()->user()->biteship_area_name ?? '') : '' }}" required>
+                            <div id="area-suggestions" class="absolute left-0 right-0 top-[100%] z-50 bg-[#FFFFFF] border border-[#E5E7EB] divide-y divide-[#E5E7EB] max-h-60 overflow-y-auto hidden shadow-lg">
                                 <!-- suggestions populated dynamically -->
                             </div>
                             <input type="hidden" name="biteship_area_id" id="biteship-area-id" value="{{ auth()->check() ? (auth()->user()->biteship_area_id ?? old('biteship_area_id')) : old('biteship_area_id') }}">
@@ -149,9 +149,9 @@
                         <!-- Hidden input for courier (selected courier code) -->
                         <input type="hidden" name="courier" id="courier" value="{{ old('courier') }}">
 
-                        <div class="col-span-full flex flex-col gap-2" id="shipping-service-container" style="display: none;">
-                            <label class="label-tiny text-[10px] opacity-60">Pilih Layanan Pengiriman</label>
-                            <select id="shipping-service-select" class="w-full py-3 px-4 outline-none text-sm bg-transparent border border-[#444444] text-[#F9F9F9] focus:border-[#F9F9F9] transition-all font-sans">
+                        <div class="col-span-full flex flex-col gap-2 text-[#121212]" id="shipping-service-container" style="display: none;">
+                            <label class="label-tiny text-[10px] text-neutral-500 font-semibold">Pilih Layanan Pengiriman</label>
+                            <select id="shipping-service-select" class="w-full py-3 px-4 outline-none text-sm bg-[#FFFFFF] border border-[#E5E7EB] text-[#121212] focus:border-brand-accent transition-all font-sans">
                                 <!-- Options populated dynamically -->
                             </select>
                             <input type="hidden" name="shipping_service" id="shipping_service" value="{{ old('shipping_service') }}">
@@ -168,28 +168,28 @@
 
                 <!-- Section 2: Payment Method -->
                 <section class="space-y-6">
-                    <div class="border-b border-[#F9F9F9]/10 pb-2">
+                    <div class="border-b border-neutral-200 pb-2">
                         <h2 class="label-tiny opacity-60">02 / Payment Method</h2>
                     </div>
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-[#121212]">
                         <label class="cursor-pointer relative">
                             <input class="hidden peer" name="payment" type="radio" value="Bank Transfer" {{ old('payment', 'Bank Transfer') === 'Bank Transfer' ? 'checked' : '' }}>
-                            <div class="border border-[#444444] p-6 flex flex-col gap-2 peer-checked:bg-[#F9F9F9] peer-checked:text-[#121212] peer-checked:border-transparent transition-all">
+                            <div class="border border-neutral-300 p-6 flex flex-col gap-2 peer-checked:bg-[#121212] peer-checked:text-white peer-checked:border-transparent transition-all">
                                 <div class="flex justify-between items-start">
                                     <span class="label-tiny font-bold">Bank Transfer</span>
                                     <span class="material-symbols-outlined text-[20px]">account_balance</span>
                                 </div>
-                                <p class="text-[11px] opacity-70">Manual verification within 24 hours</p>
+                                <p class="text-[11px] opacity-70">Verifikasi manual dalam 24 jam dengan Kode Unik</p>
                             </div>
                         </label>
                         <label class="cursor-pointer relative">
                             <input class="hidden peer" name="payment" type="radio" value="QRIS" {{ old('payment') === 'QRIS' ? 'checked' : '' }}>
-                            <div class="border border-[#444444] p-6 flex flex-col gap-2 peer-checked:bg-[#F9F9F9] peer-checked:text-[#121212] peer-checked:border-transparent transition-all">
+                            <div class="border border-neutral-300 p-6 flex flex-col gap-2 peer-checked:bg-[#121212] peer-checked:text-white peer-checked:border-transparent transition-all">
                                 <div class="flex justify-between items-start">
                                     <span class="label-tiny font-bold">QRIS / Instant</span>
                                     <span class="material-symbols-outlined text-[20px]">qr_code_2</span>
                                 </div>
-                                <p class="text-[11px] opacity-70">Immediate processing &amp; roast schedule</p>
+                                <p class="text-[11px] opacity-70">Proses instan &amp; otomatis terverifikasi</p>
                             </div>
                         </label>
                     </div>
@@ -202,35 +202,45 @@
 
         <!-- Right Side: Order Summary -->
         <div class="col-span-12 lg:col-span-4 lg:sticky lg:top-28">
-            <div class="border border-[#F9F9F9]/10 p-8 bg-[#1a1a1a]/40 backdrop-blur-xl">
-                <h3 class="label-tiny opacity-60 border-b border-[#F9F9F9]/10 pb-4 mb-6">Order Summary</h3>
+            <div class="border border-neutral-200 p-8 bg-brand-cream shadow-sm text-[#121212]">
+                <h3 class="label-tiny opacity-60 border-b border-neutral-200 pb-4 mb-6 font-bold">Order Summary</h3>
                 
                 <!-- Dynamic Items List -->
                 <div id="summary-items" class="space-y-6 mb-6">
                     <!-- Injected dynamically -->
                 </div>
 
-                <div class="pt-6 border-t border-[#F9F9F9]/10 space-y-4 text-sm font-sans">
+                <div class="pt-6 border-t border-neutral-200 space-y-4 text-sm font-sans text-neutral-600">
                     <div class="flex justify-between">
                         <span class="opacity-60">Subtotal</span>
-                        <span id="summary-subtotal" class="font-semibold">Rp. 0</span>
+                        <span id="summary-subtotal" class="font-semibold text-[#121212]">Rp 0</span>
                     </div>
                     <div class="flex justify-between">
-                        <span class="opacity-60">Shipping</span>
-                        <span id="summary-shipping" class="font-semibold">Rp. 0</span>
+                        <span class="opacity-60">Shipping / Ongkir</span>
+                        <span id="summary-shipping" class="font-semibold text-[#121212]">Rp 0</span>
                     </div>
-                    <div class="flex justify-between font-display text-2xl border-t border-[#F9F9F9]/15 pt-6 uppercase">
+                    
+                    <!-- Kode Unik Info Container -->
+                    <div id="unique-code-info" class="flex flex-col gap-1 border-t border-neutral-200 pt-3 hidden">
+                        <div class="flex justify-between text-xs text-brand-accent font-bold">
+                            <span>Kode Unik (Bank Transfer)</span>
+                            <span>+ Rp ***</span>
+                        </div>
+                        <p class="text-[10px] text-neutral-400 leading-normal">3 digit kode unik acak akan ditambahkan di akhir saat checkout dikirim untuk keperluan verifikasi transfer otomatis.</p>
+                    </div>
+
+                    <div class="flex justify-between font-display text-2xl border-t border-neutral-200 pt-6 uppercase text-[#121212]">
                         <span>Total</span>
-                        <span id="summary-total">Rp. 0</span>
+                        <span id="summary-total" class="font-bold">Rp 0</span>
                     </div>
                 </div>
 
-                <div id="api-error-alert" class="bg-amber-900/40 border border-amber-500 text-amber-200 px-4 py-3 mt-6 text-[11px] uppercase tracking-wide hidden">
+                <div id="api-error-alert" class="bg-brand-cream border border-brand-accent/20 text-brand-accent px-4 py-3 mt-6 text-[11px] uppercase tracking-wide hidden">
                     Layanan pengiriman otomatis sedang tidak tersedia. Silakan klik tombol "Pesan via WhatsApp" untuk menyelesaikan pesanan Anda.
                 </div>
 
                 <div id="checkout-actions-container">
-                    <button id="pay-button" form="checkout-form" type="submit" class="w-full mt-8 bg-[#F9F9F9] text-[#121212] font-bold text-center py-5 uppercase tracking-widest hover:bg-transparent hover:text-[#F9F9F9] border border-transparent hover:border-[#F9F9F9]/25 transition-all duration-350 active:scale-[0.98] label-tiny">
+                    <button id="pay-button" form="checkout-form" type="submit" class="w-full mt-8 bg-[#121212] text-white font-bold text-center py-5 uppercase tracking-widest hover:bg-brand-accent hover:border-brand-accent hover:text-white border border-[#121212] transition-all duration-350 active:scale-[0.98] label-tiny">
                         Confirm &amp; Pay
                     </button>
                     <a id="whatsapp-fallback-button" href="#" target="_blank" class="w-full mt-8 bg-[#25D366] text-[#FFFFFF] font-bold text-center py-5 uppercase tracking-widest hover:bg-[#128C7E] border border-transparent transition-all duration-350 active:scale-[0.98] label-tiny hidden flex items-center justify-center gap-2">
@@ -277,16 +287,16 @@
             const grindLabel = item.grind_size ? item.grind_size : 'WHOLE BEAN';
             
             html += `
-                <div class="flex gap-4 items-center">
-                    <div class="w-16 h-20 bg-[#1a1a1a] border border-[#F9F9F9]/10 overflow-hidden flex-shrink-0">
-                        <img class="w-full h-full object-cover grayscale brightness-90" src="${item.image}" alt="${item.name}">
+                <div class="flex gap-4 items-center text-[#121212]">
+                    <div class="w-16 h-20 bg-brand-cream border border-[#E5E7EB] overflow-hidden flex-shrink-0">
+                        <img class="w-full h-full object-cover" src="${item.image}" alt="${item.name}">
                     </div>
                     <div class="flex-grow flex flex-col justify-between">
                         <div>
-                            <h4 class="font-display text-sm uppercase italic leading-tight">${item.name}</h4>
-                            <p class="label-tiny text-[9px] opacity-50 mt-1 text-neutral-400">${grindLabel} | QTY: ${item.quantity}</p>
+                            <h4 class="font-display text-sm uppercase italic leading-tight text-[#121212]">${item.name}</h4>
+                            <p class="label-tiny text-[9px] text-neutral-400 mt-1">${grindLabel} | QTY: ${item.quantity}</p>
                         </div>
-                        <span class="font-sans text-xs font-semibold mt-2">${formatRupiah(itemTotal)}</span>
+                        <span class="font-sans text-xs font-semibold mt-2 text-neutral-800">${formatRupiah(itemTotal)}</span>
                     </div>
                 </div>
             `;
@@ -491,12 +501,12 @@
                                     const postalCode = area.postal_code || (postalMatch ? postalMatch[1] : '');
                                     const displayName = area.name.match(/\d{5}$/) ? area.name : `${area.name} (${postalCode})`;
                                     html += `
-                                        <div class="suggestion-item p-3 cursor-pointer border-b border-[#444444]/30 hover:bg-[#F9F9F9] hover:text-[#121212] transition-colors text-xs font-sans" 
+                                        <div class="suggestion-item p-3 cursor-pointer border-b border-[#E5E7EB]/50 hover:bg-brand-cream text-[#121212] hover:text-brand-accent transition-colors text-xs font-sans" 
                                              data-id="${area.id}" 
                                              data-name="${displayName}"
                                              data-city="${area.administrative_division_level_2_name}"
                                              data-postal="${postalCode}">
-                                            ${displayName}
+                                             ${displayName}
                                         </div>
                                     `;
                                 });
@@ -578,8 +588,13 @@
         });
 
         document.getElementsByName('payment').forEach(radio => {
-            radio.addEventListener('change', updateWhatsappLink);
+            radio.addEventListener('change', function() {
+                updateWhatsappLink();
+                toggleUniqueCodeInfo();
+            });
         });
+
+        toggleUniqueCodeInfo();
 
         const waBtn = document.getElementById('whatsapp-fallback-button');
         if (waBtn) {
@@ -626,6 +641,25 @@
                     localStorage.removeItem('order_notes');
                 }, 100);
             });
+        }
+
+        function toggleUniqueCodeInfo() {
+            const paymentRadios = document.getElementsByName('payment');
+            let isBankTransfer = false;
+            for (let radio of paymentRadios) {
+                if (radio.checked && radio.value === 'Bank Transfer') {
+                    isBankTransfer = true;
+                    break;
+                }
+            }
+            const infoEl = document.getElementById('unique-code-info');
+            if (infoEl) {
+                if (isBankTransfer) {
+                    infoEl.classList.remove('hidden');
+                } else {
+                    infoEl.classList.add('hidden');
+                }
+            }
         }
     });
 </script>

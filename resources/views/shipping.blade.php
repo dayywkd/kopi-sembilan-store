@@ -19,9 +19,9 @@
         width: 1px;
         flex-shrink: 0;
     }
-    .phase-connector.done      { background: rgba(249,249,249,0.5); }
-    .phase-connector.active    { background: linear-gradient(to bottom, rgba(34,197,94,0.6), rgba(249,249,249,0.1)); }
-    .phase-connector.pending   { background: rgba(249,249,249,0.12); }
+    .phase-connector.done      { background: #121212; }
+    .phase-connector.active    { background: linear-gradient(to bottom, #121212, rgba(18,18,18,0.05)); }
+    .phase-connector.pending   { background: rgba(18,18,18,0.08); }
 
     /* Phase dot */
     .phase-dot {
@@ -29,13 +29,13 @@
         height: 10px;
         flex-shrink: 0;
     }
-    .phase-dot.done    { background: #F9F9F9; }
-    .phase-dot.active  { background: #22c55e; animation: dot-pulse 1.8s ease-in-out infinite; }
-    .phase-dot.pending { background: transparent; border: 1px solid #444; }
+    .phase-dot.done    { background: #121212; }
+    .phase-dot.active  { background: #121212; animation: dot-pulse 1.8s ease-in-out infinite; }
+    .phase-dot.pending { background: transparent; border: 1px solid #E5E7EB; }
 
     @keyframes dot-pulse {
-        0%, 100% { box-shadow: 0 0 0 0 rgba(34,197,94, 0.5); }
-        50%       { box-shadow: 0 0 0 6px rgba(34,197,94, 0); }
+        0%, 100% { box-shadow: 0 0 0 0 rgba(18, 18, 18, 0.5); }
+        50%       { box-shadow: 0 0 0 6px rgba(18, 18, 18, 0); }
     }
 
     /* Current badge */
@@ -81,16 +81,16 @@
     };
 @endphp
 
-<main class="mt-32 min-h-screen px-margin-mobile md:px-margin-desktop py-stack-xl max-w-container-max mx-auto">
+<main class="mt-32 min-h-screen px-margin-mobile md:px-margin-desktop py-stack-xl max-w-container-max mx-auto bg-white">
 
     @if (session('confirm_success'))
-        <div class="mb-8 bg-emerald-950/60 border border-emerald-800 text-emerald-300 p-6 text-xs uppercase tracking-widest font-bold">
+        <div class="mb-8 bg-green-50 border border-green-200 text-green-800 p-6 text-xs uppercase tracking-widest font-bold">
             {{ session('confirm_success') }}
         </div>
     @endif
 
     {{-- ── Header dinamis berdasarkan status ──────────────────── --}}
-    <section class="mb-stack-lg border-b border-[#F9F9F9]/15 pb-8">
+    <section class="mb-stack-lg border-b border-[#E5E7EB] pb-8">
         <div class="grid grid-cols-12 items-end gap-4">
             <div class="col-span-12 md:col-span-8">
                 @php
@@ -111,23 +111,23 @@
                         default            => 'Order Confirmed',
                     };
                     $headerColor = match($order->status) {
-                        'Awaiting Payment' => 'text-amber-400',
-                        'Paid'             => 'text-blue-400',
-                        'Packing'          => 'text-yellow-400',
-                        'Shipped'          => 'text-green-400',
-                        'Delivered'        => 'text-emerald-400',
-                        default            => 'text-[#F9F9F9]/60',
+                        'Awaiting Payment' => 'text-amber-600',
+                        'Paid'             => 'text-blue-600',
+                        'Packing'          => 'text-yellow-600',
+                        'Shipped'          => 'text-green-600',
+                        'Delivered'        => 'text-emerald-600',
+                        default            => 'text-neutral-500',
                     };
                 @endphp
                 <span class="label-tiny {{ $headerColor }} font-bold tracking-widest block mb-2">
                     ● &nbsp;{{ $headerLabel }} — #{{ $order->transaction_id }}
                 </span>
-                <h1 class="font-display text-5xl md:text-7xl uppercase italic leading-none">
+                <h1 class="font-display text-5xl md:text-7xl uppercase italic leading-none text-[#121212]">
                     {{ $headerTitle }}
                 </h1>
             </div>
             <div class="col-span-12 md:col-span-4 md:text-right">
-                <p class="font-sans text-neutral-400 text-sm max-w-xs md:ml-auto leading-relaxed">
+                <p class="font-sans text-neutral-500 text-sm max-w-xs md:ml-auto leading-relaxed">
                     @if ($order->status === 'Awaiting Payment')
                         Segera selesaikan pembayaran agar pesanan Anda diproses.
                     @elseif ($order->status === 'Paid')
@@ -144,21 +144,21 @@
         </div>
     </section>
 
-    {{-- ── Banner Belum Bayar ───────────────────────────────────── --}}
+    {{-- ── Banner Belum Bayar / Dalam Perjalanan / Selesai ── --}}
     @if ($order->status === 'Awaiting Payment')
     <section class="mb-10">
-        <div class="bg-amber-950/50 border border-amber-700/60 p-6 flex flex-col md:flex-row md:items-center justify-between gap-5">
+        <div class="bg-brand-cream border border-brand-accent/20 p-6 flex flex-col md:flex-row md:items-center justify-between gap-5">
             <div class="flex items-start gap-4">
-                <span class="material-symbols-outlined text-amber-400 text-[28px] flex-shrink-0">pending_actions</span>
+                <span class="material-symbols-outlined text-brand-accent text-[28px] flex-shrink-0">pending_actions</span>
                 <div>
-                    <p class="label-tiny text-amber-300 mb-1">Pembayaran Diperlukan</p>
-                    <p class="font-sans text-sm text-amber-200/80 leading-relaxed">
+                    <p class="label-tiny text-brand-accent mb-1">Pembayaran Diperlukan</p>
+                    <p class="font-sans text-sm text-brand-accent leading-relaxed">
                         Pesanan belum dibayar. Lakukan pembayaran via <strong>{{ $order->payment_method }}</strong> agar pesanan segera diproses.
                     </p>
                 </div>
             </div>
-            <a href="{{ route('order.payment', $order->transaction_id) }}"
-               class="flex-shrink-0 flex items-center gap-2 bg-amber-500 hover:bg-amber-400 text-[#121212] font-bold text-xs uppercase tracking-widest px-6 py-4 transition-colors duration-300 active:scale-[0.98] whitespace-nowrap">
+            <a href="{{ route('order.payment', $order->uuid) }}"
+               class="flex-shrink-0 flex items-center gap-2 bg-[#121212] hover:bg-brand-accent hover:text-[#FFFFFF] font-bold text-xs uppercase tracking-widest px-6 py-4 transition-all duration-300 active:scale-[0.98] whitespace-nowrap">
                 <span class="material-symbols-outlined text-[18px]">payments</span>
                 Bayar Sekarang
             </a>
@@ -166,20 +166,20 @@
     </section>
     @elseif ($order->status === 'Shipped')
     <section class="mb-10">
-        <div class="bg-blue-950/50 border border-blue-700/60 p-6 flex flex-col md:flex-row md:items-center justify-between gap-5">
+        <div class="bg-brand-cream border border-brand-accent/20 p-6 flex flex-col md:flex-row md:items-center justify-between gap-5">
             <div class="flex items-start gap-4">
-                <span class="material-symbols-outlined text-blue-400 text-[28px] flex-shrink-0">local_shipping</span>
+                <span class="material-symbols-outlined text-brand-accent text-[28px] flex-shrink-0">local_shipping</span>
                 <div>
-                    <p class="label-tiny text-blue-300 mb-1">Paket Dalam Perjalanan</p>
-                    <p class="font-sans text-sm text-blue-200/80 leading-relaxed">
+                    <p class="label-tiny text-brand-accent mb-1">Paket Dalam Perjalanan</p>
+                    <p class="font-sans text-sm text-brand-accent leading-relaxed">
                         Pesanan Anda sedang dikirim. Nomor Resi: <strong>{{ $order->tracking_number ?? '-' }}</strong>. Silakan konfirmasi jika barang sudah sampai.
                     </p>
                 </div>
             </div>
-            <form action="{{ route('order.confirm_delivery', $order->transaction_id) }}" method="POST" class="flex-shrink-0">
+            <form action="{{ route('order.confirm_delivery', $order->uuid) }}" method="POST" class="flex-shrink-0">
                 @csrf
                 <button type="submit"
-                        class="flex items-center gap-2 bg-green-600 hover:bg-green-500 text-white font-bold text-xs uppercase tracking-widest px-6 py-4 transition-colors duration-300 active:scale-[0.98] whitespace-nowrap cursor-pointer">
+                        class="flex items-center gap-2 bg-brand-dark hover:bg-brand-accent text-white font-bold text-xs uppercase tracking-widest px-6 py-4 transition-colors duration-300 active:scale-[0.98] whitespace-nowrap cursor-pointer">
                     <span class="material-symbols-outlined text-[18px]">done_all</span>
                     Konfirmasi Pesanan Tiba
                 </button>
@@ -188,11 +188,11 @@
     </section>
     @elseif ($order->status === 'Delivered')
     <section class="mb-10">
-        <div class="bg-emerald-950/50 border border-emerald-700/60 p-6 flex items-center gap-5">
-            <span class="material-symbols-outlined text-emerald-400 text-[32px]">verified</span>
+        <div class="bg-brand-cream border border-brand-accent/20 p-6 flex items-center gap-5">
+            <span class="material-symbols-outlined text-brand-accent text-[32px]">verified</span>
             <div>
-                <p class="label-tiny text-emerald-300 mb-1">Pesanan Selesai</p>
-                <p class="font-sans text-sm text-emerald-200/80 leading-relaxed">
+                <p class="label-tiny text-brand-accent mb-1">Pesanan Selesai</p>
+                <p class="font-sans text-sm text-brand-accent leading-relaxed">
                     Paket telah tiba di tangan Anda. Terima kasih telah mempercayai <strong>Toko Kopi Sembilan</strong>. Selamat menikmati!
                 </p>
             </div>
@@ -204,8 +204,8 @@
     <section class="grid grid-cols-12 gap-gutter">
 
         {{-- LEFT: Timeline Status ──────────────────────────────── --}}
-        <div class="col-span-12 lg:col-span-5 border-b lg:border-b-0 lg:border-r border-[#F9F9F9]/10 pb-12 lg:pb-0 lg:pr-12">
-            <h2 class="label-tiny opacity-60 mb-10 font-bold">Status Pesanan</h2>
+        <div class="col-span-12 lg:col-span-5 border-b lg:border-b-0 lg:border-r border-[#E5E7EB] pb-12 lg:pb-0 lg:pr-12">
+            <h2 class="label-tiny text-neutral-500 mb-10 font-bold">Status Pesanan</h2>
 
             @php
                 $phases = [
@@ -284,21 +284,21 @@
                         <div class="pb-8 flex-grow {{ $isLast ? 'pb-0' : '' }}">
                             {{-- Current badge --}}
                             @if ($state === 'active')
-                                <span class="current-badge inline-flex items-center gap-1 bg-green-950/70 text-green-400 border border-green-800/60 px-2 py-0.5 mb-2 label-tiny text-[9px] font-bold">
-                                    <span class="w-1.5 h-1.5 rounded-full bg-green-400 inline-block animate-pulse"></span>
+                                <span class="current-badge inline-flex items-center gap-1 bg-brand-cream text-brand-accent border border-brand-accent/20 px-2 py-0.5 mb-2 label-tiny text-[9px] font-bold">
+                                    <span class="w-1.5 h-1.5 rounded-full bg-brand-accent inline-block animate-pulse"></span>
                                     FASE SAAT INI
                                 </span>
                             @endif
 
                             <div class="flex items-center gap-2 mb-1">
-                                <span class="material-symbols-outlined text-[14px] {{ $state === 'done' ? 'text-[#F9F9F9]/60' : ($state === 'active' ? 'text-green-400' : 'text-[#F9F9F9]/20') }}">
+                                <span class="material-symbols-outlined text-[14px] {{ $state === 'done' ? 'text-brand-accent' : ($state === 'active' ? 'text-brand-accent' : 'text-neutral-300') }}">
                                     {{ $state === 'done' ? 'check_circle' : $phase['icon'] }}
                                 </span>
-                                <p class="label-tiny font-bold {{ $state === 'done' ? 'text-[#F9F9F9]/70' : ($state === 'active' ? 'text-[#F9F9F9]' : 'text-[#F9F9F9]/25') }}">
+                                <p class="label-tiny font-bold {{ $state === 'done' ? 'text-neutral-600' : ($state === 'active' ? 'text-[#121212]' : 'text-neutral-300') }}">
                                     {{ $phase['num'] }}. {{ $phase['label'] }}
                                 </p>
                             </div>
-                            <p class="font-sans text-xs leading-relaxed ml-5 {{ $state === 'active' ? 'text-neutral-300' : ($state === 'done' ? 'text-neutral-500' : 'text-neutral-600') }}">
+                            <p class="font-sans text-xs leading-relaxed ml-5 {{ $state === 'active' ? 'text-neutral-700' : ($state === 'done' ? 'text-neutral-500' : 'text-neutral-400') }}">
                                 {{ $desc }}
                             </p>
                         </div>
@@ -307,16 +307,16 @@
             </div>
 
             {{-- Progress bar --}}
-            <div class="mt-8 pt-8 border-t border-[#F9F9F9]/10">
-                <div class="flex justify-between label-tiny text-[9px] opacity-40 mb-2">
+            <div class="mt-8 pt-8 border-t border-[#E5E7EB]">
+                <div class="flex justify-between label-tiny text-[9px] text-neutral-400 mb-2">
                     <span>Progress</span>
                     <span>{{ round(($currentIdx / 4) * 100) }}%</span>
                 </div>
-                <div class="w-full bg-[#F9F9F9]/10 h-0.5">
-                    <div class="h-0.5 bg-[#F9F9F9] transition-all duration-700"
+                <div class="w-full bg-neutral-100 h-0.5">
+                    <div class="h-0.5 bg-[#121212] transition-all duration-700"
                          style="width: {{ round(($currentIdx / 4) * 100) }}%"></div>
                 </div>
-                <p class="label-tiny text-[9px] opacity-30 mt-2">
+                <p class="label-tiny text-[9px] text-neutral-400 mt-2">
                     Fase {{ $currentIdx + 1 }} dari 5
                 </p>
             </div>
@@ -327,55 +327,55 @@
 
             {{-- Items --}}
             <div class="space-y-6">
-                <h2 class="label-tiny opacity-60 font-bold border-b border-[#F9F9F9]/10 pb-3">Produk Dipesan</h2>
+                <h2 class="label-tiny text-neutral-500 font-bold border-b border-[#E5E7EB] pb-3">Produk Dipesan</h2>
                 
                 @if (session('review_success'))
-                    <div class="mb-4 bg-green-950/40 border border-green-800/60 text-green-300 p-4 text-xs font-bold uppercase tracking-wider">
+                    <div class="mb-4 bg-green-50 border border-green-200 text-green-800 p-4 text-xs font-bold uppercase tracking-wider">
                         {{ session('review_success') }}
                     </div>
                 @endif
 
                 @foreach ($order->items as $item)
-                <div class="border-b border-[#F9F9F9]/10 pb-6 last:border-b-0 last:pb-0">
+                <div class="border-b border-[#E5E7EB] pb-6 last:border-b-0 last:pb-0">
                     <div class="flex gap-4 items-center">
-                        <div class="w-16 h-20 bg-[#1a1a1a] border border-[#F9F9F9]/10 overflow-hidden flex-shrink-0">
+                        <div class="w-16 h-20 bg-neutral-50 border border-[#E5E7EB] overflow-hidden flex-shrink-0">
                             @if ($item->product && ($item->product->image_path ?? $item->product->image) && file_exists(public_path('storage/' . ($item->product->image_path ?? $item->product->image))))
-                                <img class="w-full h-full object-cover grayscale brightness-90"
+                                <img class="w-full h-full object-cover"
                                      src="{{ asset('storage/' . ($item->product->image_path ?? $item->product->image)) }}"
                                      alt="{{ $item->product_name }}">
                             @elseif ($item->product && filter_var($item->product->image_path ?? $item->product->image, FILTER_VALIDATE_URL))
-                                <img class="w-full h-full object-cover grayscale brightness-90"
+                                <img class="w-full h-full object-cover"
                                      src="{{ $item->product->image_path ?? $item->product->image }}"
                                      alt="{{ $item->product_name }}">
                             @else
-                                <img class="w-full h-full object-cover grayscale brightness-90"
+                                <img class="w-full h-full object-cover"
                                      src="https://lh3.googleusercontent.com/aida-public/AB6AXuDb1xpGK5YLtJgXI-Ej1XU8ac6A9zyZ3XMT2g1GnouDhIOXyC-Fh84tjYy6_XxxAxnRgIQNWAC7YknFDTODxK-LmO33YfLZkTikQ2NqiTIx13hRNaJ_l5JBC_6eXsTpsGE5SaZhf-jW8qhKaqWnrC6r0exbZgrfWGpxCAKsHrS3IGSDSs8d2qdXT1iynwNKSuA0ZasXNXXWld-R4vJZkRF5jPsQlHUonMDp1PeAJAQdY4q6g0xNazyE_dgGTy_s46dg1Fdd0H1og7w"
                                      alt="{{ $item->product_name }}">
                             @endif
                         </div>
                         <div class="flex-grow flex flex-col justify-between">
                             <div>
-                                <h4 class="font-display text-sm uppercase italic leading-tight">{{ $item->product_name }}</h4>
-                                <p class="label-tiny text-[9px] opacity-50 mt-1">{{ $item->grind_size }} | QTY: {{ $item->quantity }}</p>
+                                <h4 class="font-display text-sm uppercase italic leading-tight text-[#121212]">{{ $item->product_name }}</h4>
+                                <p class="label-tiny text-[9px] text-neutral-400 mt-1">{{ $item->grind_size }} | QTY: {{ $item->quantity }}</p>
                             </div>
-                            <span class="font-sans text-xs font-semibold mt-2 text-neutral-200">
+                            <span class="font-sans text-xs font-semibold mt-2 text-neutral-800">
                                 Rp. {{ number_format($item->price * $item->quantity, 0, ',', '.') }}
                             </span>
                         </div>
                     </div>
 
                     @if ($order->status === 'Delivered' && $item->product)
-                    <div class="mt-4 md:ml-20 bg-[#1a1a1a]/40 p-4 border border-[#F9F9F9]/5">
-                        <span class="label-tiny text-[9px] text-green-400 font-bold block mb-2">Tulis Ulasan untuk {{ $item->product_name }}</span>
+                    <div class="mt-4 md:ml-20 bg-brand-cream p-4 border border-[#E5E7EB]">
+                        <span class="label-tiny text-[9px] text-brand-accent font-bold block mb-2">Tulis Ulasan untuk {{ $item->product_name }}</span>
                         <form action="{{ route('product.review.store', $item->product_id) }}" method="POST" class="space-y-3">
                             @csrf
                             <input type="hidden" name="customer_name" value="{{ $order->first_name }} {{ $order->last_name }}">
                             
                             <div class="flex items-center gap-3">
-                                <label class="label-tiny text-[8px] opacity-60 font-bold">Rating:</label>
+                                <label class="label-tiny text-[8px] text-neutral-400 font-bold">Rating:</label>
                                 <div class="flex gap-1.5 rating-stars" data-item-id="{{ $item->id }}">
                                     @for ($i = 1; $i <= 5; $i++)
-                                        <button type="button" class="star-btn text-[#F9F9F9]/20 hover:text-yellow-400 transition-colors" data-value="{{ $i }}" onclick="setRating({{ $item->id }}, {{ $i }})">
+                                        <button type="button" class="star-btn text-neutral-300 hover:text-brand-accent transition-colors" data-value="{{ $i }}" onclick="setRating({{ $item->id }}, {{ $i }})">
                                             <span class="material-symbols-outlined text-[16px]">star</span>
                                         </button>
                                     @endfor
@@ -384,8 +384,8 @@
                             </div>
 
                             <div class="flex gap-2">
-                                <input type="text" name="comment" class="flex-grow py-2 px-3 outline-none text-xs bg-transparent border border-[#444444]" placeholder="Tulis pendapat Anda tentang kopi ini...">
-                                <button type="submit" class="bg-[#F9F9F9] text-[#121212] px-4 py-2 text-[10px] font-bold uppercase tracking-wider hover:bg-transparent hover:text-[#F9F9F9] border border-transparent hover:border-[#F9F9F9]/25 transition-all">
+                                <input type="text" name="comment" class="flex-grow py-2 px-3 outline-none text-xs bg-white border border-[#E5E7EB] text-[#121212] focus:border-brand-accent" placeholder="Tulis pendapat Anda tentang kopi ini...">
+                                <button type="submit" class="bg-brand-dark text-white px-4 py-2 text-[10px] font-bold uppercase tracking-wider hover:bg-brand-accent hover:border-brand-accent hover:text-white border border-brand-dark transition-all">
                                     Kirim
                                 </button>
                             </div>
@@ -397,62 +397,62 @@
             </div>
 
             {{-- Totals --}}
-            <div class="border-t border-[#F9F9F9]/10 pt-8">
+            <div class="border-t border-[#E5E7EB] pt-8">
                 <div class="grid grid-cols-3 gap-4 font-sans text-sm mb-8">
                     <div>
-                        <span class="label-tiny opacity-50 block mb-2 font-bold">Subtotal</span>
-                        <span class="font-semibold text-neutral-200">Rp. {{ number_format($order->subtotal, 0, ',', '.') }}</span>
+                        <span class="label-tiny text-neutral-400 block mb-2 font-bold">Subtotal</span>
+                        <span class="font-semibold text-neutral-800">Rp. {{ number_format($order->subtotal, 0, ',', '.') }}</span>
                     </div>
                     <div>
-                        <span class="label-tiny opacity-50 block mb-2 font-bold">Ongkir</span>
-                        <span class="font-semibold text-neutral-200">
+                        <span class="label-tiny text-neutral-400 block mb-2 font-bold">Ongkir</span>
+                        <span class="font-semibold text-neutral-800">
                             {{ $order->shipping_cost == 0 ? 'GRATIS' : 'Rp. ' . number_format($order->shipping_cost, 0, ',', '.') }}
                         </span>
                     </div>
                     <div>
-                        <span class="label-tiny opacity-50 block mb-2 font-bold">Total Dibayar</span>
-                        <span class="font-display text-2xl text-[#F9F9F9]">
+                        <span class="label-tiny text-neutral-400 block mb-2 font-bold">Total Dibayar</span>
+                        <span class="font-display text-base font-bold text-[#121212]">
                             Rp. {{ number_format($order->total_paid, 0, ',', '.') }}
                         </span>
                     </div>
                 </div>
 
                 {{-- Address & Payment --}}
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-8 border-t border-[#F9F9F9]/10 pt-8 text-sm">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8 border-t border-[#E5E7EB] pt-8 text-sm">
                     <div>
-                        <span class="label-tiny opacity-50 block mb-3 font-bold">Alamat Pengiriman</span>
-                        <address class="not-italic text-neutral-300 leading-relaxed font-sans text-sm">
-                            <strong class="text-[#F9F9F9]">{{ $order->first_name }} {{ $order->last_name }}</strong><br>
+                        <span class="label-tiny text-neutral-400 block mb-3 font-bold">Alamat Pengiriman</span>
+                        <address class="not-italic text-neutral-600 leading-relaxed font-sans text-sm">
+                            <strong class="text-[#121212]">{{ $order->first_name }} {{ $order->last_name }}</strong><br>
                             {{ $order->shipping_address }}<br>
                             {{ $order->city }}{{ $order->postal_code ? ', ' . $order->postal_code : '' }}
                         </address>
                         @if ($order->order_notes)
-                        <div class="mt-4 p-4 bg-[#1a1a1a]/30 border border-[#F9F9F9]/5">
-                            <span class="label-tiny opacity-50 block mb-1 text-[9px] font-bold">Catatan</span>
-                            <p class="font-sans text-neutral-400 text-xs italic">{{ $order->order_notes }}</p>
+                        <div class="mt-4 p-4 bg-brand-cream border border-[#E5E7EB]">
+                            <span class="label-tiny text-neutral-400 block mb-1 text-[9px] font-bold">Catatan</span>
+                            <p class="font-sans text-neutral-500 text-xs italic">{{ $order->order_notes }}</p>
                         </div>
                         @endif
                     </div>
                     <div class="space-y-5">
                         <div>
-                            <span class="label-tiny opacity-50 block mb-2 font-bold">Metode Pembayaran</span>
+                            <span class="label-tiny text-neutral-400 block mb-2 font-bold">Metode Pembayaran</span>
                             <div class="flex items-center gap-2">
-                                <span class="material-symbols-outlined text-[16px] opacity-50">
+                                <span class="material-symbols-outlined text-[16px] text-neutral-400">
                                     {{ $order->payment_method === 'QRIS' ? 'qr_code_2' : 'account_balance' }}
                                 </span>
-                                <p class="text-neutral-300 font-sans text-sm">{{ $order->payment_method }}</p>
+                                <p class="text-neutral-600 font-sans text-sm">{{ $order->payment_method }}</p>
                             </div>
                         </div>
                         <div>
-                            <span class="label-tiny opacity-50 block mb-2 font-bold">Status Pembayaran</span>
+                            <span class="label-tiny text-neutral-400 block mb-2 font-bold">Status Pembayaran</span>
                             @if ($order->status === 'Awaiting Payment')
-                                <span class="inline-flex items-center gap-1.5 px-3 py-1 border border-amber-600/50 bg-amber-950/30 text-amber-400 label-tiny text-[9px] font-bold">
-                                    <span class="w-1.5 h-1.5 rounded-full bg-amber-400 animate-pulse"></span>
+                                <span class="inline-flex items-center gap-1.5 px-3 py-1 border border-brand-accent/20 bg-brand-cream text-brand-accent label-tiny text-[9px] font-bold">
+                                    <span class="w-1.5 h-1.5 rounded-full bg-brand-accent animate-pulse"></span>
                                     Belum Dibayar
                                 </span>
                             @else
-                                <span class="inline-flex items-center gap-1.5 px-3 py-1 border border-green-600/50 bg-green-950/30 text-green-400 label-tiny text-[9px] font-bold">
-                                    <span class="material-symbols-outlined text-[12px]">check</span>
+                                <span class="inline-flex items-center gap-1.5 px-3 py-1 border border-[#A7F3D0] bg-[#E2F9EB] text-[#121212] label-tiny text-[9px] font-bold">
+                                    <span class="material-symbols-outlined text-[12px] text-green-700">check</span>
                                     Lunas
                                 </span>
                             @endif
@@ -463,9 +463,9 @@
 
             {{-- CTA ke halaman pembayaran jika belum bayar --}}
             @if ($order->status === 'Awaiting Payment')
-            <div class="border-t border-[#F9F9F9]/10 pt-8">
-                <a href="{{ route('order.payment', $order->transaction_id) }}"
-                   class="inline-flex items-center gap-3 w-full justify-center bg-[#F9F9F9] text-[#121212] py-5 font-bold text-xs uppercase tracking-widest hover:bg-transparent hover:text-[#F9F9F9] border border-transparent hover:border-[#F9F9F9]/25 transition-all duration-300 active:scale-[0.98]">
+            <div class="border-t border-[#E5E7EB] pt-8">
+                <a href="{{ route('order.payment', $order->uuid) }}"
+                   class="inline-flex items-center gap-3 w-full justify-center bg-[#121212] text-[#FFFFFF] py-5 font-bold text-xs uppercase tracking-widest hover:bg-brand-accent hover:border-brand-accent hover:text-white border border-[#121212] transition-all duration-300 active:scale-[0.98]">
                     <span class="material-symbols-outlined text-[20px]">payments</span>
                     Selesaikan Pembayaran
                 </a>
@@ -494,14 +494,14 @@
                 const val = parseInt(button.getAttribute('data-value'));
                 const icon = button.querySelector('.material-symbols-outlined');
                 if (val <= rating) {
-                    button.classList.remove('text-[#F9F9F9]/20');
-                    button.classList.add('text-yellow-400');
+                    button.classList.remove('text-neutral-300');
+                    button.classList.add('text-brand-accent');
                     if (icon) {
                         icon.style.fontVariationSettings = "'FILL' 1, 'wght' 200, 'GRAD' 0, 'opsz' 24";
                     }
                 } else {
-                    button.classList.remove('text-yellow-400');
-                    button.classList.add('text-[#F9F9F9]/20');
+                    button.classList.remove('text-brand-accent');
+                    button.classList.add('text-neutral-300');
                     if (icon) {
                         icon.style.fontVariationSettings = "'FILL' 0, 'wght' 200, 'GRAD' 0, 'opsz' 24";
                     }
