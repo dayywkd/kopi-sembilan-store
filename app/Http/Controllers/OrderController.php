@@ -97,96 +97,103 @@ class OrderController extends Controller
             }
 
             // Validasi ongkir di backend menggunakan Biteship (Area ID)
+            $isPickup = $request->delivery_method === 'pickup';
             $verifiedCost = null;
             $verifiedService = null;
-            if (config('services.biteship.mock', false)) {
-                $mockCosts = $this->getMockCosts($request->courier);
-                foreach ($mockCosts as $c) {
-                    if (strtolower($c['service']) === strtolower($request->shipping_service)) {
-                        $verifiedCost = (float) $c['price'];
-                        $verifiedService = $c['service'];
-                        break;
+            $shippingCost = 0;
+
+            if (!$isPickup) {
+                if (config('services.biteship.mock', false)) {
+                    $mockCosts = $this->getMockCosts($request->courier);
+                    foreach ($mockCosts as $c) {
+                        if (strtolower($c['service']) === strtolower($request->shipping_service)) {
+                            $verifiedCost = (float) $c['price'];
+                            $verifiedService = $c['service'];
+                            break;
+                        }
                     }
-                }
-            } else {
-                $apiKey = config('services.biteship.api_key');
-                $baseUrl = config('services.biteship.base_url', 'https://api.biteship.com/v1');
-                $endpoint = rtrim($baseUrl, '/') . '/rates';
-                if (substr($endpoint, -6) === '/rates') {
-                    $endpoint .= '/couriers';
-                }
+                } else {
+                    $apiKey = config('services.biteship.api_key');
+                    $baseUrl = config('services.biteship.base_url', 'https://api.biteship.com/v1');
+                    $endpoint = rtrim($baseUrl, '/') . '/rates';
+                    if (substr($endpoint, -6) === '/rates') {
+                        $endpoint .= '/couriers';
+                    }
 
-                if ($apiKey && $request->postal_code) {
-                    try {
-                        $destPostalCode = (int) $request->postal_code;
-                        $originPostalCode = 62311; // Kode pos toko (Tuban)
+                    if ($apiKey && $request->postal_code) {
+                        try {
+                            $destPostalCode = (int) $request->postal_code;
+                            $originPostalCode = 62311; // Kode pos toko (Tuban)
 
-                        // Map items
-                        $items = [];
-                        foreach ($cartItems as $item) {
-                            $product = Product::find($item['id']);
-                            $name = $product ? $product->name : $item['name'];
-                            $selectedSize = $item['grind_size'] ?? '100gr';
-                            $weight = $this->parseWeightInGrams($selectedSize);
-                            $price = $product ? $product->price : (float) $item['price'];
-                            if ($product && $product->sizes && is_array($product->sizes)) {
-                                foreach ($product->sizes as $sizeOption) {
-                                    if ($sizeOption['size'] === $selectedSize) {
-                                        $price = (float) $sizeOption['price'];
+                            // Map items
+                            $items = [];
+                            foreach ($cartItems as $item) {
+                                $product = Product::find($item['id']);
+                                $name = $product ? $product->name : $item['name'];
+                                $selectedSize = $item['grind_size'] ?? '100gr';
+                                $weight = $this->parseWeightInGrams($selectedSize);
+                                $price = $product ? $product->price : (float) $item['price'];
+                                if ($product && $product->sizes && is_array($product->sizes)) {
+                                    foreach ($product->sizes as $sizeOption) {
+                                        if ($sizeOption['size'] === $selectedSize) {
+                                            $price = (float) $sizeOption['price'];
+                                            break;
+                                        }
+                                    }
+                                }
+
+                                $items[] = [
+                                    'name' => $name . ' (' . $selectedSize . ')',
+                                    'quantity' => (int) $item['quantity'],
+                                    'value' => (float) $price,
+                                    'weight' => $weight
+                                ];
+                            }
+
+                            $activeCouriers = Setting::getValue('active_couriers', 'jne,jnt');
+                            $response = Http::withHeaders([
+                                'authorization' => $apiKey
+                            ])->post($endpoint, [
+                                'origin_postal_code' => $originPostalCode,
+                                'destination_postal_code' => $destPostalCode,
+                                'couriers' => $activeCouriers,
+                                'items' => $items,
+                            ]);
+
+                            if ($response->successful()) {
+                                $data = $response->json();
+                                $pricings = $data['pricing'] ?? $data['data']['pricing'] ?? [];
+                                $chosenCourier = strtolower($request->courier);
+                                $chosenService = strtolower($request->shipping_service);
+
+                                foreach ($pricings as $pricing) {
+                                    $serviceName = $pricing['courier_service_name'] ?? $pricing['courier_service_code'];
+                                    if (strtolower($pricing['courier_code']) === $chosenCourier && strtolower($serviceName) === $chosenService) {
+                                        $verifiedCost = (float) ($pricing['price'] ?? 0);
+                                        $verifiedService = $serviceName;
                                         break;
                                     }
                                 }
                             }
-
-                            $items[] = [
-                                'name' => $name . ' (' . $selectedSize . ')',
-                                'quantity' => (int) $item['quantity'],
-                                'value' => (float) $price,
-                                'weight' => $weight
-                            ];
+                        } catch (\Exception $e) {
+                            Log::error('Biteship validation failed: ' . $e->getMessage());
                         }
-
-                        $activeCouriers = Setting::getValue('active_couriers', 'jne,jnt');
-                        $response = Http::withHeaders([
-                            'authorization' => $apiKey
-                        ])->post($endpoint, [
-                            'origin_postal_code' => $originPostalCode,
-                            'destination_postal_code' => $destPostalCode,
-                            'couriers' => $activeCouriers,
-                            'items' => $items,
-                        ]);
-
-                        if ($response->successful()) {
-                            $data = $response->json();
-                            $pricings = $data['pricing'] ?? $data['data']['pricing'] ?? [];
-                            $chosenCourier = strtolower($request->courier);
-                            $chosenService = strtolower($request->shipping_service);
-
-                            foreach ($pricings as $pricing) {
-                                $serviceName = $pricing['courier_service_name'] ?? $pricing['courier_service_code'];
-                                if (strtolower($pricing['courier_code']) === $chosenCourier && strtolower($serviceName) === $chosenService) {
-                                    $verifiedCost = (float) ($pricing['price'] ?? 0);
-                                    $verifiedService = $serviceName;
-                                    break;
-                                }
-                            }
-                        }
-                    } catch (\Exception $e) {
-                        Log::error('Biteship validation failed: ' . $e->getMessage());
                     }
                 }
-            }
 
-            // Jika berhasil diverifikasi, gunakan verified cost, jika gagal, gunakan cost dari request
-            $shippingCost = $verifiedCost !== null ? $verifiedCost : (float) $request->shipping_cost;
+                // Jika berhasil diverifikasi, gunakan verified cost, jika gagal, gunakan cost dari request
+                $shippingCost = $verifiedCost !== null ? $verifiedCost : (float) $request->shipping_cost;
 
-            // Terapkan Free Shipping Threshold
-            $shippingThreshold = (int) Setting::getValue('shipping_threshold', 500000);
-            if ($subtotal >= $shippingThreshold) {
-                $shippingCost = 0;
-            }
+                // Terapkan Free Shipping Threshold
+                $shippingThreshold = (int) Setting::getValue('shipping_threshold', 500000);
+                if ($subtotal >= $shippingThreshold) {
+                    $shippingCost = 0;
+                }
 
-            if ($shippingCost < 0) {
+                if ($shippingCost < 0) {
+                    $shippingCost = 0;
+                }
+            } else {
                 $shippingCost = 0;
             }
 
@@ -198,7 +205,22 @@ class OrderController extends Controller
                 $exists = Order::where('transaction_id', $transactionId)->exists();
             } while ($exists);
 
-            $finalNotes = $request->order_notes;
+            if ($isPickup) {
+                $finalNotes = "[Kurir: Ambil di Toko]\n" . $request->order_notes;
+                $shippingAddress = "Ambil di Toko (Local Pickup)";
+                $city = "Tuban";
+                $postalCode = "62311";
+                $areaId = null;
+                $areaName = null;
+            } else {
+                $courierName = strtolower($request->courier) === 'jne' ? 'JNE Reguler' : 'J&T';
+                $finalNotes = "[Kurir: {$courierName} - {$request->shipping_service}]\n" . $request->order_notes;
+                $shippingAddress = $request->address;
+                $city = $request->city;
+                $postalCode = $request->postal_code;
+                $areaId = $request->biteship_area_id;
+                $areaName = $request->biteship_area_name;
+            }
 
             $order = Order::create([
                 'transaction_id' => $transactionId,
@@ -206,11 +228,11 @@ class OrderController extends Controller
                 'last_name' => $request->last_name,
                 'email' => $request->email,
                 'phone' => $request->phone,
-                'shipping_address' => $request->address,
-                'city' => $request->city,
-                'postal_code' => $request->postal_code,
-                'biteship_area_id' => $request->biteship_area_id,
-                'biteship_area_name' => $request->biteship_area_name,
+                'shipping_address' => $shippingAddress,
+                'city' => $city,
+                'postal_code' => $postalCode,
+                'biteship_area_id' => $areaId,
+                'biteship_area_name' => $areaName,
                 'order_notes' => $finalNotes,
                 'payment_method' => $request->payment,
                 'subtotal' => $subtotal,
@@ -236,14 +258,20 @@ class OrderController extends Controller
 
             // Update profile address if logged in
             if (\Illuminate\Support\Facades\Auth::check()) {
-                \Illuminate\Support\Facades\Auth::user()->update([
-                    'phone' => $request->phone,
-                    'address' => $request->address,
-                    'city' => $request->city,
-                    'postal_code' => $request->postal_code,
-                    'biteship_area_id' => $request->biteship_area_id,
-                    'biteship_area_name' => $request->biteship_area_name,
-                ]);
+                if (!$isPickup) {
+                    \Illuminate\Support\Facades\Auth::user()->update([
+                        'phone' => $request->phone,
+                        'address' => $request->address,
+                        'city' => $request->city,
+                        'postal_code' => $request->postal_code,
+                        'biteship_area_id' => $request->biteship_area_id,
+                        'biteship_area_name' => $request->biteship_area_name,
+                    ]);
+                } else {
+                    \Illuminate\Support\Facades\Auth::user()->update([
+                        'phone' => $request->phone,
+                    ]);
+                }
             }
 
             DB::commit();
@@ -612,6 +640,14 @@ class OrderController extends Controller
             $order->update([
                 'status' => 'Delivered'
             ]);
+
+            // Kirim email notifikasi bahwa pesanan telah diterima
+            try {
+                \Illuminate\Support\Facades\Mail::to($order->email)->send(new \App\Mail\OrderStatusChanged($order));
+            } catch (\Exception $e) {
+                \Illuminate\Support\Facades\Log::error("Gagal mengirim email update status Delivered #{$order->transaction_id}: " . $e->getMessage());
+            }
+
             return redirect()->back()->with('confirm_success', 'Terima kasih! Pesanan Anda telah ditandai sebagai Diterima.');
         }
 

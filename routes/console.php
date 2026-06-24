@@ -10,9 +10,22 @@ Artisan::command('inspire', function () {
 use App\Models\Order;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Schedule;
+use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Log;
 
 Schedule::call(function () {
-    Order::where('status', 'Awaiting Payment')
+    $expiredOrders = Order::where('status', 'Awaiting Payment')
         ->where('created_at', '<', Carbon::now()->subHours(24))
-        ->update(['status' => 'Cancelled']);
+        ->get();
+
+    foreach ($expiredOrders as $order) {
+        $order->update(['status' => 'Cancelled']);
+
+        // Kirim email notifikasi bahwa pesanan kedaluwarsa/dibatalkan
+        try {
+            Mail::to($order->email)->send(new \App\Mail\OrderStatusChanged($order));
+        } catch (\Exception $e) {
+            Log::error("Gagal mengirim email pembatalan pesanan #{$order->transaction_id}: " . $e->getMessage());
+        }
+    }
 })->hourly();

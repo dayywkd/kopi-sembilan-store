@@ -42,7 +42,7 @@
         <div class="col-span-12 lg:col-span-8">
             <div class="mb-stack-lg border-b border-[#E5E7EB] pb-6">
                 <h1 class="font-display text-5xl md:text-7xl uppercase italic mb-2 text-[#121212]">Checkout</h1>
-                <p class="label-tiny text-neutral-500 font-semibold">Complete your shipping and payment architecture</p>
+                <p class="label-tiny text-neutral-500 font-semibold">Complete your shipping and payment</p>
             </div>
             
             <!-- Tampilkan error umum jika ada -->
@@ -121,7 +121,35 @@
                             @enderror
                         </div>
 
-                        <div class="col-span-full flex flex-col gap-2">
+                        <!-- Delivery Method Selector -->
+                        <div class="col-span-full flex flex-col gap-3 mb-4">
+                            <label class="label-tiny text-[10px] text-neutral-500 font-semibold">Metode Penerimaan</label>
+                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                                <label class="cursor-pointer relative">
+                                    <input class="hidden peer" name="delivery_method" type="radio" value="shipping" checked onchange="toggleDeliveryMethod('shipping')">
+                                    <div class="border border-neutral-300 p-5 flex flex-col gap-1 peer-checked:bg-[#121212] peer-checked:text-white peer-checked:border-transparent transition-all">
+                                        <div class="flex justify-between items-start">
+                                            <span class="label-tiny font-bold text-xs">Kirim via Kurir</span>
+                                            <span class="material-symbols-outlined text-[20px]">local_shipping</span>
+                                        </div>
+                                        <p class="text-[10px] opacity-70">Pengiriman JNE Reguler / J&T ke alamat Anda</p>
+                                    </div>
+                                </label>
+                                <label class="cursor-pointer relative">
+                                    <input class="hidden peer" name="delivery_method" type="radio" value="pickup" onchange="toggleDeliveryMethod('pickup')">
+                                    <div class="border border-neutral-300 p-5 flex flex-col gap-1 peer-checked:bg-[#121212] peer-checked:text-white peer-checked:border-transparent transition-all">
+                                        <div class="flex justify-between items-start">
+                                            <span class="label-tiny font-bold text-xs">Ambil di Toko (Local Pickup)</span>
+                                            <span class="material-symbols-outlined text-[20px]">store</span>
+                                        </div>
+                                        <p class="text-[10px] opacity-70">Ambil langsung di Roastery (Tuban, Jawa Timur)</p>
+                                    </div>
+                                </label>
+                            </div>
+                        </div>
+
+                        <!-- Address field container -->
+                        <div id="address-field-container" class="col-span-full flex flex-col gap-2">
                             <label class="label-tiny text-[10px] opacity-60">Shipping Address</label>
                             <textarea id="address" name="address" class="w-full py-3 px-4 outline-none text-sm placeholder:opacity-20 resize-none min-h-[80px]" placeholder="STREET, BUILDING, UNIT" required>{{ auth()->check() ? (auth()->user()->address ?? old('address')) : old('address') }}</textarea>
                             @error('address')
@@ -129,7 +157,8 @@
                             @enderror
                         </div>
                         
-                        <div class="col-span-full flex flex-col gap-2 relative text-[#121212]">
+                        <!-- Area search field container -->
+                        <div id="area-search-field-container" class="col-span-full flex flex-col gap-2 relative text-[#121212]">
                             <label class="label-tiny text-[10px] text-neutral-500 font-semibold">Cari Wilayah (Kecamatan, Kota, atau Kode Pos)</label>
                             <input id="area-search" type="text" class="w-full py-3 px-4 outline-none text-sm placeholder:opacity-40 bg-[#FFFFFF] border border-[#E5E7EB] text-[#121212] focus:border-brand-accent transition-all font-sans" placeholder="Ketik minimal 3 karakter untuk mencari wilayah..." autocomplete="off" value="{{ auth()->check() ? (auth()->user()->biteship_area_name ?? '') : '' }}" required>
                             <div id="area-suggestions" class="absolute left-0 right-0 top-[100%] z-50 bg-[#FFFFFF] border border-[#E5E7EB] divide-y divide-[#E5E7EB] max-h-60 overflow-y-auto hidden shadow-lg">
@@ -317,8 +346,20 @@
         const cityName = document.getElementById('city')?.value || '';
         const postalCode = document.getElementById('postal-code')?.value || '';
         
-        const courierCode = document.getElementById('courier')?.value || '';
-        const courierName = courierCode ? courierCode.toUpperCase() : 'Cheapest Courier';
+        const methodRadios = document.getElementsByName('delivery_method');
+        let deliveryMethod = 'shipping';
+        for (let radio of methodRadios) {
+            if (radio.checked) {
+                deliveryMethod = radio.value;
+                break;
+            }
+        }
+
+        let courierCode = document.getElementById('courier')?.value || '';
+        let courierName = courierCode ? courierCode.toUpperCase() : 'Cheapest Courier';
+        if (deliveryMethod === 'pickup') {
+            courierName = 'AMBIL DI TOKO (LOCAL PICKUP)';
+        }
         
         const paymentRadios = document.getElementsByName('payment');
         let paymentMethod = 'Bank Transfer';
@@ -341,6 +382,20 @@
             cartText += `- ${item.name} (${grindLabel}) x ${item.quantity} = ${formatRupiah(itemTotal)}\n`;
         });
         
+        let receiptInfoText = '';
+        if (deliveryMethod === 'pickup') {
+            receiptInfoText = `Penerimaan: Ambil Mandiri di Toko (Tuban, Jawa Timur)\n`;
+        } else {
+            receiptInfoText = `Alamat: ${address}\n` +
+                              `Kota: ${cityName}\n` +
+                              `Kode Pos: ${postalCode}\n` +
+                              `Pilihan Kurir: ${courierName}\n`;
+        }
+
+        const footerText = deliveryMethod === 'pickup' 
+            ? `Saya akan mengambil pesanan langsung di roastery. Terima kasih!`
+            : `Mohon bantu hitungkan ongkos kirim ke alamat saya. Terima kasih!`;
+
         const message = `Halo Toko Kopi Sembilan, saya ingin memesan:\n` +
                         `${cartText}` +
                         `Subtotal: ${formatRupiah(subtotal)}\n\n` +
@@ -348,13 +403,10 @@
                         `Nama: ${firstName} ${lastName}\n` +
                         `Email: ${email}\n` +
                         `Nomor HP: ${phone}\n` +
-                        `Alamat: ${address}\n` +
-                        `Kota: ${cityName}\n` +
-                        `Kode Pos: ${postalCode}\n` +
-                        `Pilihan Kurir: ${courierName}\n` +
+                        receiptInfoText +
                         `Metode Pembayaran: ${paymentMethod}\n` +
                         `Catatan: ${orderNotes}\n\n` +
-                        `Mohon bantu hitungkan ongkos kirim ke alamat saya. Terima kasih!`;
+                        footerText;
                         
         const phoneNumber = '6285855180131';
         const waUrl = `https://wa.me/${phoneNumber}?text=${encodeURIComponent(message)}`;
@@ -393,6 +445,24 @@
     }
 
     function checkAndFetchShippingCost() {
+        const methodRadios = document.getElementsByName('delivery_method');
+        let deliveryMethod = 'shipping';
+        for (let radio of methodRadios) {
+            if (radio.checked) {
+                deliveryMethod = radio.value;
+                break;
+            }
+        }
+
+        if (deliveryMethod === 'pickup') {
+            document.getElementById('shipping-service-container').style.display = 'none';
+            document.getElementById('courier').value = 'pickup';
+            document.getElementById('shipping_service').value = 'pickup';
+            document.getElementById('shipping_cost').value = '0';
+            renderSummary(0);
+            return;
+        }
+
         const areaId = document.getElementById('biteship-area-id').value;
         const cart = getCart();
 
@@ -583,6 +653,41 @@
             });
         }
 
+        // Global function for toggling delivery method (shipping vs pickup)
+        window.toggleDeliveryMethod = function(method) {
+            const addressFieldContainer = document.getElementById('address-field-container');
+            const areaSearchFieldContainer = document.getElementById('area-search-field-container');
+            const shippingServiceContainer = document.getElementById('shipping-service-container');
+            
+            const addressInput = document.getElementById('address');
+            const areaSearchInput = document.getElementById('area-search');
+            
+            if (method === 'pickup') {
+                if (addressFieldContainer) addressFieldContainer.style.display = 'none';
+                if (areaSearchFieldContainer) areaSearchFieldContainer.style.display = 'none';
+                if (shippingServiceContainer) shippingServiceContainer.style.display = 'none';
+                
+                if (addressInput) addressInput.removeAttribute('required');
+                if (areaSearchInput) areaSearchInput.removeAttribute('required');
+                
+                document.getElementById('courier').value = 'pickup';
+                document.getElementById('shipping_service').value = 'pickup';
+                document.getElementById('shipping_cost').value = '0';
+                
+                renderSummary(0);
+                disableWhatsappFallback();
+            } else {
+                if (addressFieldContainer) addressFieldContainer.style.display = 'block';
+                if (areaSearchFieldContainer) areaSearchFieldContainer.style.display = 'block';
+                
+                if (addressInput) addressInput.setAttribute('required', 'required');
+                if (areaSearchInput) areaSearchInput.setAttribute('required', 'required');
+                
+                checkAndFetchShippingCost();
+            }
+            updateWhatsappLink();
+        };
+
         // Global function for selecting shipping rate card
         window.selectShippingRate = function(courier, service, cost) {
             document.getElementById('courier').value = courier;
@@ -640,14 +745,25 @@
                 // Check if shipping details are calculated (if not under WhatsApp fallback)
                 const isWaActive = !document.getElementById('whatsapp-fallback-button').classList.contains('hidden');
                 if (!isWaActive) {
-                    const courier = document.getElementById('courier').value;
-                    const service = document.getElementById('shipping_service').value;
-                    const cost = document.getElementById('shipping_cost').value;
-                    const areaId = document.getElementById('biteship-area-id').value;
-                    if (!courier || !service || cost === "" || !areaId) {
-                        e.preventDefault();
-                        alert('Silakan pilih wilayah pengiriman dan layanan kurir yang valid.');
-                        return;
+                    const methodRadios = document.getElementsByName('delivery_method');
+                    let deliveryMethod = 'shipping';
+                    for (let radio of methodRadios) {
+                        if (radio.checked) {
+                            deliveryMethod = radio.value;
+                            break;
+                        }
+                    }
+
+                    if (deliveryMethod === 'shipping') {
+                        const courier = document.getElementById('courier').value;
+                        const service = document.getElementById('shipping_service').value;
+                        const cost = document.getElementById('shipping_cost').value;
+                        const areaId = document.getElementById('biteship-area-id').value;
+                        if (!courier || !service || cost === "" || !areaId) {
+                            e.preventDefault();
+                            alert('Silakan pilih wilayah pengiriman dan layanan kurir yang valid.');
+                            return;
+                        }
                     }
                 }
                 

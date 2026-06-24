@@ -19,23 +19,38 @@ class CheckoutRequest extends FormRequest
      */
     public function rules(): array
     {
-        return [
+        $rules = [
             'first_name' => ['required', 'string', 'max:100'],
             'last_name' => ['required', 'string', 'max:100'],
             'email' => ['required', 'email', 'max:150'],
             'phone' => ['required', 'string', 'max:25'],
-            'address' => ['required', 'string'],
-            'city' => ['required', 'string', 'max:100'],
-            'courier' => ['required', 'string', 'in:jne,jnt,sicepat,anteraja,tiki,pos,lion,idexpress,wahana,sap,ninja,grab,gojek,rpx,paxel,deliveree,lalamove,borzo,sentralcargo,tlx,dash_express'],
-            'shipping_service' => ['required', 'string', 'max:100'],
-            'shipping_cost' => ['required', 'numeric', 'min:0'],
-            'postal_code' => ['required', 'string', 'max:15'],
-            'biteship_area_id' => ['nullable', 'string', 'max:100'],
-            'biteship_area_name' => ['nullable', 'string', 'max:255'],
             'payment' => ['required', 'string', 'in:Bank Transfer,QRIS'],
             'cart_data' => ['required', 'string'], // JSON payload dari local storage
             'order_notes' => ['nullable', 'string', 'max:500'],
+            'delivery_method' => ['required', 'string', 'in:shipping,pickup'],
         ];
+
+        if ($this->input('delivery_method') === 'pickup') {
+            $rules['address'] = ['nullable', 'string'];
+            $rules['city'] = ['nullable', 'string', 'max:100'];
+            $rules['postal_code'] = ['nullable', 'string', 'max:15'];
+            $rules['courier'] = ['nullable', 'string'];
+            $rules['shipping_service'] = ['nullable', 'string', 'max:100'];
+            $rules['shipping_cost'] = ['nullable', 'numeric', 'min:0'];
+            $rules['biteship_area_id'] = ['nullable', 'string', 'max:100'];
+            $rules['biteship_area_name'] = ['nullable', 'string', 'max:255'];
+        } else {
+            $rules['address'] = ['required', 'string'];
+            $rules['city'] = ['required', 'string', 'max:100'];
+            $rules['postal_code'] = ['required', 'string', 'max:15'];
+            $rules['courier'] = ['required', 'string', 'in:jne,jnt,sicepat,anteraja,tiki,pos,lion,idexpress,wahana,sap,ninja,grab,gojek,rpx,paxel,deliveree,lalamove,borzo,sentralcargo,tlx,dash_express,pickup'];
+            $rules['shipping_service'] = ['required', 'string', 'max:100'];
+            $rules['shipping_cost'] = ['required', 'numeric', 'min:0'];
+            $rules['biteship_area_id'] = ['nullable', 'string', 'max:100'];
+            $rules['biteship_area_name'] = ['nullable', 'string', 'max:255'];
+        }
+
+        return $rules;
     }
 
     /**

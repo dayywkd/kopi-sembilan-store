@@ -75,6 +75,13 @@ class DashboardController extends Controller
 
         $order->update($updateData);
 
+        // Kirim email notifikasi perubahan status
+        try {
+            \Illuminate\Support\Facades\Mail::to($order->email)->send(new \App\Mail\OrderStatusChanged($order));
+        } catch (\Exception $e) {
+            \Illuminate\Support\Facades\Log::error("Gagal mengirim email update status #{$order->transaction_id}: " . $e->getMessage());
+        }
+
         return redirect()->route('admin.dashboard')
             ->with('status_updated', "Status pesanan #{$order->transaction_id} berhasil diubah menjadi {$request->status}.");
     }

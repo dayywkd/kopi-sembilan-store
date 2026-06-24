@@ -1,6 +1,8 @@
 @extends('layouts.app')
 
 @section('title', $product->name . ' | Toko Kopi Sembilan')
+@section('meta_description', 'Beli ' . $product->name . ' - Roast Level: ' . $product->roast_level . ', Altitude: ' . $product->altitude . '. Notes: ' . $product->sensory_notes . '. Dapatkan biji kopi pilihan berkualitas tinggi dari Toko Kopi Sembilan.')
+@section('meta_image', $product->image_path ? asset($product->image_path) : asset('images/hero_default.jpg'))
 
 @section('styles')
 <style>

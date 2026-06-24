@@ -1,6 +1,7 @@
 @extends('layouts.app')
 
 @section('title', 'About Us | Toko Kopi Sembilan')
+@section('meta_description', 'Ketahui lebih dalam mengenai sejarah perjalanan roastery Toko Kopi Sembilan, komitmen kualitas specialty coffee kami, dan dedikasi kami pada petani lokal.')
 
 @section('styles')
 <style>

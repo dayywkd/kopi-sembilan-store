@@ -386,15 +386,28 @@
 
                 {{-- Shipping Info --}}
                 <div class="border border-[#E5E7EB] bg-brand-cream p-6 space-y-4">
-                    <h3 class="label-tiny text-neutral-500">Info Pengiriman</h3>
-                    <div class="font-sans text-sm space-y-2 text-neutral-600">
-                        <p class="font-semibold text-[#121212]">{{ $order->first_name }} {{ $order->last_name }}</p>
-                        <p>{{ $order->email }}</p>
-                        <p class="text-xs leading-relaxed mt-2 text-neutral-500">
-                            {{ $order->shipping_address }}<br>
-                            {{ $order->city }}{{ $order->postal_code ? ', ' . $order->postal_code : '' }}
-                        </p>
-                    </div>
+                    @if (str_contains(strtolower($order->shipping_address), 'ambil di toko'))
+                        <h3 class="label-tiny text-neutral-500">Info Penerimaan (Local Pickup)</h3>
+                        <div class="font-sans text-sm space-y-2 text-neutral-600">
+                            <p class="font-semibold text-[#121212]">{{ $order->first_name }} {{ $order->last_name }}</p>
+                            <p>{{ $order->email }}</p>
+                            <p class="text-xs leading-relaxed mt-2 text-neutral-500">
+                                <strong>Metode:</strong> Ambil Sendiri di Toko<br>
+                                <strong>Lokasi:</strong> Roastery Toko Kopi Sembilan (Kutorejo, Tuban)<br>
+                                <span class="text-neutral-400">Silakan ambil pesanan Anda setelah status berubah menjadi "Packing" (siap diambil).</span>
+                            </p>
+                        </div>
+                    @else
+                        <h3 class="label-tiny text-neutral-500">Info Pengiriman</h3>
+                        <div class="font-sans text-sm space-y-2 text-neutral-600">
+                            <p class="font-semibold text-[#121212]">{{ $order->first_name }} {{ $order->last_name }}</p>
+                            <p>{{ $order->email }}</p>
+                            <p class="text-xs leading-relaxed mt-2 text-neutral-500">
+                                {{ $order->shipping_address }}<br>
+                                {{ $order->city }}{{ $order->postal_code ? ', ' . $order->postal_code : '' }}
+                            </p>
+                        </div>
+                    @endif
                 </div>
 
                 {{-- CTA to Tracking Page --}}

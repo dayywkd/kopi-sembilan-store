@@ -1,6 +1,7 @@
 @extends('layouts.app')
 
 @section('title', 'Toko Kopi Sembilan | Specialty Coffee | SCA Certified | Roastery')
+@section('meta_description', 'Toko Kopi Sembilan adalah roastery kopi lokal di Tuban yang menyediakan biji kopi pilihan (specialty coffee) berkualitas tinggi dengan standar SCA Certified Roastery.')
 
 @section('styles')
 <style>

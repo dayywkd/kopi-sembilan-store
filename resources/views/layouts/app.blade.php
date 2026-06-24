@@ -4,6 +4,23 @@
     <meta charset="utf-8"/>
     <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
     <title>@yield('title', 'Toko Kopi Sembilan | Specialty Coffee | SCA Certified | Roastery')</title>
+    <meta name="description" content="@yield('meta_description', 'Toko Kopi Sembilan menyediakan biji kopi pilihan (specialty coffee) berkualitas tinggi yang dipanggang dengan standar SCA Certified Roastery.')">
+    <meta name="keywords" content="toko kopi, biji kopi, specialty coffee, roastery, kopi tuban, kopi sembilan, kopi indonesia">
+    <meta name="author" content="Toko Kopi Sembilan">
+    
+    <!-- OpenGraph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="@yield('title', 'Toko Kopi Sembilan | Specialty Coffee | SCA Certified | Roastery')">
+    <meta property="og:description" content="@yield('meta_description', 'Toko Kopi Sembilan menyediakan biji kopi pilihan (specialty coffee) berkualitas tinggi yang dipanggang dengan standar SCA Certified Roastery.')">
+    <meta property="og:image" content="@yield('meta_image', asset('images/hero_default.jpg'))">
+    <meta property="og:url" content="{{ request()->url() }}">
+    <meta property="og:site_name" content="Toko Kopi Sembilan">
+    
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="@yield('title', 'Toko Kopi Sembilan | Specialty Coffee | SCA Certified | Roastery')">
+    <meta name="twitter:description" content="@yield('meta_description', 'Toko Kopi Sembilan menyediakan biji kopi pilihan (specialty coffee) berkualitas tinggi.')">
+    <meta name="twitter:image" content="@yield('meta_image', asset('images/hero_default.jpg'))">
     
     <!-- Tailwind CSS & Plugins (CDN) -->
     <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>

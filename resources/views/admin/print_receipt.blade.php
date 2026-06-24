@@ -281,10 +281,15 @@
 
         <div class="shipping-grid">
             <div class="address-box">
-                <h4>Penerima:</h4>
+                <h4>Penerima / Penerimaan:</h4>
                 <p><strong>{{ $order->first_name }} {{ $order->last_name }}</strong></p>
-                <p>{{ $order->shipping_address }}</p>
-                <p>{{ $order->city }} - {{ $order->postal_code }}</p>
+                @if (str_contains(strtolower($order->shipping_address), 'ambil di toko'))
+                    <p><em>Ambil Sendiri di Toko (Local Pickup)</em></p>
+                    <p>Lokasi: Roastery Toko Kopi Sembilan (Kutorejo, Tuban)</p>
+                @else
+                    <p>{{ $order->shipping_address }}</p>
+                    <p>{{ $order->city }} - {{ $order->postal_code }}</p>
+                @endif
                 @if($order->phone)
                     <p>Telp: {{ $order->phone }}</p>
                 @endif

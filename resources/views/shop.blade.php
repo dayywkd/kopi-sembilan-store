@@ -1,6 +1,7 @@
 @extends('layouts.app')
 
 @section('title', 'Shop | Toko Kopi Sembilan')
+@section('meta_description', 'Jelajahi koleksi biji kopi pilihan (single origin & blend) terbaik kami di Toko Kopi Sembilan. Roasting fresh setiap minggu untuk kesegaran rasa kopi terbaik Anda.')
 
 @section('styles')
 <style>

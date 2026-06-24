@@ -68,3 +68,7 @@ Route::middleware(['auth', 'is_admin'])->prefix('admin')->name('admin.')->group(
     Route::post('/products/{id}/delete', [AdminDashboardController::class, 'destroyProduct'])->name('products.delete');
     Route::post('/settings/update-couriers', [AdminDashboardController::class, 'updateCouriers'])->name('settings.update_couriers');
 });
+
+// Halaman Legal
+Route::view('/privacy-policy', 'legal.privacy_policy')->name('legal.privacy');
+Route::view('/refund-policy', 'legal.refund_policy')->name('legal.refund');
