@@ -4,6 +4,9 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Order;
+use App\Models\Product;
+use App\Models\Category;
+use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 
 class DashboardController extends Controller
@@ -119,5 +122,120 @@ class DashboardController extends Controller
 
         return redirect()->route('admin.dashboard')
             ->with('status_updated', 'Pengaturan kurir aktif berhasil diperbarui.');
+    }
+
+    public function storeProduct(Request $request)
+    {
+        $request->validate([
+            'category_id' => ['required', 'exists:categories,id'],
+            'name' => ['required', 'string', 'max:255'],
+            'price' => ['required', 'numeric', 'min:0'],
+            'stock' => ['required', 'integer', 'min:0'],
+            'roast_level' => ['required', 'string', 'in:Light,Medium-Light,Medium,Medium-Dark'],
+            'altitude' => ['required', 'string', 'max:255'],
+            'sensory_notes' => ['required', 'string', 'max:255'],
+            'sizes' => ['required', 'string'],
+            'status' => ['required', 'string', 'in:AVAILABLE,LIMITED,SOLD OUT'],
+            'image' => ['nullable', 'image', 'mimes:jpeg,png,jpg,gif', 'max:2048'],
+        ]);
+
+        $imagePath = null;
+        if ($request->hasFile('image')) {
+            $imageName = time() . '_' . $request->file('image')->getClientOriginalName();
+            $request->file('image')->move(public_path('images/products'), $imageName);
+            $imagePath = 'images/products/' . $imageName;
+        }
+
+        $sizes = json_decode($request->sizes, true);
+        if (!$sizes) {
+            $sizes = [['size' => $request->sizes, 'price' => (int)$request->price]];
+        }
+
+        Product::create([
+            'category_id' => $request->category_id,
+            'name' => $request->name,
+            'slug' => Str::slug($request->name),
+            'price' => $request->price,
+            'sizes' => $sizes,
+            'image_path' => $imagePath,
+            'roast_level' => $request->roast_level,
+            'altitude' => $request->altitude,
+            'sensory_notes' => $request->sensory_notes,
+            'status' => $request->status,
+            'stock' => $request->stock,
+        ]);
+
+        return redirect()->route('admin.dashboard')
+            ->with('status_updated', 'Produk baru berhasil ditambahkan.');
+    }
+
+    public function updateProduct(Request $request, $id)
+    {
+        $product = Product::findOrFail($id);
+
+        $request->validate([
+            'category_id' => ['required', 'exists:categories,id'],
+            'name' => ['required', 'string', 'max:255'],
+            'price' => ['required', 'numeric', 'min:0'],
+            'stock' => ['required', 'integer', 'min:0'],
+            'roast_level' => ['required', 'string', 'in:Light,Medium-Light,Medium,Medium-Dark'],
+            'altitude' => ['required', 'string', 'max:255'],
+            'sensory_notes' => ['required', 'string', 'max:255'],
+            'sizes' => ['required', 'string'],
+            'status' => ['required', 'string', 'in:AVAILABLE,LIMITED,SOLD OUT'],
+            'image' => ['nullable', 'image', 'mimes:jpeg,png,jpg,gif', 'max:2048'],
+        ]);
+
+        $imagePath = $product->image_path;
+        if ($request->hasFile('image')) {
+            if ($imagePath && file_exists(public_path($imagePath))) {
+                @unlink(public_path($imagePath));
+            }
+            $imageName = time() . '_' . $request->file('image')->getClientOriginalName();
+            $request->file('image')->move(public_path('images/products'), $imageName);
+            $imagePath = 'images/products/' . $imageName;
+        }
+
+        $sizes = json_decode($request->sizes, true);
+        if (!$sizes) {
+            $sizes = [['size' => $request->sizes, 'price' => (int)$request->price]];
+        }
+
+        $status = $request->status;
+        $stock = (int)$request->stock;
+        if ($stock === 0) {
+            $status = 'SOLD OUT';
+        }
+
+        $product->update([
+            'category_id' => $request->category_id,
+            'name' => $request->name,
+            'slug' => Str::slug($request->name),
+            'price' => $request->price,
+            'sizes' => $sizes,
+            'image_path' => $imagePath,
+            'roast_level' => $request->roast_level,
+            'altitude' => $request->altitude,
+            'sensory_notes' => $request->sensory_notes,
+            'status' => $status,
+            'stock' => $stock,
+        ]);
+
+        return redirect()->route('admin.dashboard')
+            ->with('status_updated', 'Produk berhasil diperbarui.');
+    }
+
+    public function destroyProduct($id)
+    {
+        $product = Product::findOrFail($id);
+        
+        if ($product->image_path && file_exists(public_path($product->image_path))) {
+            @unlink(public_path($product->image_path));
+        }
+
+        $product->delete();
+
+        return redirect()->route('admin.dashboard')
+            ->with('status_updated', 'Produk berhasil dihapus.');
     }
 }

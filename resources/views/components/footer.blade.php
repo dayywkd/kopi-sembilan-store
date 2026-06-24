@@ -80,6 +80,7 @@
                 <h4 class="text-xs font-bold uppercase tracking-widest text-brand-dark">Support</h4>
                 <div class="flex flex-col gap-2 text-xs text-brand-dark font-medium">
                     <a class="hover:text-brand-accent transition-colors" href="{{ route('about') }}">Contact Support</a>
+                    <a class="hover:text-brand-accent transition-colors" href="{{ route('order.tracking.form') }}">Lacak Pesanan</a>
                     <a class="hover:text-brand-accent transition-colors" href="#">Shipping & Returns</a>
                     <a class="hover:text-brand-accent transition-colors" href="#">Privacy Policy</a>
                     <a class="hover:text-brand-accent transition-colors" href="#">Terms & Conditions</a>

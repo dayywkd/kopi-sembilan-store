@@ -170,7 +170,7 @@
             <td class="text-right">Rp {{ number_format($order->shipping_cost, 0, ',', '.') }}</td>
         </tr>
         <tr class="grand-total">
-            <td>Total Pembayaran @if($order->payment_method === 'Bank Transfer') (termasuk kode unik) @endif</td>
+            <td>Total Pembayaran</td>
             <td class="text-right">Rp {{ number_format($order->total_paid, 0, ',', '.') }}</td>
         </tr>
     </table>
@@ -182,7 +182,7 @@
             <strong>Bank BCA: 1234567890 (a.n. Toko Kopi Sembilan)</strong><br><br>
             Harap transfer nominal yang sesuai yaitu sebesar:<br>
             <span style="font-size: 18px; font-weight: 700; color: #b45309;">Rp {{ number_format($order->total_paid, 0, ',', '.') }}</span><br>
-            <span style="font-size: 12px; color: #666;">(Mohon pastikan 3 digit terakhir sama persis agar pesanan Anda dapat diverifikasi dengan cepat)</span>
+            <span style="font-size: 12px; color: #666;">(Harap cantumkan kode pesanan {{ $order->transaction_id }} di berita transfer untuk memudahkan verifikasi)</span>
         </div>
     @endif
 

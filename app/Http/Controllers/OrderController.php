@@ -71,6 +71,11 @@ class OrderController extends Controller
                 }
 
                 $quantity = (int) $item['quantity'];
+                
+                if ($product->stock < $quantity) {
+                    throw new \Exception("Stok produk '{$product->name}' tidak mencukupi. Tersedia: {$product->stock}, dipesan: {$quantity}.");
+                }
+
                 $itemTotal = $price * $quantity;
                 $subtotal += $itemTotal;
 
@@ -185,16 +190,11 @@ class OrderController extends Controller
                 $shippingCost = 0;
             }
 
-            $baseTotal = $subtotal + $shippingCost;
+            $totalPaid = $subtotal + $shippingCost;
 
-            // Bulatkan ke ribuan terdekat dan tambahkan 3-digit kode unik acak (100 s.d 999)
-            $roundedTotal = floor($baseTotal / 1000) * 1000;
-            $uniqueCode = mt_rand(100, 999);
-            $totalPaid = $roundedTotal + $uniqueCode;
-
-            // Generate Transaction ID unik berformat TK9-****** (6 digit angka acak)
+            // Generate Transaction ID unik berformat KS9-****** (6 digit angka acak)
             do {
-                $transactionId = 'TK9-' . mt_rand(100000, 900000);
+                $transactionId = 'KS9-' . mt_rand(100000, 999999);
                 $exists = Order::where('transaction_id', $transactionId)->exists();
             } while ($exists);
 
@@ -219,9 +219,19 @@ class OrderController extends Controller
                 'status' => 'Awaiting Payment', // Default Awaiting Payment sesuai spesifikasi PRD V6
             ]);
 
-            // Simpan detail Order Items
+            // Simpan detail Order Items & kurangi stok
             foreach ($itemsToSave as $itemData) {
                 $order->items()->create($itemData);
+                
+                $product = Product::find($itemData['product_id']);
+                if ($product) {
+                    $newStock = max(0, $product->stock - $itemData['quantity']);
+                    $updateData = ['stock' => $newStock];
+                    if ($newStock === 0) {
+                        $updateData['status'] = 'SOLD OUT';
+                    }
+                    $product->update($updateData);
+                }
             }
 
             // Update profile address if logged in
@@ -275,6 +285,34 @@ class OrderController extends Controller
             ->firstOrFail();
 
         return view('shipping', compact('order'));
+    }
+
+    public function showTrackingForm()
+    {
+        return view('tracking_lookup');
+    }
+
+    public function findOrder(Request $request)
+    {
+        $request->validate([
+            'transaction_id' => ['required', 'string'],
+            'email_or_phone' => ['required', 'string'],
+        ]);
+
+        $order = Order::where('transaction_id', $request->transaction_id)
+            ->where(function ($query) use ($request) {
+                $query->where('email', $request->email_or_phone)
+                      ->orWhere('phone', $request->email_or_phone);
+            })
+            ->first();
+
+        if (!$order) {
+            return back()
+                ->withErrors(['tracking_error' => 'Pesanan tidak ditemukan. Pastikan data yang dimasukkan benar.'])
+                ->withInput();
+        }
+
+        return redirect()->route('order.tracking', $order->uuid);
     }
 
     /**

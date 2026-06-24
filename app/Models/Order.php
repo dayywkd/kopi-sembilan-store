@@ -51,22 +51,10 @@ class Order extends Model
     }
 
     /**
-     * Accessor untuk mendapatkan format Rupiah dengan menyorot 3 digit kode unik terakhir (Opsi C).
+     * Accessor untuk format Rupiah standar tanpa kode unik.
      */
     public function getFormattedTotalPaidAttribute()
     {
-        $amount = (int) $this->total_paid;
-        $base = floor($amount / 1000) * 1000;
-        $unique = $amount % 1000;
-        
-        $baseFormatted = number_format($base, 0, ',', '.');
-        $baseStr = substr($baseFormatted, 0, -4);
-        $uniqueStr = str_pad($unique, 3, '0', STR_PAD_LEFT);
-        
-        if ($base >= 1000) {
-            return 'Rp. ' . $baseStr . '.' . '<span class="font-bold text-[#121212]">' . $uniqueStr . '</span>';
-        } else {
-            return 'Rp. <span class="font-bold text-[#121212]">' . $uniqueStr . '</span>';
-        }
+        return 'Rp ' . number_format((int) $this->total_paid, 0, ',', '.');
     }
 }

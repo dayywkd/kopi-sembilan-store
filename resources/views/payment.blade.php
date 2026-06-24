@@ -128,9 +128,9 @@
                     <div class="bg-brand-cream border border-brand-accent/20 p-5 flex gap-4 items-start">
                         <span class="material-symbols-outlined text-brand-accent text-[22px] flex-shrink-0 mt-0.5">info</span>
                         <div>
-                            <p class="label-tiny text-brand-accent mb-1">Penting: Kode Unik Transfer</p>
+                            <p class="label-tiny text-brand-accent mb-1">Penting: Transfer Tepat</p>
                             <p class="font-sans text-xs text-brand-accent leading-relaxed">
-                                Transfer dengan jumlah <strong>tepat</strong> termasuk 3 digit kode unik di akhir angka. Ini memudahkan verifikasi pesanan Anda secara otomatis.
+                                Transfer dengan jumlah <strong>tepat</strong> sesuai nominal yang tertera, lalu cantumkan kode pesanan Anda di berita transfer.
                             </p>
                         </div>
                     </div>
@@ -172,7 +172,7 @@
                             <p class="label-tiny text-neutral-500 mb-3">Jumlah Transfer <span class="text-brand-accent font-bold">(Harus Tepat)</span></p>
                             <div class="flex items-end justify-between gap-4">
                                 <div>
-                                    <p class="font-sans text-xs text-neutral-500 mb-1">Total termasuk kode unik</p>
+                                    <p class="font-sans text-xs text-neutral-500 mb-1">Total yang harus ditransfer</p>
                                     <div class="font-display text-4xl md:text-5xl text-[#121212] amount-display leading-none">
                                         {!! $order->formatted_total_paid !!}
                                     </div>
@@ -209,7 +209,7 @@
                             ['Buka aplikasi m-banking atau ATM Bank BCA Anda.', 'phone_android'],
                             ['Pilih menu Transfer → ke Rekening BCA.', 'compare_arrows'],
                             ['Masukkan nomor rekening <strong class="text-[#121212]">1234567890</strong>.', 'dialpad'],
-                            ['Masukkan nominal transfer <strong class="text-amber-600">PERSIS TEPAT</strong> sesuai yang tertera (termasuk 3 digit kode unik).', 'payments'],
+                            ['Masukkan nominal transfer <strong class="text-amber-600">PERSIS TEPAT</strong> sesuai yang tertera.', 'payments'],
                             ['Isi berita transfer dengan kode pesanan: <strong class="font-mono text-[#121212]">{{ $order->transaction_id }}</strong>', 'edit_note'],
                             ['Konfirmasi dan selesaikan transfer. Simpan bukti transfer Anda.', 'check_circle'],
                         ] as $i => [$step, $icon])
@@ -379,9 +379,6 @@
                             <span class="label-tiny font-bold text-neutral-800">Total Bayar</span>
                             <div class="text-right">
                                 <div class="font-display text-2xl leading-none text-[#121212]">{!! $order->formatted_total_paid !!}</div>
-                                @if ($order->payment_method === 'Bank Transfer')
-                                <p class="font-sans text-[9px] text-neutral-400 mt-1">Termasuk kode unik verifikasi</p>
-                                @endif
                             </div>
                         </div>
                     </div>

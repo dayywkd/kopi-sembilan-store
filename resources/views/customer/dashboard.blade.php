@@ -157,7 +157,7 @@
                             
                             <!-- Total Paid -->
                             <div class="col-span-3 md:col-span-2 text-right font-semibold text-sm text-[#121212]">
-                                {!! $order->formatted_total_paid !!}
+                                {{ $order->formatted_total_paid }}
                             </div>
                             
                             <!-- Status -->

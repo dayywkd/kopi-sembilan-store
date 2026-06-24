@@ -23,6 +23,7 @@ class Product extends Model
         'altitude',
         'sensory_notes',
         'status',
+        'stock',
         'is_best_seller'
     ];
 

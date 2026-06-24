@@ -179,7 +179,7 @@
                                     <span class="label-tiny font-bold">Bank Transfer</span>
                                     <span class="material-symbols-outlined text-[20px]">account_balance</span>
                                 </div>
-                                <p class="text-[11px] opacity-70">Verifikasi manual dalam 24 jam dengan Kode Unik</p>
+                                <p class="text-[11px] opacity-70">Verifikasi manual dalam 24 jam via Bank Transfer</p>
                             </div>
                         </label>
                         <label class="cursor-pointer relative">
@@ -220,14 +220,7 @@
                         <span id="summary-shipping" class="font-semibold text-[#121212]">Rp 0</span>
                     </div>
                     
-                    <!-- Kode Unik Info Container -->
-                    <div id="unique-code-info" class="flex flex-col gap-1 border-t border-neutral-200 pt-3 hidden">
-                        <div class="flex justify-between text-xs text-brand-accent font-bold">
-                            <span>Kode Unik (Bank Transfer)</span>
-                            <span>+ Rp ***</span>
-                        </div>
-                        <p class="text-[10px] text-neutral-400 leading-normal">3 digit kode unik acak akan ditambahkan di akhir saat checkout dikirim untuk keperluan verifikasi transfer otomatis.</p>
-                    </div>
+
 
                     <div class="flex justify-between font-display text-2xl border-t border-neutral-200 pt-6 uppercase text-[#121212]">
                         <span>Total</span>
@@ -590,11 +583,8 @@
         document.getElementsByName('payment').forEach(radio => {
             radio.addEventListener('change', function() {
                 updateWhatsappLink();
-                toggleUniqueCodeInfo();
             });
         });
-
-        toggleUniqueCodeInfo();
 
         const waBtn = document.getElementById('whatsapp-fallback-button');
         if (waBtn) {
@@ -643,24 +633,7 @@
             });
         }
 
-        function toggleUniqueCodeInfo() {
-            const paymentRadios = document.getElementsByName('payment');
-            let isBankTransfer = false;
-            for (let radio of paymentRadios) {
-                if (radio.checked && radio.value === 'Bank Transfer') {
-                    isBankTransfer = true;
-                    break;
-                }
-            }
-            const infoEl = document.getElementById('unique-code-info');
-            if (infoEl) {
-                if (isBankTransfer) {
-                    infoEl.classList.remove('hidden');
-                } else {
-                    infoEl.classList.add('hidden');
-                }
-            }
-        }
+
     });
 </script>
 @endsection

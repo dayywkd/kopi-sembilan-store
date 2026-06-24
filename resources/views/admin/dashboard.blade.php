@@ -247,43 +247,68 @@
 
         <!-- TAB CONTENT: INVENTORY -->
         <div id="content-inventory" class="tab-content hidden flex flex-col gap-8">
+            <div class="flex justify-between items-center">
+                <h2 class="font-display text-2xl uppercase italic text-brand-dark">Daftar Produk</h2>
+                <button onclick="openAddProductModal()" class="flex items-center gap-2 border border-transparent bg-[#121212] text-white px-5 py-3 text-[10px] font-bold uppercase tracking-wider hover:bg-neutral-800 transition-all active:scale-95">
+                    <span class="material-symbols-outlined text-[16px]">add</span> Tambah Produk Baru
+                </button>
+            </div>
+
             <div class="border border-brand-outline bg-white">
                 <div class="grid grid-cols-12 gap-4 px-6 py-4 bg-brand-cream border-b border-brand-outline label-tiny opacity-60 text-xs font-bold text-neutral-500">
-                    <div class="col-span-2">Gambar</div>
-                    <div class="col-span-4">Nama Produk</div>
+                    <div class="col-span-1">Gambar</div>
+                    <div class="col-span-3">Nama Produk</div>
                     <div class="col-span-2 text-right">Harga</div>
-                    <div class="col-span-2 text-center">Status</div>
-                    <div class="col-span-2 text-center">Best Seller Status</div>
+                    <div class="col-span-2 text-center">Stok</div>
+                    <div class="col-span-1 text-center">Status</div>
+                    <div class="col-span-1 text-center">Best Seller</div>
+                    <div class="col-span-2 text-center">Aksi</div>
                 </div>
                 
                 <div class="divide-y divide-[#E5E7EB] text-neutral-800">
                     @forelse($products as $product)
                         <div class="grid grid-cols-12 gap-4 px-6 py-4 items-center product-row">
-                            <div class="col-span-2">
+                            <div class="col-span-1">
                                 @if($product->image_path)
-                                    <img src="{{ asset($product->image_path) }}" class="h-12 w-12 object-cover border border-brand-outline bg-brand-cream" alt="{{ $product->name }}">
+                                    <img src="{{ asset($product->image_path) }}" class="h-10 w-10 object-cover border border-brand-outline bg-brand-cream" alt="{{ $product->name }}">
                                 @else
-                                    <div class="h-12 w-12 bg-brand-cream border border-brand-outline flex items-center justify-center text-[10px] text-neutral-400">No Image</div>
+                                    <div class="h-10 w-10 bg-brand-cream border border-brand-outline flex items-center justify-center text-[8px] text-neutral-400">No Image</div>
                                 @endif
                             </div>
-                            <div class="col-span-4 flex flex-col gap-0.5">
+                            <div class="col-span-3 flex flex-col gap-0.5">
                                 <span class="font-bold text-sm text-brand-dark">{{ $product->name }}</span>
                                 <span class="text-[10px] text-neutral-400 uppercase tracking-widest">{{ $product->category?->name }}</span>
                             </div>
                             <div class="col-span-2 text-right text-sm font-semibold text-neutral-800">Rp. {{ number_format($product->price, 0, ',', '.') }}</div>
-                            <div class="col-span-2 text-center">
-                                <span class="px-2 py-0.5 border border-green-200 bg-green-50 text-green-700 text-[9px] font-bold uppercase tracking-wider">In Stock</span>
+                            <div class="col-span-2 text-center text-sm font-sans font-semibold text-neutral-700">{{ $product->stock }}</div>
+                            <div class="col-span-1 text-center">
+                                @if ($product->stock > 0 && $product->status !== 'SOLD OUT')
+                                    <span class="px-2 py-0.5 border border-green-200 bg-green-50 text-green-700 text-[9px] font-bold uppercase tracking-wider">In Stock</span>
+                                @else
+                                    <span class="px-2 py-0.5 border border-red-200 bg-red-50 text-red-700 text-[9px] font-bold uppercase tracking-wider">Sold Out</span>
+                                @endif
                             </div>
-                            <div class="col-span-2 text-center flex justify-center">
+                            <div class="col-span-1 text-center flex justify-center">
                                 <label class="relative inline-flex items-center cursor-pointer">
                                     <input type="checkbox" class="sr-only peer" {{ $product->is_best_seller ? 'checked' : '' }} onchange="toggleBestSeller({{ $product->id }}, this)">
-                                    <div class="w-11 h-6 bg-neutral-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-neutral-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-brand-accent"></div>
+                                    <div class="w-9 h-5 bg-neutral-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-neutral-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-brand-accent"></div>
                                 </label>
+                            </div>
+                            <div class="col-span-2 text-center flex justify-center gap-2">
+                                <button onclick="openEditProductModal({{ json_encode($product) }}, '{{ $product->category?->name }}')" class="p-1.5 border border-brand-outline hover:border-brand-accent text-neutral-500 hover:text-brand-accent transition-colors" title="Edit Produk">
+                                    <span class="material-symbols-outlined text-[16px] leading-none flex">edit</span>
+                                </button>
+                                <form action="{{ route('admin.products.delete', $product->id) }}" method="POST" onsubmit="return confirm('Apakah Anda yakin ingin menghapus produk ini?');" class="inline">
+                                    @csrf
+                                    <button type="submit" class="p-1.5 border border-brand-outline hover:border-red-500 text-neutral-500 hover:text-red-500 transition-colors" title="Hapus Produk">
+                                        <span class="material-symbols-outlined text-[16px] leading-none flex">delete</span>
+                                    </button>
+                                </form>
                             </div>
                         </div>
                     @empty
                         <div class="p-16 text-center text-neutral-400 font-sans text-sm bg-white">
-                            No products in database.
+                            Belum ada produk terdaftar.
                         </div>
                     @endforelse
                 </div>
@@ -465,7 +490,7 @@
             <span class="material-symbols-outlined">close</span>
         </button>
         <h3 class="font-display text-2xl mb-2 uppercase italic text-brand-dark">Update Order Status</h3>
-        <p class="label-tiny opacity-60 mb-6 text-neutral-500 font-bold" id="modal-order-id">ORDER: #TK9-000000</p>
+        <p class="label-tiny opacity-60 mb-6 text-neutral-500 font-bold" id="modal-order-id">ORDER: #KS9-000000</p>
         
         <form id="status-update-form" action="{{ route('admin.order.update_status') }}" method="POST" class="space-y-6">
             @csrf
@@ -490,6 +515,176 @@
             <div class="pt-4">
                 <button type="submit" class="w-full bg-brand-dark text-white py-4 font-bold label-tiny hover:bg-brand-accent border border-brand-dark hover:border-brand-accent transition-all">
                     Confirm Changes
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- Modal Overlay for Add Product -->
+<div class="fixed inset-0 bg-black/40 backdrop-blur-sm z-50 flex items-center justify-center hidden opacity-0 transition-opacity duration-200" id="add-product-modal">
+    <div class="bg-white border border-brand-outline shadow-2xl w-full max-w-lg p-8 relative overflow-y-auto max-h-[90vh]">
+        <button class="absolute top-4 right-4 text-neutral-400 hover:text-brand-dark transition-colors" onclick="closeAddProductModal()">
+            <span class="material-symbols-outlined">close</span>
+        </button>
+        <h3 class="font-display text-2xl mb-6 uppercase italic text-brand-dark">Tambah Produk Baru</h3>
+        
+        <form action="{{ route('admin.products.store') }}" method="POST" enctype="multipart/form-data" class="space-y-4">
+            @csrf
+            <div>
+                <label class="label-tiny text-[10px] opacity-60 block mb-1 font-bold text-neutral-500">Kategori</label>
+                <select name="category_id" required class="w-full py-2.5 px-3 text-sm bg-white border border-brand-outline text-brand-dark">
+                    @foreach(\App\Models\Category::all() as $cat)
+                        <option value="{{ $cat->id }}">{{ $cat->name }}</option>
+                    @endforeach
+                </select>
+            </div>
+
+            <div>
+                <label class="label-tiny text-[10px] opacity-60 block mb-1 font-bold text-neutral-500">Nama Produk</label>
+                <input type="text" name="name" required class="w-full py-2 px-3 text-sm bg-white border border-brand-outline text-brand-dark">
+            </div>
+
+            <div class="grid grid-cols-2 gap-4">
+                <div>
+                    <label class="label-tiny text-[10px] opacity-60 block mb-1 font-bold text-neutral-500">Harga (Rp)</label>
+                    <input type="number" name="price" required class="w-full py-2 px-3 text-sm bg-white border border-brand-outline text-brand-dark">
+                </div>
+                <div>
+                    <label class="label-tiny text-[10px] opacity-60 block mb-1 font-bold text-neutral-500">Stok</label>
+                    <input type="number" name="stock" required class="w-full py-2 px-3 text-sm bg-white border border-brand-outline text-brand-dark">
+                </div>
+            </div>
+
+            <div class="grid grid-cols-2 gap-4">
+                <div>
+                    <label class="label-tiny text-[10px] opacity-60 block mb-1 font-bold text-neutral-500">Roast Level</label>
+                    <select name="roast_level" required class="w-full py-2.5 px-3 text-sm bg-white border border-brand-outline text-brand-dark">
+                        <option value="Light">Light</option>
+                        <option value="Medium-Light">Medium-Light</option>
+                        <option value="Medium">Medium</option>
+                        <option value="Medium-Dark">Medium-Dark</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="label-tiny text-[10px] opacity-60 block mb-1 font-bold text-neutral-500">Ketinggian (Altitude)</label>
+                    <input type="text" name="altitude" placeholder="Contoh: 1500m" required class="w-full py-2 px-3 text-sm bg-white border border-brand-outline text-brand-dark">
+                </div>
+            </div>
+
+            <div>
+                <label class="label-tiny text-[10px] opacity-60 block mb-1 font-bold text-neutral-500">Sensory Notes</label>
+                <input type="text" name="sensory_notes" placeholder="Contoh: Jasmine, Apple, Caramel" required class="w-full py-2 px-3 text-sm bg-white border border-brand-outline text-brand-dark">
+            </div>
+
+            <div>
+                <label class="label-tiny text-[10px] opacity-60 block mb-1 font-bold text-neutral-500">Ukuran & Harga (JSON)</label>
+                <textarea name="sizes" required class="w-full py-2 px-3 text-xs bg-white border border-brand-outline text-brand-dark h-16 font-mono" placeholder='[{"size":"100gr","price":78000}]'>[{"size":"100gr","price":78000}]</textarea>
+            </div>
+
+            <div class="grid grid-cols-2 gap-4">
+                <div>
+                    <label class="label-tiny text-[10px] opacity-60 block mb-1 font-bold text-neutral-500">Status</label>
+                    <select name="status" required class="w-full py-2.5 px-3 text-sm bg-white border border-brand-outline text-brand-dark">
+                        <option value="AVAILABLE">AVAILABLE</option>
+                        <option value="LIMITED">LIMITED</option>
+                        <option value="SOLD OUT">SOLD OUT</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="label-tiny text-[10px] opacity-60 block mb-1 font-bold text-neutral-500">Gambar Produk</label>
+                    <input type="file" name="image" class="w-full text-xs text-brand-dark">
+                </div>
+            </div>
+
+            <div class="pt-4">
+                <button type="submit" class="w-full bg-[#121212] text-white py-3.5 font-bold label-tiny hover:bg-neutral-800 transition-all">
+                    Simpan Produk
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- Modal Overlay for Edit Product -->
+<div class="fixed inset-0 bg-black/40 backdrop-blur-sm z-50 flex items-center justify-center hidden opacity-0 transition-opacity duration-200" id="edit-product-modal">
+    <div class="bg-white border border-brand-outline shadow-2xl w-full max-w-lg p-8 relative overflow-y-auto max-h-[90vh]">
+        <button class="absolute top-4 right-4 text-neutral-400 hover:text-brand-dark transition-colors" onclick="closeEditProductModal()">
+            <span class="material-symbols-outlined">close</span>
+        </button>
+        <h3 class="font-display text-2xl mb-6 uppercase italic text-brand-dark">Edit Detail Produk</h3>
+        
+        <form id="edit-product-form" method="POST" enctype="multipart/form-data" class="space-y-4">
+            @csrf
+            <div>
+                <label class="label-tiny text-[10px] opacity-60 block mb-1 font-bold text-neutral-500">Kategori</label>
+                <select name="category_id" id="edit-category_id" required class="w-full py-2.5 px-3 text-sm bg-white border border-brand-outline text-brand-dark">
+                    @foreach(\App\Models\Category::all() as $cat)
+                        <option value="{{ $cat->id }}">{{ $cat->name }}</option>
+                    @endforeach
+                </select>
+            </div>
+
+            <div>
+                <label class="label-tiny text-[10px] opacity-60 block mb-1 font-bold text-neutral-500">Nama Produk</label>
+                <input type="text" name="name" id="edit-name" required class="w-full py-2 px-3 text-sm bg-white border border-brand-outline text-brand-dark">
+            </div>
+
+            <div class="grid grid-cols-2 gap-4">
+                <div>
+                    <label class="label-tiny text-[10px] opacity-60 block mb-1 font-bold text-neutral-500">Harga (Rp)</label>
+                    <input type="number" name="price" id="edit-price" required class="w-full py-2 px-3 text-sm bg-white border border-brand-outline text-brand-dark">
+                </div>
+                <div>
+                    <label class="label-tiny text-[10px] opacity-60 block mb-1 font-bold text-neutral-500">Stok</label>
+                    <input type="number" name="stock" id="edit-stock" required class="w-full py-2 px-3 text-sm bg-white border border-brand-outline text-brand-dark">
+                </div>
+            </div>
+
+            <div class="grid grid-cols-2 gap-4">
+                <div>
+                    <label class="label-tiny text-[10px] opacity-60 block mb-1 font-bold text-neutral-500">Roast Level</label>
+                    <select name="roast_level" id="edit-roast_level" required class="w-full py-2.5 px-3 text-sm bg-white border border-brand-outline text-brand-dark">
+                        <option value="Light">Light</option>
+                        <option value="Medium-Light">Medium-Light</option>
+                        <option value="Medium">Medium</option>
+                        <option value="Medium-Dark">Medium-Dark</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="label-tiny text-[10px] opacity-60 block mb-1 font-bold text-neutral-500">Ketinggian (Altitude)</label>
+                    <input type="text" name="altitude" id="edit-altitude" required class="w-full py-2 px-3 text-sm bg-white border border-brand-outline text-brand-dark">
+                </div>
+            </div>
+
+            <div>
+                <label class="label-tiny text-[10px] opacity-60 block mb-1 font-bold text-neutral-500">Sensory Notes</label>
+                <input type="text" name="sensory_notes" id="edit-sensory_notes" required class="w-full py-2 px-3 text-sm bg-white border border-brand-outline text-brand-dark">
+            </div>
+
+            <div>
+                <label class="label-tiny text-[10px] opacity-60 block mb-1 font-bold text-neutral-500">Ukuran & Harga (JSON)</label>
+                <textarea name="sizes" id="edit-sizes" required class="w-full py-2 px-3 text-xs bg-white border border-brand-outline text-brand-dark h-16 font-mono"></textarea>
+            </div>
+
+            <div class="grid grid-cols-2 gap-4">
+                <div>
+                    <label class="label-tiny text-[10px] opacity-60 block mb-1 font-bold text-neutral-500">Status</label>
+                    <select name="status" id="edit-status" required class="w-full py-2.5 px-3 text-sm bg-white border border-brand-outline text-brand-dark">
+                        <option value="AVAILABLE">AVAILABLE</option>
+                        <option value="LIMITED">LIMITED</option>
+                        <option value="SOLD OUT">SOLD OUT</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="label-tiny text-[10px] opacity-60 block mb-1 font-bold text-neutral-500">Gambar Baru (Opsional)</label>
+                    <input type="file" name="image" class="w-full text-xs text-brand-dark">
+                </div>
+            </div>
+
+            <div class="pt-4">
+                <button type="submit" class="w-full bg-[#121212] text-white py-3.5 font-bold label-tiny hover:bg-neutral-800 transition-all">
+                    Simpan Perubahan
                 </button>
             </div>
         </form>
@@ -805,6 +1000,49 @@
         document.body.appendChild(link);
         link.click();
         document.body.removeChild(link);
+    }
+
+    function openAddProductModal() {
+        const modal = document.getElementById('add-product-modal');
+        modal.classList.remove('hidden');
+        setTimeout(() => {
+            modal.classList.remove('opacity-0');
+        }, 50);
+    }
+
+    function closeAddProductModal() {
+        const modal = document.getElementById('add-product-modal');
+        modal.classList.add('opacity-0');
+        setTimeout(() => {
+            modal.classList.add('hidden');
+        }, 200);
+    }
+
+    function openEditProductModal(product, categoryName) {
+        document.getElementById('edit-product-form').action = `/admin/products/${product.id}/update`;
+        document.getElementById('edit-category_id').value = product.category_id;
+        document.getElementById('edit-name').value = product.name;
+        document.getElementById('edit-price').value = Math.round(product.price);
+        document.getElementById('edit-stock').value = product.stock;
+        document.getElementById('edit-roast_level').value = product.roast_level;
+        document.getElementById('edit-altitude').value = product.altitude;
+        document.getElementById('edit-sensory_notes').value = product.sensory_notes;
+        document.getElementById('edit-sizes').value = JSON.stringify(product.sizes);
+        document.getElementById('edit-status').value = product.status;
+
+        const modal = document.getElementById('edit-product-modal');
+        modal.classList.remove('hidden');
+        setTimeout(() => {
+            modal.classList.remove('opacity-0');
+        }, 50);
+    }
+
+    function closeEditProductModal() {
+        const modal = document.getElementById('edit-product-modal');
+        modal.classList.add('opacity-0');
+        setTimeout(() => {
+            modal.classList.add('hidden');
+        }, 200);
     }
 </script>
 @endsection
