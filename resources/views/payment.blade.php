@@ -210,7 +210,7 @@
                             ['Pilih menu Transfer → ke Rekening BCA.', 'compare_arrows'],
                             ['Masukkan nomor rekening <strong class="text-[#121212]">1234567890</strong>.', 'dialpad'],
                             ['Masukkan nominal transfer <strong class="text-amber-600">PERSIS TEPAT</strong> sesuai yang tertera.', 'payments'],
-                            ['Isi berita transfer dengan kode pesanan: <strong class="font-mono text-[#121212]">{{ $order->transaction_id }}</strong>', 'edit_note'],
+                            ['Isi berita transfer dengan kode pesanan: <strong class="font-mono text-[#121212]">' . $order->transaction_id . '</strong>', 'edit_note'],
                             ['Konfirmasi dan selesaikan transfer. Simpan bukti transfer Anda.', 'check_circle'],
                         ] as $i => [$step, $icon])
                         <div class="flex items-start gap-4 py-4 border-b border-[#E5E7EB]/50 last:border-0">
