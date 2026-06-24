@@ -32,15 +32,27 @@
         background-color: #ffffff !important;
         color: #121212 !important;
     }
-    /* Guarantee visibility of text inside checked radio cards */
+    /* Reset and force immediate style changes on radio cards without transitions or repaint glitches */
+    input[type="radio"] + div {
+        background-color: #ffffff !important;
+        color: #121212 !important;
+        border-color: #e5e7eb !important;
+        transition: none !important;
+    }
+    input[type="radio"] + div * {
+        color: #121212 !important;
+        transition: none !important;
+    }
+
     input[type="radio"]:checked + div {
         background-color: #121212 !important;
         color: #ffffff !important;
         border-color: transparent !important;
+        transition: none !important;
     }
-    input[type="radio"]:checked + div,
     input[type="radio"]:checked + div * {
         color: #ffffff !important;
+        transition: none !important;
     }
 </style>
 @endsection
@@ -136,8 +148,8 @@
                             <label class="label-tiny text-[10px] text-neutral-500 font-semibold">Metode Penerimaan</label>
                             <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                                 <label class="cursor-pointer relative">
-                                    <input class="hidden peer" name="delivery_method" type="radio" value="shipping" checked onchange="toggleDeliveryMethod('shipping')">
-                                    <div class="border border-neutral-300 p-5 flex flex-col gap-1 peer-checked:bg-[#121212] peer-checked:text-white peer-checked:border-transparent transition-all">
+                                    <input class="sr-only peer" name="delivery_method" type="radio" value="shipping" checked onchange="toggleDeliveryMethod('shipping')">
+                                    <div class="border border-neutral-300 p-5 flex flex-col gap-1 peer-checked:bg-[#121212] peer-checked:text-white peer-checked:border-transparent">
                                         <div class="flex justify-between items-start">
                                             <span class="label-tiny font-bold text-xs">Kirim via Kurir</span>
                                             <span class="material-symbols-outlined text-[20px]">local_shipping</span>
@@ -146,8 +158,8 @@
                                     </div>
                                 </label>
                                 <label class="cursor-pointer relative">
-                                    <input class="hidden peer" name="delivery_method" type="radio" value="pickup" onchange="toggleDeliveryMethod('pickup')">
-                                    <div class="border border-neutral-300 p-5 flex flex-col gap-1 peer-checked:bg-[#121212] peer-checked:text-white peer-checked:border-transparent transition-all">
+                                    <input class="sr-only peer" name="delivery_method" type="radio" value="pickup" onchange="toggleDeliveryMethod('pickup')">
+                                    <div class="border border-neutral-300 p-5 flex flex-col gap-1 peer-checked:bg-[#121212] peer-checked:text-white peer-checked:border-transparent">
                                         <div class="flex justify-between items-start">
                                             <span class="label-tiny font-bold text-xs">Ambil di Toko (Local Pickup)</span>
                                             <span class="material-symbols-outlined text-[20px]">store</span>
@@ -212,8 +224,8 @@
                     </div>
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-[#121212]">
                         <label class="cursor-pointer relative">
-                            <input class="hidden peer" name="payment" type="radio" value="Bank Transfer" {{ old('payment', 'Bank Transfer') === 'Bank Transfer' ? 'checked' : '' }}>
-                            <div class="border border-neutral-300 p-6 flex flex-col gap-2 peer-checked:bg-[#121212] peer-checked:text-white peer-checked:border-transparent transition-all">
+                            <input class="sr-only peer" name="payment" type="radio" value="Bank Transfer" {{ old('payment', 'Bank Transfer') === 'Bank Transfer' ? 'checked' : '' }}>
+                            <div class="border border-neutral-300 p-6 flex flex-col gap-2 peer-checked:bg-[#121212] peer-checked:text-white peer-checked:border-transparent">
                                 <div class="flex justify-between items-start">
                                     <span class="label-tiny font-bold">Bank Transfer</span>
                                     <span class="material-symbols-outlined text-[20px]">account_balance</span>
@@ -222,8 +234,8 @@
                             </div>
                         </label>
                         <label class="cursor-pointer relative">
-                            <input class="hidden peer" name="payment" type="radio" value="QRIS" {{ old('payment') === 'QRIS' ? 'checked' : '' }}>
-                            <div class="border border-neutral-300 p-6 flex flex-col gap-2 peer-checked:bg-[#121212] peer-checked:text-white peer-checked:border-transparent transition-all">
+                            <input class="sr-only peer" name="payment" type="radio" value="QRIS" {{ old('payment') === 'QRIS' ? 'checked' : '' }}>
+                            <div class="border border-neutral-300 p-6 flex flex-col gap-2 peer-checked:bg-[#121212] peer-checked:text-white peer-checked:border-transparent">
                                 <div class="flex justify-between items-start">
                                     <span class="label-tiny font-bold">QRIS / Instant</span>
                                     <span class="material-symbols-outlined text-[20px]">qr_code_2</span>
@@ -548,8 +560,8 @@
                     
                     optionsHtml += `
                         <label class="cursor-pointer relative block">
-                            <input class="hidden peer" type="radio" name="shipping_rate_option" value="${valueStr}" ${isChecked} onchange="selectShippingRate('${rate.courier}', '${rate.service}', ${rate.cost})">
-                            <div class="border border-neutral-300 p-5 flex justify-between items-center peer-checked:bg-[#121212] peer-checked:text-white peer-checked:border-transparent transition-all">
+                            <input class="sr-only peer" type="radio" name="shipping_rate_option" value="${valueStr}" ${isChecked} onchange="selectShippingRate('${rate.courier}', '${rate.service}', ${rate.cost})">
+                            <div class="border border-neutral-300 p-5 flex justify-between items-center peer-checked:bg-[#121212] peer-checked:text-white peer-checked:border-transparent">
                                 <div class="flex flex-col gap-1">
                                     <span class="label-tiny font-bold text-xs">${courierName}</span>
                                     <span class="text-[10px] opacity-70">Estimasi ${etdText}</span>
