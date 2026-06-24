@@ -32,6 +32,16 @@
         background-color: #ffffff !important;
         color: #121212 !important;
     }
+    /* Guarantee visibility of text inside checked radio cards */
+    input[type="radio"]:checked + div {
+        background-color: #121212 !important;
+        color: #ffffff !important;
+        border-color: transparent !important;
+    }
+    input[type="radio"]:checked + div,
+    input[type="radio"]:checked + div * {
+        color: #ffffff !important;
+    }
 </style>
 @endsection
 
