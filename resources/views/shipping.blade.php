@@ -158,7 +158,7 @@
                 </div>
             </div>
             <a href="{{ route('order.payment', $order->uuid) }}"
-               class="flex-shrink-0 flex items-center gap-2 bg-[#121212] hover:bg-brand-accent hover:text-[#FFFFFF] font-bold text-xs uppercase tracking-widest px-6 py-4 transition-all duration-300 active:scale-[0.98] whitespace-nowrap">
+               class="flex-shrink-0 flex items-center gap-2 bg-[#121212] text-white hover:bg-brand-accent hover:text-[#FFFFFF] font-bold text-xs uppercase tracking-widest px-6 py-4 transition-all duration-300 active:scale-[0.98] whitespace-nowrap">
                 <span class="material-symbols-outlined text-[18px]">payments</span>
                 Bayar Sekarang
             </a>
