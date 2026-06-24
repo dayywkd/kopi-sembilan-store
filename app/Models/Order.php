@@ -28,7 +28,9 @@ class Order extends Model
         'status',
         'biteship_area_id',
         'biteship_area_name',
-        'tracking_number'
+        'tracking_number',
+        'courier',
+        'shipping_service'
     ];
 
     protected static function boot()

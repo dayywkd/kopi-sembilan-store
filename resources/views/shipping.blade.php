@@ -79,6 +79,8 @@
         if ($currentIdx === $faseIdx) return 'active';
         return 'pending';
     };
+
+    $isPickupOrder = ($order->courier === 'pickup') || (strpos(strtolower($order->shipping_address), 'ambil di toko') !== false);
 @endphp
 
 <main class="mt-32 min-h-screen px-margin-mobile md:px-margin-desktop py-stack-xl max-w-container-max mx-auto bg-white">
@@ -97,17 +99,17 @@
                     $headerLabel = match($order->status) {
                         'Awaiting Payment' => 'Menunggu Pembayaran',
                         'Paid'             => 'Pembayaran Diterima',
-                        'Packing'          => 'Sedang Dikemas',
-                        'Shipped'          => 'Dalam Pengiriman',
-                        'Delivered'        => 'Pesanan Tiba',
+                        'Packing'          => $isPickupOrder ? 'Sedang Dipersiapkan' : 'Sedang Dikemas',
+                        'Shipped'          => $isPickupOrder ? 'Siap Diambil' : 'Dalam Pengiriman',
+                        'Delivered'        => $isPickupOrder ? 'Pesanan Telah Diambil' : 'Pesanan Tiba',
                         default            => 'Order Confirmed',
                     };
                     $headerTitle = match($order->status) {
                         'Awaiting Payment' => 'Awaiting Payment',
                         'Paid'             => 'Paid — In Roast',
                         'Packing'          => 'Packing & Prep',
-                        'Shipped'          => 'On The Way',
-                        'Delivered'        => 'Delivered',
+                        'Shipped'          => $isPickupOrder ? 'Ready For Pickup' : 'On The Way',
+                        'Delivered'        => $isPickupOrder ? 'Picked Up' : 'Delivered',
                         default            => 'Order Confirmed',
                     };
                     $headerColor = match($order->status) {
@@ -133,11 +135,11 @@
                     @elseif ($order->status === 'Paid')
                         Pembayaran terverifikasi. Kopi Anda sedang masuk jadwal roasting.
                     @elseif ($order->status === 'Packing')
-                        Biji kopi sedang di-roast dan dikemas dengan presisi di Tuban Roastery.
+                        {{ $isPickupOrder ? 'Biji kopi sedang di-roast dan dipersiapkan untuk Anda ambil di roastery kami.' : 'Biji kopi sedang di-roast dan dikemas dengan presisi di Tuban Roastery.' }}
                     @elseif ($order->status === 'Shipped')
-                        Paket Anda telah diserahkan ke kurir dan sedang dalam perjalanan.
+                        {{ $isPickupOrder ? 'Pesanan Anda telah siap di roastery Tuban. Silakan ambil langsung di toko kami.' : 'Paket Anda telah diserahkan ke kurir dan sedang dalam perjalanan.' }}
                     @else
-                        Paket telah tiba. Nikmati kopi terbaik Anda! 
+                        {{ $isPickupOrder ? 'Pesanan telah diambil langsung di toko. Terima kasih dan selamat menikmati!' : 'Paket telah tiba. Nikmati kopi terbaik Anda!' }}
                     @endif
                 </p>
             </div>
@@ -168,11 +170,19 @@
     <section class="mb-10">
         <div class="bg-brand-cream border border-brand-accent/20 p-6 flex flex-col md:flex-row md:items-center justify-between gap-5">
             <div class="flex items-start gap-4">
-                <span class="material-symbols-outlined text-brand-accent text-[28px] flex-shrink-0">local_shipping</span>
+                <span class="material-symbols-outlined text-brand-accent text-[28px] flex-shrink-0">
+                    {{ $isPickupOrder ? 'store' : 'local_shipping' }}
+                </span>
                 <div>
-                    <p class="label-tiny text-brand-accent mb-1">Paket Dalam Perjalanan</p>
+                    <p class="label-tiny text-brand-accent mb-1">
+                        {{ $isPickupOrder ? 'Pesanan Siap Diambil' : 'Paket Dalam Perjalanan' }}
+                    </p>
                     <p class="font-sans text-sm text-brand-accent leading-relaxed">
-                        Pesanan Anda sedang dikirim. Nomor Resi: <strong>{{ $order->tracking_number ?? '-' }}</strong>. Silakan konfirmasi jika barang sudah sampai.
+                        @if ($isPickupOrder)
+                            Pesanan Anda telah siap di roastery Tuban. Silakan ambil langsung di toko kami.
+                        @else
+                            Pesanan Anda sedang dikirim. Nomor Resi: <strong>{{ $order->tracking_number ?? '-' }}</strong>. Silakan konfirmasi jika barang sudah sampai.
+                        @endif
                     </p>
                 </div>
             </div>
@@ -181,7 +191,7 @@
                 <button type="submit"
                         class="flex items-center gap-2 bg-brand-dark hover:bg-brand-accent text-white font-bold text-xs uppercase tracking-widest px-6 py-4 transition-colors duration-300 active:scale-[0.98] whitespace-nowrap cursor-pointer">
                     <span class="material-symbols-outlined text-[18px]">done_all</span>
-                    Konfirmasi Pesanan Tiba
+                    {{ $isPickupOrder ? 'Konfirmasi Pesanan Telah Diambil' : 'Konfirmasi Pesanan Tiba' }}
                 </button>
             </form>
         </div>
@@ -189,11 +199,17 @@
     @elseif ($order->status === 'Delivered')
     <section class="mb-10">
         <div class="bg-brand-cream border border-brand-accent/20 p-6 flex items-center gap-5">
-            <span class="material-symbols-outlined text-brand-accent text-[32px]">verified</span>
+            <span class="material-symbols-outlined text-brand-accent text-[32px]">
+                {{ $isPickupOrder ? 'storefront' : 'verified' }}
+            </span>
             <div>
                 <p class="label-tiny text-brand-accent mb-1">Pesanan Selesai</p>
                 <p class="font-sans text-sm text-brand-accent leading-relaxed">
-                    Paket telah tiba di tangan Anda. Terima kasih telah mempercayai <strong>Toko Kopi Sembilan</strong>. Selamat menikmati!
+                    @if ($isPickupOrder)
+                        Pesanan telah diambil langsung di toko. Terima kasih telah mempercayai <strong>Toko Kopi Sembilan</strong>. Selamat menikmati!
+                    @else
+                        Paket telah tiba di tangan Anda. Terima kasih telah mempercayai <strong>Toko Kopi Sembilan</strong>. Selamat menikmati!
+                    @endif
                 </p>
             </div>
         </div>
@@ -208,6 +224,18 @@
             <h2 class="label-tiny text-neutral-500 mb-10 font-bold">Status Pesanan</h2>
 
             @php
+                $phase4Label = $isPickupOrder ? 'Siap Diambil' : 'Dalam Pengiriman';
+                $phase4DescDone = $isPickupOrder ? 'Pesanan siap diambil di toko.' : 'Paket telah diserahkan ke kurir.';
+                $phase4DescActive = $isPickupOrder ? 'Pesanan siap diambil di toko. Silakan kunjungi Roastery kami.' : 'Paket sedang dalam perjalanan menuju alamat Anda.';
+                $phase4DescPending = $isPickupOrder ? 'Pesanan belum siap diambil.' : 'Paket belum dikirim.';
+                $phase4Icon = $isPickupOrder ? 'store' : 'local_shipping';
+
+                $phase5Label = $isPickupOrder ? 'Pesanan Diambil' : 'Pesanan Tiba';
+                $phase5DescDone = $isPickupOrder ? 'Pesanan telah diambil oleh pelanggan. Terima kasih! ☕' : 'Paket telah diterima. Terima kasih! ☕';
+                $phase5DescActive = $isPickupOrder ? 'Pesanan telah diambil oleh pelanggan!' : 'Paket telah tiba di tangan Anda!';
+                $phase5DescPending = $isPickupOrder ? 'Belum diambil.' : 'Belum tiba.';
+                $phase5Icon = $isPickupOrder ? 'check_circle' : 'home';
+
                 $phases = [
                     [
                         'idx'   => 0,
@@ -230,29 +258,29 @@
                     [
                         'idx'   => 2,
                         'num'   => '03',
-                        'label' => 'Roasting & Pengemasan',
-                        'desc_done'    => 'Roasting dan pengemasan selesai.',
+                        'label' => $isPickupOrder ? 'Roasting & Persiapan' : 'Roasting & Pengemasan',
+                        'desc_done'    => $isPickupOrder ? 'Roasting dan persiapan selesai.' : 'Roasting dan pengemasan selesai.',
                         'desc_active'  => 'Kopi sedang di-roast dengan profil khusus di Tuban Roastery. Est. 24 jam.',
-                        'desc_pending' => 'Menunggu proses roasting & pengemasan.',
+                        'desc_pending' => $isPickupOrder ? 'Menunggu proses roasting & persiapan.' : 'Menunggu proses roasting & pengemasan.',
                         'icon'  => 'local_fire_department',
                     ],
                     [
                         'idx'   => 3,
                         'num'   => '04',
-                        'label' => 'Dalam Pengiriman',
-                        'desc_done'    => 'Paket telah diserahkan ke kurir.',
-                        'desc_active'  => 'Paket sedang dalam perjalanan menuju alamat Anda.',
-                        'desc_pending' => 'Paket belum dikirim.',
-                        'icon'  => 'local_shipping',
+                        'label' => $phase4Label,
+                        'desc_done'    => $phase4DescDone,
+                        'desc_active'  => $phase4DescActive,
+                        'desc_pending' => $phase4DescPending,
+                        'icon'  => $phase4Icon,
                     ],
                     [
                         'idx'   => 4,
                         'num'   => '05',
-                        'label' => 'Pesanan Tiba',
-                        'desc_done'    => 'Paket telah diterima. Terima kasih! ☕',
-                        'desc_active'  => 'Paket telah tiba di tangan Anda!',
-                        'desc_pending' => 'Belum tiba.',
-                        'icon'  => 'home',
+                        'label' => $phase5Label,
+                        'desc_done'    => $phase5DescDone,
+                        'desc_active'  => $phase5DescActive,
+                        'desc_pending' => $phase5DescPending,
+                        'icon'  => $phase5Icon,
                     ],
                 ];
             @endphp
@@ -417,23 +445,85 @@
                     </div>
                 </div>
 
-                {{-- Address & Payment --}}
+                {{-- Address, Courier, & Payment --}}
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-8 border-t border-[#E5E7EB] pt-8 text-sm">
                     <div>
-                        <span class="label-tiny text-neutral-400 block mb-3 font-bold">Alamat Pengiriman</span>
-                        <address class="not-italic text-neutral-600 leading-relaxed font-sans text-sm">
-                            <strong class="text-[#121212]">{{ $order->first_name }} {{ $order->last_name }}</strong><br>
-                            {{ $order->shipping_address }}<br>
-                            {{ $order->city }}{{ $order->postal_code ? ', ' . $order->postal_code : '' }}
-                        </address>
-                        @if ($order->order_notes)
+                        @if ($isPickupOrder)
+                            <span class="label-tiny text-neutral-400 block mb-3 font-bold">Informasi Pengambilan</span>
+                            <address class="not-italic text-neutral-600 leading-relaxed font-sans text-sm">
+                                <strong class="text-[#121212]">{{ $order->first_name }} {{ $order->last_name }}</strong><br>
+                                <span class="inline-flex items-center gap-1.5 px-2 py-0.5 border border-[#121212] bg-[#121212] text-white label-tiny text-[9px] font-bold mb-2">
+                                    Ambil di Toko (Local Pickup)
+                                </span><br>
+                                Silakan ambil pesanan Anda langsung di:<br>
+                                <strong>Roastery Toko Kopi Sembilan</strong><br>
+                                Tuban, Jawa Timur
+                            </address>
+                        @else
+                            <span class="label-tiny text-neutral-400 block mb-3 font-bold">Alamat Pengiriman</span>
+                            <address class="not-italic text-neutral-600 leading-relaxed font-sans text-sm">
+                                <strong class="text-[#121212]">{{ $order->first_name }} {{ $order->last_name }}</strong><br>
+                                {{ $order->shipping_address }}<br>
+                                {{ $order->city }}{{ $order->postal_code ? ', ' . $order->postal_code : '' }}
+                            </address>
+                        @endif
+
+                        @php
+                            $displayedNotes = $order->order_notes;
+                            $displayedNotes = preg_replace('/^\[Kurir:[^\]]+\]\r?\n?/', '', $displayedNotes);
+                            $displayedNotes = trim($displayedNotes);
+                        @endphp
+                        @if ($displayedNotes)
                         <div class="mt-4 p-4 bg-brand-cream border border-[#E5E7EB]">
                             <span class="label-tiny text-neutral-400 block mb-1 text-[9px] font-bold">Catatan</span>
-                            <p class="font-sans text-neutral-500 text-xs italic">{{ $order->order_notes }}</p>
+                            <p class="font-sans text-neutral-500 text-xs italic">{{ $displayedNotes }}</p>
                         </div>
                         @endif
                     </div>
                     <div class="space-y-5">
+                        <div>
+                            @if ($isPickupOrder)
+                                <span class="label-tiny text-neutral-400 block mb-2 font-bold">Metode Penerimaan</span>
+                                <div class="flex items-center gap-2">
+                                    <span class="material-symbols-outlined text-[16px] text-neutral-400">store</span>
+                                    <p class="text-neutral-600 font-sans text-sm font-semibold">Ambil di Toko (Local Pickup)</p>
+                                </div>
+                            @else
+                                <span class="label-tiny text-neutral-400 block mb-2 font-bold">Metode Pengiriman</span>
+                                <div class="flex items-center gap-2">
+                                    <span class="material-symbols-outlined text-[16px] text-neutral-400">local_shipping</span>
+                                    <p class="text-neutral-600 font-sans text-sm font-semibold">
+                                        @php
+                                            $courierCode = $order->courier;
+                                            if (!$courierCode && preg_match('/\[Kurir:\s*([^\]\-]+)/', $order->order_notes, $matches)) {
+                                                $courierCode = trim($matches[1]);
+                                            }
+                                            
+                                            $serviceName = $order->shipping_service;
+                                            if (!$serviceName && preg_match('/\[Kurir:\s*[^\]\-]+\-\s*([^\]]+)/', $order->order_notes, $matches)) {
+                                                $serviceName = trim($matches[1]);
+                                            }
+
+                                            $courierDisplay = 'Kurir Pengiriman';
+                                            if ($courierCode) {
+                                                $cClean = strtolower($courierCode);
+                                                if ($cClean === 'jne') {
+                                                    $courierDisplay = 'JNE Reguler';
+                                                } elseif ($cClean === 'jnt' || $cClean === 'j&t') {
+                                                    $courierDisplay = 'J&T';
+                                                } else {
+                                                    $courierDisplay = strtoupper($courierCode);
+                                                }
+                                            }
+                                            if ($serviceName) {
+                                                $courierDisplay .= ' (' . strtoupper($serviceName) . ')';
+                                            }
+                                        @endphp
+                                        {{ $courierDisplay }}
+                                    </p>
+                                </div>
+                            @endif
+                        </div>
                         <div>
                             <span class="label-tiny text-neutral-400 block mb-2 font-bold">Metode Pembayaran</span>
                             <div class="flex items-center gap-2">

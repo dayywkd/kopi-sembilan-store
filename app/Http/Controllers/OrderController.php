@@ -206,15 +206,16 @@ class OrderController extends Controller
             } while ($exists);
 
             if ($isPickup) {
-                $finalNotes = "[Kurir: Ambil di Toko]\n" . $request->order_notes;
+                $courierVal = 'pickup';
+                $serviceVal = 'pickup';
                 $shippingAddress = "Ambil di Toko (Local Pickup)";
                 $city = "Tuban";
                 $postalCode = "62311";
                 $areaId = null;
                 $areaName = null;
             } else {
-                $courierName = strtolower($request->courier) === 'jne' ? 'JNE Reguler' : 'J&T';
-                $finalNotes = "[Kurir: {$courierName} - {$request->shipping_service}]\n" . $request->order_notes;
+                $courierVal = $request->courier;
+                $serviceVal = $request->shipping_service;
                 $shippingAddress = $request->address;
                 $city = $request->city;
                 $postalCode = $request->postal_code;
@@ -233,12 +234,14 @@ class OrderController extends Controller
                 'postal_code' => $postalCode,
                 'biteship_area_id' => $areaId,
                 'biteship_area_name' => $areaName,
-                'order_notes' => $finalNotes,
+                'order_notes' => $request->order_notes, // Catatan murni dari user
                 'payment_method' => $request->payment,
                 'subtotal' => $subtotal,
                 'shipping_cost' => $shippingCost,
                 'total_paid' => $totalPaid,
-                'status' => 'Awaiting Payment', // Default Awaiting Payment sesuai spesifikasi PRD V6
+                'status' => 'Awaiting Payment',
+                'courier' => $courierVal,
+                'shipping_service' => $serviceVal,
             ]);
 
             // Simpan detail Order Items & kurangi stok
