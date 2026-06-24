@@ -149,11 +149,11 @@
                         <!-- Hidden input for courier (selected courier code) -->
                         <input type="hidden" name="courier" id="courier" value="{{ old('courier') }}">
 
-                        <div class="col-span-full flex flex-col gap-2 text-[#121212]" id="shipping-service-container" style="display: none;">
+                        <div class="col-span-full flex flex-col gap-3 text-[#121212]" id="shipping-service-container" style="display: none;">
                             <label class="label-tiny text-[10px] text-neutral-500 font-semibold">Pilih Layanan Pengiriman</label>
-                            <select id="shipping-service-select" class="w-full py-3 px-4 outline-none text-sm bg-[#FFFFFF] border border-[#E5E7EB] text-[#121212] focus:border-brand-accent transition-all font-sans">
-                                <!-- Options populated dynamically -->
-                            </select>
+                            <div id="shipping-service-options" class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                                <!-- Radio cards populated dynamically -->
+                            </div>
                             <input type="hidden" name="shipping_service" id="shipping_service" value="{{ old('shipping_service') }}">
                             <input type="hidden" name="shipping_cost" id="shipping_cost" value="{{ old('shipping_cost') }}">
                             @error('shipping_service')
@@ -405,8 +405,8 @@
             return;
         }
 
-        const selectEl = document.getElementById('shipping-service-select');
-        selectEl.innerHTML = '<option value="">MENGHITUNG TARIF...</option>';
+        const optionsDiv = document.getElementById('shipping-service-options');
+        optionsDiv.innerHTML = '<p class="col-span-full text-xs opacity-60 uppercase tracking-widest animate-pulse">Menghitung tarif pengiriman...</p>';
         document.getElementById('shipping-service-container').style.display = 'block';
 
         fetch('/api/shipping-cost', {
@@ -426,18 +426,60 @@
             if (res.success && res.rates && res.rates.length > 0) {
                 disableWhatsappFallback();
 
+                // Filter to keep JNE Reguler and J&T
+                const filteredRates = res.rates.filter(rate => {
+                    const courier = rate.courier.toLowerCase();
+                    const service = rate.service.toLowerCase();
+                    
+                    if (courier === 'jne') {
+                        return service === 'reguler' || service === 'reg';
+                    }
+                    if (courier === 'jnt' || courier === 'j&t') {
+                        return service === 'ez' || service === 'reguler' || service === 'regular' || service === 'standard';
+                    }
+                    return false;
+                });
+
+                if (filteredRates.length === 0) {
+                    optionsDiv.innerHTML = '<p class="col-span-full text-xs text-brand-accent uppercase tracking-widest">Tidak ada layanan JNE Reguler atau J&T yang menjangkau lokasi Anda.</p>';
+                    enableWhatsappFallback();
+                    return;
+                }
+
                 // Sort rates by cost ascending (cheapest first)
-                const sortedRates = res.rates.sort((a, b) => a.cost - b.cost);
+                const sortedRates = filteredRates.sort((a, b) => a.cost - b.cost);
                 
-                // Populate select options
+                // Populate radio cards
                 let optionsHtml = '';
                 sortedRates.forEach((rate, index) => {
+                    const isChecked = index === 0 ? 'checked' : '';
+                    const courierName = rate.courier.toLowerCase() === 'jne' ? 'JNE Reguler' : 'J&T';
+                    
+                    // Parse and clean estimated delivery time
+                    let etdText = '1-3 Hari';
+                    if (rate.etd) {
+                        let etdClean = rate.etd.toString().toLowerCase().replace(/days|day|hari/g, '').replace(/\s+/g, '');
+                        if (etdClean) {
+                            etdText = `${etdClean} Hari`;
+                        }
+                    }
+                    
                     const valueStr = `${rate.courier}|${rate.service}|${rate.cost}`;
-                    const cheapestLabel = index === 0 ? ' [TERMURAH]' : '';
-                    const etdLabel = rate.etd ? ` - ${rate.etd}` : '';
-                    optionsHtml += `<option value="${valueStr}">${rate.courier.toUpperCase()} - ${rate.service} (${formatRupiah(rate.cost)}${cheapestLabel}${etdLabel})</option>`;
+                    
+                    optionsHtml += `
+                        <label class="cursor-pointer relative block">
+                            <input class="hidden peer" type="radio" name="shipping_rate_option" value="${valueStr}" ${isChecked} onchange="selectShippingRate('${rate.courier}', '${rate.service}', ${rate.cost})">
+                            <div class="border border-neutral-300 p-5 flex justify-between items-center peer-checked:bg-[#121212] peer-checked:text-white peer-checked:border-transparent transition-all">
+                                <div class="flex flex-col gap-1">
+                                    <span class="label-tiny font-bold text-xs">${courierName}</span>
+                                    <span class="text-[10px] opacity-70">Estimasi ${etdText}</span>
+                                </div>
+                                <span class="font-display font-semibold text-sm">${formatRupiah(rate.cost)}</span>
+                            </div>
+                        </label>
+                    `;
                 });
-                selectEl.innerHTML = optionsHtml;
+                optionsDiv.innerHTML = optionsHtml;
 
                 // Auto-select the first (cheapest) rate
                 const cheapestRate = sortedRates[0];
@@ -448,16 +490,15 @@
                 renderSummary(cheapestRate.cost);
                 updateWhatsappLink();
             } else {
-                // Show more specific error message
                 const errMsg = res.message || 'Tidak ada layanan kurir yang tersedia.';
-                selectEl.innerHTML = `<option value="">${errMsg}</option>`;
+                optionsDiv.innerHTML = `<p class="col-span-full text-xs text-neutral-400 uppercase tracking-widest">${errMsg}</p>`;
                 console.error('Failed to calculate shipping:', errMsg);
                 enableWhatsappFallback();
             }
         })
         .catch(err => {
             console.error('Error fetching shipping cost:', err);
-            selectEl.innerHTML = '<option value="">Gagal memuat tarif kurir.</option>';
+            optionsDiv.innerHTML = '<p class="col-span-full text-xs text-neutral-400 uppercase tracking-widest">Gagal memuat tarif kurir.</p>';
             enableWhatsappFallback();
         });
     }
@@ -542,28 +583,14 @@
             });
         }
 
-        // Change event listener on shipping service select
-        const shippingServiceSelect = document.getElementById('shipping-service-select');
-        if (shippingServiceSelect) {
-            shippingServiceSelect.addEventListener('change', function() {
-                const val = this.value;
-                if (val) {
-                    const parts = val.split('|');
-                    if (parts.length === 3) {
-                        const courier = parts[0];
-                        const service = parts[1];
-                        const cost = parseFloat(parts[2]);
-
-                        document.getElementById('courier').value = courier;
-                        document.getElementById('shipping_service').value = service;
-                        document.getElementById('shipping_cost').value = cost;
-
-                        renderSummary(cost);
-                        updateWhatsappLink();
-                    }
-                }
-            });
-        }
+        // Global function for selecting shipping rate card
+        window.selectShippingRate = function(courier, service, cost) {
+            document.getElementById('courier').value = courier;
+            document.getElementById('shipping_service').value = service;
+            document.getElementById('shipping_cost').value = cost;
+            renderSummary(cost);
+            updateWhatsappLink();
+        };
 
         // Auto-trigger calculation if area ID is already pre-filled (e.g. from user profile or old input)
         const initialAreaId = document.getElementById('biteship-area-id')?.value;
