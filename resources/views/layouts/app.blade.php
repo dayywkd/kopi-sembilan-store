@@ -236,6 +236,83 @@
             }
         }
 
+        function showCustomAlert(title, message, type = 'warning', redirectUrl = null) {
+            // Remove existing alert if any
+            const existing = document.getElementById('global-custom-alert-modal');
+            if (existing) existing.remove();
+
+            const modal = document.createElement('div');
+            modal.id = 'global-custom-alert-modal';
+            modal.className = 'fixed inset-0 z-[99999] flex items-center justify-center bg-black/60 backdrop-blur-[2px] transition-opacity duration-300 opacity-0';
+            modal.style.zIndex = '99999';
+            
+            let icon = 'warning';
+            let iconColor = 'text-neutral-900';
+            if (type === 'error') {
+                icon = 'error';
+                iconColor = 'text-neutral-900';
+            } else if (type === 'success') {
+                icon = 'check_circle';
+                iconColor = 'text-neutral-900';
+            } else if (type === 'info') {
+                icon = 'info';
+                iconColor = 'text-neutral-900';
+            }
+
+            modal.innerHTML = `
+                <div class="bg-white border border-[#E5E7EB] p-8 max-w-sm w-full mx-4 shadow-2xl transform scale-95 transition-transform duration-300 flex flex-col gap-6 text-[#121212] rounded-none">
+                    <div class="flex items-start gap-4">
+                        <span class="material-symbols-outlined ${iconColor} text-[32px] mt-0.5" style="font-variation-settings: 'wght' 300; font-size: 32px;">${icon}</span>
+                        <div class="flex-1">
+                            <h4 class="font-display text-lg uppercase italic font-bold tracking-wider mb-2 text-[#121212]">${title}</h4>
+                            <p class="font-sans text-xs text-neutral-500 leading-relaxed uppercase tracking-wider">${message}</p>
+                        </div>
+                    </div>
+                    <button onclick="closeGlobalCustomAlert()" class="w-full bg-[#121212] text-white py-4 font-bold uppercase tracking-widest hover:bg-neutral-800 active:scale-[0.98] transition-all text-[10px] label-tiny text-center rounded-none border border-[#121212]">
+                        Kembali
+                    </button>
+                </div>
+            `;
+
+            document.body.appendChild(modal);
+
+            // Trigger animation
+            setTimeout(() => {
+                modal.classList.remove('opacity-0');
+                const card = modal.querySelector('.transform');
+                if (card) card.classList.remove('scale-95');
+            }, 10);
+
+            window.closeGlobalCustomAlert = function() {
+                modal.classList.add('opacity-0');
+                const card = modal.querySelector('.transform');
+                if (card) card.classList.add('scale-95');
+                setTimeout(() => {
+                    modal.remove();
+                    if (redirectUrl) {
+                        window.location.href = redirectUrl;
+                    }
+                }, 300);
+            };
+        }
+        window.showCustomAlert = showCustomAlert;
+
+        @if ($errors->any())
+        document.addEventListener('DOMContentLoaded', () => {
+            showCustomAlert('Perhatian', '{{ $errors->first() }}', 'warning');
+        });
+        @endif
+        @if (session('error'))
+        document.addEventListener('DOMContentLoaded', () => {
+            showCustomAlert('Terjadi Kesalahan', '{{ session('error') }}', 'error');
+        });
+        @endif
+        @if (session('success'))
+        document.addEventListener('DOMContentLoaded', () => {
+            showCustomAlert('Berhasil', '{{ session('success') }}', 'success');
+        });
+        @endif
+
         // Global Add To Bag function for landing/catalog page
         function addToBag(id, name, price, size = '100gr') {
             let cart = getCart();

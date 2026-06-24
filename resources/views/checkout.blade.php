@@ -309,6 +309,7 @@
         return 'Rp. ' + num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
     }
 
+
     function renderSummary(customShippingCost = null) {
         const cart = getCart();
         const container = document.getElementById('summary-items');
@@ -598,6 +599,13 @@
     document.addEventListener('DOMContentLoaded', () => {
         renderSummary();
 
+        // Cek jika keranjang kosong pada saat halaman dimuat
+        const cart = getCart();
+        if (cart.length === 0) {
+            showCustomAlert('Keranjang Kosong', 'Keranjang belanja Anda kosong. Silakan tambahkan produk sebelum melakukan checkout.', 'warning', '{{ route('shop') }}');
+            return;
+        }
+
         // Autocomplete Area Search
         const areaSearchInput = document.getElementById('area-search');
         const suggestionsDiv = document.getElementById('area-suggestions');
@@ -760,7 +768,7 @@
                 const cart = getCart();
                 if (cart.length === 0) {
                     e.preventDefault();
-                    alert('Keranjang belanja Anda kosong. Tambahkan produk sebelum checkout.');
+                    showCustomAlert('Keranjang Kosong', 'Keranjang belanja Anda kosong. Silakan tambahkan produk sebelum melakukan checkout.', 'warning', '{{ route('shop') }}');
                     return;
                 }
 
@@ -783,7 +791,7 @@
                         const areaId = document.getElementById('biteship-area-id').value;
                         if (!courier || !service || cost === "" || !areaId) {
                             e.preventDefault();
-                            alert('Silakan pilih wilayah pengiriman dan layanan kurir yang valid.');
+                            showCustomAlert('Pilihan Kurir Belum Lengkap', 'Silakan tentukan wilayah pengiriman dan pilih layanan kurir yang valid terlebih dahulu.');
                             return;
                         }
                     }

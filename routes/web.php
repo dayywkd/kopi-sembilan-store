@@ -72,3 +72,11 @@ Route::middleware(['auth', 'is_admin'])->prefix('admin')->name('admin.')->group(
 // Halaman Legal
 Route::view('/privacy-policy', 'legal.privacy_policy')->name('legal.privacy');
 Route::view('/refund-policy', 'legal.refund_policy')->name('legal.refund');
+
+// Route Pengujian Halaman Error (Temporer)
+Route::get('/test-error/{code}', function ($code) {
+    if (in_array($code, [403, 404, 419, 500])) {
+        abort($code);
+    }
+    return 'Gunakan kode error: 403, 404, 419, atau 500. Contoh: /test-error/404';
+});

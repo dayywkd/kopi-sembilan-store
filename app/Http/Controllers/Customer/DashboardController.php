@@ -25,6 +25,7 @@ class DashboardController extends Controller
     {
         $request->validate([
             'name' => ['required', 'string', 'max:255'],
+            'phone' => ['required', 'string', 'max:20'],
             'address' => ['nullable', 'string'],
             'city' => ['nullable', 'string', 'max:100'],
             'postal_code' => ['nullable', 'string', 'max:15'],
@@ -35,6 +36,7 @@ class DashboardController extends Controller
         $user = Auth::user();
         $user->update([
             'name' => $request->name,
+            'phone' => $request->phone,
             'address' => $request->address,
             'city' => $request->city,
             'postal_code' => $request->postal_code,

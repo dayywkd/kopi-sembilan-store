@@ -74,6 +74,13 @@
                         @enderror
                     </div>
                     <div class="flex flex-col gap-1.5">
+                        <label class="label-tiny text-[10px] text-neutral-500">Phone Number / Nomor HP</label>
+                        <input type="text" name="phone" value="{{ Auth::user()->phone }}" class="w-full py-2.5 px-4 outline-none border border-neutral-300 text-[#121212] focus:ring-0 focus:border-[#121212] bg-white transition-all" placeholder="08XXXXXXXXXX" required>
+                        @error('phone')
+                            <span class="text-xs text-red-500 uppercase tracking-wider">{{ $message }}</span>
+                        @enderror
+                    </div>
+                    <div class="flex flex-col gap-1.5">
                         <label class="label-tiny text-[10px] text-neutral-500">Shipping Address</label>
                         <textarea name="address" class="w-full py-2.5 px-4 outline-none border border-neutral-300 text-[#121212] focus:ring-0 focus:border-[#121212] bg-white transition-all resize-none min-h-[80px]">{{ Auth::user()->address }}</textarea>
                         @error('address')

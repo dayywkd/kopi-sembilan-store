@@ -32,39 +32,86 @@
     select {
         background-image: none !important;
     }
+    .size-pill {
+        border-radius: 0px !important;
+    }
+    .gallery-thumb {
+        border-radius: 0px !important;
+    }
 </style>
 @endsection
 
 @section('content')
 <main class="pt-32 min-h-screen flex flex-col justify-between bg-white">
-    <section class="grid grid-cols-1 lg:grid-cols-2 flex-grow">
-        <!-- Left Side: Product Gallery -->
-        <div class="relative bg-brand-cream border-r border-[#E5E7EB] flex items-center justify-center p-margin-desktop group overflow-hidden min-h-[400px]">
-            <div class="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(18,18,18,0.01)_0%,transparent_70%)] pointer-events-none"></div>
-            <div class="w-full h-full flex items-center justify-center transition-all duration-700">
+    <section class="grid grid-cols-1 lg:grid-cols-12 flex-grow">
+        <!-- Left Side: Product Gallery & Thumbnails (60% Desktop Width) -->
+        <div class="col-span-12 lg:col-span-7 bg-white flex flex-col justify-center gap-6 p-8 md:p-12 relative group min-h-[450px] items-center">
+            
+            <!-- Main Image Container -->
+            <div class="w-full h-[350px] lg:h-[450px] flex items-center justify-center relative">
                 @if($product->image_path)
-                    <img alt="{{ $product->name }}" class="max-w-full max-h-[80%] object-contain transition-transform duration-1000 ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:scale-105" src="{{ asset($product->image_path) }}"/>
+                    <img id="main-product-image" alt="{{ $product->name }}" class="max-w-[80%] max-h-[80%] object-contain transition-all duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:scale-[1.02]" src="{{ asset($product->image_path) }}"/>
                 @else
                     <div class="w-full h-full flex items-center justify-center text-neutral-300 text-xs tracking-widest font-mono">NO IMAGE</div>
                 @endif
+
+                <!-- Navigation Arrows -->
+                <div class="absolute inset-0 flex items-center justify-between px-2 opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none">
+                    <button type="button" onclick="prevImage()" class="bg-[#FFFFFF]/80 backdrop-blur-md border border-[#E5E7EB] p-2 hover:bg-[#121212] hover:text-[#FFFFFF] transition-colors text-[#121212] pointer-events-auto cursor-pointer">
+                        <span class="material-symbols-outlined text-sm leading-none flex">chevron_left</span>
+                    </button>
+                    <button type="button" onclick="nextImage()" class="bg-[#FFFFFF]/80 backdrop-blur-md border border-[#E5E7EB] p-2 hover:bg-[#121212] hover:text-[#FFFFFF] transition-colors text-[#121212] pointer-events-auto cursor-pointer">
+                        <span class="material-symbols-outlined text-sm leading-none flex">chevron_right</span>
+                    </button>
+                </div>
             </div>
-            <!-- Navigation Arrows (Statis) -->
-            <div class="absolute inset-0 flex items-center justify-between px-6 opacity-0 group-hover:opacity-100 transition-opacity">
-                <button class="bg-[#FFFFFF]/80 backdrop-blur-md border border-[#E5E7EB] p-2 hover:bg-[#121212] hover:text-[#FFFFFF] transition-colors text-[#121212]">
-                    <span class="material-symbols-outlined text-sm leading-none flex">chevron_left</span>
-                </button>
-                <button class="bg-[#FFFFFF]/80 backdrop-blur-md border border-[#E5E7EB] p-2 hover:bg-[#121212] hover:text-[#FFFFFF] transition-colors text-[#121212]">
-                    <span class="material-symbols-outlined text-sm leading-none flex">chevron_right</span>
-                </button>
+
+            <!-- Thumbnail strip -->
+            @php
+                $catSlug = $product->category->slug ?? '';
+                if ($catSlug === 'gear') {
+                    $extraImages = [
+                        "https://images.unsplash.com/photo-1579888944880-d98341148733?q=80&w=600&auto=format&fit=crop", // Copper detail
+                        "https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?q=80&w=600&auto=format&fit=crop", // Pour over
+                        "https://images.unsplash.com/photo-1514432324607-a09d9b4aefdd?q=80&w=600&auto=format&fit=crop"  // Minimal cup
+                    ];
+                } elseif ($catSlug === 'subscriptions') {
+                    $extraImages = [
+                        "https://images.unsplash.com/photo-1589739900243-4b52cd9b104e?q=80&w=600&auto=format&fit=crop", // Packaged box
+                        "https://images.unsplash.com/photo-1447933601403-0c6688de566e?q=80&w=600&auto=format&fit=crop", // Coffee bags array
+                        "https://images.unsplash.com/photo-1507133750040-4a8f57021571?q=80&w=600&auto=format&fit=crop"  // Morning coffee
+                    ];
+                } else {
+                    $extraImages = [
+                        "https://images.unsplash.com/photo-1514432324607-a09d9b4aefdd?q=80&w=600&auto=format&fit=crop", // Roasted coffee beans
+                        "https://images.unsplash.com/photo-1519708227418-c8fd9a32b7a2?q=80&w=600&auto=format&fit=crop", // Espresso extraction
+                        "https://images.unsplash.com/photo-1509042239860-f550ce710b93?q=80&w=600&auto=format&fit=crop"  // Coffee cup
+                    ];
+                }
+
+                $galleryImages = array_values(array_filter(array_merge(
+                    [$product->image_path ? asset($product->image_path) : null],
+                    $extraImages
+                )));
+            @endphp
+            
+            <div class="flex flex-row gap-3 w-full justify-center mt-4 flex-wrap">
+                @foreach($galleryImages as $index => $imgUrl)
+                    <button type="button" 
+                            class="gallery-thumb w-16 h-20 bg-white border {{ $index === 0 ? 'border-[#121212] border-2' : 'border-neutral-200' }} p-1 hover:border-[#121212] transition-all duration-150 flex-shrink-0"
+                            onclick="changeActiveImage(this, '{{ $imgUrl }}', {{ $index }})">
+                        <img class="w-full h-full object-cover" src="{{ $imgUrl }}" alt="Gallery thumbnail {{ $index + 1 }}">
+                    </button>
+                @endforeach
             </div>
         </div>
 
-        <!-- Right Side: Product Details -->
-        <div class="flex flex-col justify-between p-margin-mobile md:p-margin-desktop bg-white">
-            <div class="space-y-stack-xl">
+        <!-- Right Side: Product Details (40% Desktop Width) -->
+        <div class="col-span-12 lg:col-span-5 flex flex-col justify-between p-12 md:p-16 lg:p-20 bg-white">
+            <div class="space-y-12">
                 <!-- Title Section -->
                 <div class="space-y-4">
-                    <span class="font-label-caps text-label-caps uppercase tracking-[0.2em] text-neutral-500 text-xs block font-bold">{{ $product->category->name }} SERIES</span>
+                    <span class="font-label-caps text-label-caps uppercase tracking-[0.2em] text-neutral-400 text-xs block font-bold">{{ $product->category->name }} SERIES</span>
                     <h1 class="font-serif-italic italic text-4xl md:text-5xl font-display text-[#121212] leading-tight">
                         {{ $product->name }}
                     </h1>
@@ -83,27 +130,16 @@
                         </a>
                     </div>
                 </div>
-                
-                <!-- Metadata Grid -->
-                <div class="grid grid-cols-2 gap-y-stack-lg gap-x-gutter pt-stack-lg border-t border-[#E5E7EB]">
-                    <div class="space-y-unit">
-                        <p class="font-label-caps text-xs text-neutral-500 font-bold">ROAST LEVEL</p>
-                        <p class="font-sans font-light text-base text-neutral-700">{{ $product->roast_level }}</p>
-                    </div>
-                    <div class="space-y-unit">
-                        <p class="font-label-caps text-xs text-neutral-500 font-bold">ALTITUDE</p>
-                        <p class="font-sans font-light text-base text-neutral-700">{{ $product->altitude }}</p>
-                    </div>
-                    <div class="col-span-2 space-y-unit mt-4">
-                        <p class="font-label-caps text-xs text-neutral-500 font-bold">SENSORY NOTES</p>
-                        <p class="font-sans font-bold text-neutral-900 tracking-wide uppercase text-sm">{{ $product->sensory_notes }}</p>
-                    </div>
-                </div>
+
+                <!-- Intro Description -->
+                <p class="font-sans font-light text-sm text-neutral-600 leading-relaxed">
+                    Menghadirkan keunikan rasa dengan dominasi aroma <strong class="text-neutral-900 font-semibold">{{ strtolower($product->sensory_notes) }}</strong>. Biji kopi pilihan ini dipanggang dengan presisi tinggi di roastery kami untuk mengeluarkan keseimbangan rasa yang optimal.
+                </p>
                 
                 <!-- Selection & Action -->
-                <div class="space-y-gutter pt-6">
-                    <div class="space-y-stack-sm flex flex-col gap-2">
-                        <label class="font-label-caps text-xs text-neutral-500 uppercase font-semibold" for="grind">Size Beans</label>
+                <div class="space-y-6 pt-2">
+                    <div class="space-y-3">
+                        <label class="font-label-caps text-xs text-neutral-500 uppercase font-semibold block" for="grind">Size Beans</label>
                         
                         <!-- Select Asli yang disembunyikan agar logikanya tetap terhubung -->
                         @php
@@ -115,53 +151,101 @@
                             @endforeach
                         </select>
                         
-                        <!-- Custom Dropdown UI Premium -->
-                        <div class="relative" id="custom-grind-dropdown">
-                            <button type="button" id="custom-grind-trigger" class="stark-input w-full py-4 px-4 font-sans text-sm uppercase tracking-widest cursor-pointer flex justify-between items-center border border-[#E5E7EB] transition-all hover:border-brand-accent">
-                                <span id="custom-grind-selected-text">@if(count($availableSizes) > 0){{ $availableSizes[0]['size'] }}@else 100gr @endif</span>
-                                <span class="material-symbols-outlined transition-transform duration-300" id="custom-grind-arrow">expand_more</span>
-                            </button>
-                            
-                            <ul id="custom-grind-options" class="absolute left-0 right-0 mt-2 bg-white border border-[#E5E7EB] divide-y divide-[#E5E7EB] z-20 hidden opacity-0 transition-all duration-200 max-h-60 overflow-y-auto no-scrollbar shadow-xl text-[#121212]">
-                                @foreach ($availableSizes as $sizeOpt)
-                                    <li class="custom-option py-4 px-4 hover:bg-brand-cream hover:text-brand-accent cursor-pointer font-sans text-sm uppercase tracking-widest transition-colors duration-150" 
-                                         data-value="{{ $sizeOpt['size'] }}" 
-                                         data-price="{{ $sizeOpt['price'] }}">
-                                        {{ $sizeOpt['size'] }}
-                                    </li>
-                                @endforeach
-                            </ul>
+                        <!-- Horizontal Pill Selectors -->
+                        <div class="flex flex-wrap gap-2.5" id="size-pill-container">
+                            @foreach ($availableSizes as $index => $sizeOpt)
+                                <button type="button" 
+                                        class="size-pill px-6 py-3 border text-[11px] font-sans font-bold uppercase tracking-widest transition-all duration-150 {{ $index === 0 ? 'bg-[#121212] text-white border-[#121212]' : 'bg-white text-[#121212] border-neutral-200 hover:border-[#121212]' }}"
+                                        data-value="{{ $sizeOpt['size'] }}" 
+                                        data-price="{{ $sizeOpt['price'] }}">
+                                    {{ $sizeOpt['size'] }}
+                                </button>
+                            @endforeach
                         </div>
                     </div>
                     
                     <!-- Action Button -->
                     @if ($product->status === 'SOLD OUT')
-                        <button disabled class="w-full bg-neutral-100 text-neutral-400 font-bold py-6 uppercase tracking-[0.25em] border border-neutral-200 cursor-not-allowed">
+                        <button disabled class="w-full bg-neutral-100 text-neutral-400 font-bold py-5 uppercase tracking-[0.25em] border border-neutral-200 cursor-not-allowed text-xs">
                             SOLD OUT
                         </button>
                     @else
-                        <button id="add-to-bag-btn" class="w-full bg-brand-dark text-white font-bold py-6 uppercase tracking-[0.25em] border border-brand-dark transition-all duration-300 hover:bg-brand-accent hover:border-brand-accent active:scale-[0.98]">
+                        <button id="add-to-bag-btn" class="w-full bg-brand-dark text-white font-bold py-5 uppercase tracking-[0.25em] border border-brand-dark transition-all duration-300 hover:bg-[#222222] hover:border-[#222222] active:scale-[0.98] text-xs">
                             Add to Bag
                         </button>
                     @endif
                 </div>
-            </div>
 
-            <!-- Product Story / Description -->
-            <div class="mt-stack-xl space-y-stack-md pt-stack-lg border-t border-[#E5E7EB]">
-                <p class="font-sans font-light text-sm text-neutral-600 max-w-lg leading-relaxed">
-                    Ethically sourced and roasted in small batches to preserve its natural flavors. This selection represents our uncompromising commitment to precision coffee. We roast to highlight the optimal balance between body, sweetness, and the complex notes unique to its origin.
-                </p>
-                <div class="flex gap-8 text-xs font-semibold pt-4">
-                    <a class="font-label-caps border-b border-[#E5E7EB] pb-1 hover:text-brand-accent hover:border-brand-accent transition-colors text-[#121212]" href="#">SOURCING DETAILS</a>
-                    <a class="font-label-caps border-b border-[#E5E7EB] pb-1 hover:text-brand-accent hover:border-brand-accent transition-colors text-[#121212]" href="#">BREW GUIDE</a>
+                <!-- Accordion Details -->
+                <div class="border-t border-[#E5E7EB] divide-y divide-[#E5E7EB]">
+                    <!-- Accordion 01: Coffee Profile -->
+                    <div class="accordion-item">
+                        <button type="button" class="accordion-trigger w-full py-4 flex justify-between items-center text-left font-sans text-[11px] font-bold uppercase tracking-widest text-[#121212] focus:outline-none">
+                            <span>01 / Coffee Profile</span>
+                            <span class="material-symbols-outlined text-sm leading-none transition-transform duration-300">add</span>
+                        </button>
+                        <div class="accordion-content max-h-0 overflow-hidden transition-all duration-300 ease-in-out">
+                            <div class="pb-6 pt-2 space-y-4 text-xs font-sans text-neutral-600 uppercase tracking-wider">
+                                <div class="flex justify-between py-1 border-b border-[#F3F4F6]">
+                                    <span class="opacity-60">Category</span>
+                                    <span class="font-bold text-[#121212]">{{ $product->category->name }}</span>
+                                </div>
+                                <div class="flex justify-between py-1 border-b border-[#F3F4F6]">
+                                    <span class="opacity-60">Roast Level</span>
+                                    <span class="font-bold text-[#121212]">{{ $product->roast_level }}</span>
+                                </div>
+                                <div class="flex justify-between py-1 border-b border-[#F3F4F6]">
+                                    <span class="opacity-60">Altitude</span>
+                                    <span class="font-bold text-[#121212]">{{ $product->altitude }}</span>
+                                </div>
+                                <div class="flex flex-col gap-2 pt-2">
+                                    <span class="opacity-60">Sensory Notes</span>
+                                    <span class="font-bold text-sm text-[#121212] normal-case tracking-normal italic">"{{ $product->sensory_notes }}"</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Accordion 02: Brew Guide -->
+                    <div class="accordion-item">
+                        <button type="button" class="accordion-trigger w-full py-4 flex justify-between items-center text-left font-sans text-[11px] font-bold uppercase tracking-widest text-[#121212] focus:outline-none">
+                            <span>02 / Brew Guide</span>
+                            <span class="material-symbols-outlined text-sm leading-none transition-transform duration-300">add</span>
+                        </button>
+                        <div class="accordion-content max-h-0 overflow-hidden transition-all duration-300 ease-in-out">
+                            <div class="pb-6 pt-2 space-y-4 text-xs font-sans text-neutral-600 leading-relaxed">
+                                <p class="font-bold uppercase tracking-widest text-[10px] text-[#121212] mb-2">Recommended: Pour Over (V60)</p>
+                                <ul class="list-disc pl-4 space-y-1.5 uppercase tracking-wider text-[10px]">
+                                    <li>Ratio: 1:15 (15g coffee to 225g water)</li>
+                                    <li>Grind Size: Medium-Fine (like table salt)</li>
+                                    <li>Water Temp: 92°C - 94°C</li>
+                                    <li>Pour Time: 2:30 - 3:00 mins</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Accordion 03: Sourcing & Logistics -->
+                    <div class="accordion-item">
+                        <button type="button" class="accordion-trigger w-full py-4 flex justify-between items-center text-left font-sans text-[11px] font-bold uppercase tracking-widest text-[#121212] focus:outline-none">
+                            <span>03 / Sourcing &amp; Logistics</span>
+                            <span class="material-symbols-outlined text-sm leading-none transition-transform duration-300">add</span>
+                        </button>
+                        <div class="accordion-content max-h-0 overflow-hidden transition-all duration-300 ease-in-out">
+                            <div class="pb-6 pt-2 space-y-3 text-xs font-sans text-neutral-500 leading-relaxed uppercase tracking-wider text-[10px]">
+                                <p>Ethically sourced and direct trade. We pay premium prices directly to farmers to ensure sustainable and high-quality production practices.</p>
+                                <p>Roast Date: All orders are guaranteed roasted within 7 days of shipment to ensure peak freshness and flavor integrity.</p>
+                            </div>
+                        </div>
+                    </div>
                 </div>
+
             </div>
         </div>
     </section>
 
     <!-- Reviews Section -->
-    <section id="reviews-section" class="border-t border-[#E5E7EB] py-16 px-margin-mobile md:px-margin-desktop bg-white">
+    <section id="reviews-section" class="border-t border-[#E5E7EB] py-20 px-margin-mobile md:px-margin-desktop bg-white">
         <div class="max-w-4xl mx-auto">
             <div class="flex justify-between items-baseline border-b border-[#E5E7EB] pb-6 mb-8">
                 <h3 class="font-display text-3xl uppercase italic text-[#121212]">Ulasan Pelanggan</h3>
@@ -169,7 +253,7 @@
             </div>
             
             @if ($product->reviews->isEmpty())
-                <p class="text-neutral-500 font-sans text-sm italic">Belum ada ulasan untuk produk ini. Ulasan baru dapat ditulis setelah Anda membeli produk ini dan melakukan konfirmasi penerimaan pesanan pada halaman pelacakan.</p>
+                <p class="text-neutral-500 font-sans text-sm italic">Belum ada ulasan untuk produk ini.</p>
             @else
                 <div class="space-y-6">
                     @foreach ($product->reviews as $review)
@@ -197,32 +281,57 @@
         </div>
     </section>
 
-    <!-- Product Features Section -->
-    <section class="border-t border-[#E5E7EB] bg-white">
-        <div class="grid grid-cols-1 md:grid-cols-3 border-b border-[#E5E7EB]">
-            <div class="p-margin-desktop border-b md:border-b-0 md:border-r border-[#E5E7EB] group overflow-hidden relative h-[400px]">
-                <div class="absolute inset-0 z-0">
-                    <img class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-1000 opacity-40" src="{{ asset('images/roasting_bg.jpg') }}"/>
-                </div>
-                <div class="relative z-10 h-full flex flex-col justify-end p-8">
-                    <h3 class="font-display text-xl uppercase italic mb-2 text-[#121212]">PRECISION ROASTING</h3>
-                    <p class="font-sans font-light text-neutral-600 text-sm">Controlled small-batch roasting ensures absolute flavor consistency.</p>
-                </div>
+    <!-- Product Features Section (Redesigned Editorial Style) -->
+    <section class="border-t border-[#E5E7EB] py-24 px-margin-mobile md:px-margin-desktop bg-white">
+        <div class="max-w-container-max mx-auto text-[#121212]">
+            <div class="text-center mb-16">
+                <span class="font-label-caps text-xs text-neutral-400 font-bold uppercase tracking-[0.2em]">Our Craft</span>
+                <h2 class="font-serif-italic italic text-3xl md:text-4xl font-display text-[#121212] mt-2">Commitment to Quality</h2>
             </div>
-            <div class="p-margin-desktop border-b md:border-b-0 md:border-r border-[#E5E7EB] flex flex-col justify-center items-center text-center p-8 space-y-4 min-h-[300px]">
-                <span class="material-symbols-outlined text-5xl text-[#121212] opacity-80" style="font-variation-settings: 'wght' 200;">eco</span>
-                <h3 class="font-display text-xl uppercase italic text-[#121212]">REGENERATIVE</h3>
-                <p class="font-sans font-light text-neutral-600 text-sm">Sourced via regenerative agriculture practices that support local soil health.</p>
-            </div>
-            <div class="p-margin-desktop flex flex-col justify-between p-8 min-h-[300px]">
-                <div>
-                    <h3 class="font-display text-xl uppercase italic text-[#121212]">TERROIR</h3>
-                    <p class="font-sans font-light text-neutral-600 text-sm mt-2">Single-origin from volcanic soil rich in nutrients.</p>
+            
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 lg:gap-8">
+                <!-- Feature 1: Roasting -->
+                <div class="group relative h-[380px] overflow-hidden flex flex-col justify-end p-8 border border-neutral-100 bg-[#121212]">
+                    <div class="absolute inset-0 z-0 overflow-hidden">
+                        <img class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 opacity-55" src="{{ asset('images/roasting_bg.jpg') }}" alt="Precision Roasting"/>
+                        <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-transparent"></div>
+                    </div>
+                    <div class="relative z-10 space-y-3 text-white">
+                        <h3 class="font-serif-italic italic text-2xl font-display">Precision Roasting</h3>
+                        <p class="font-sans font-light text-neutral-200 text-sm leading-relaxed max-h-0 opacity-0 group-hover:max-h-[100px] group-hover:opacity-100 overflow-hidden transition-all duration-500 ease-in-out">
+                            Setiap batch kopi dipanggang dalam kuantitas kecil dengan kontrol suhu mikro untuk menghasilkan cita rasa yang presisi dan konsisten.
+                        </p>
+                        <p class="font-sans font-light text-neutral-400 text-xs tracking-wider group-hover:hidden transition-all duration-300">Arahkan kursor untuk info detail →</p>
+                    </div>
                 </div>
-                <div class="pt-6">
-                    <div class="flex justify-between items-center py-2 border-b border-[#E5E7EB] text-xs">
-                        <span class="font-label-caps text-neutral-500 font-bold">SOIL TYPE</span>
-                        <span class="font-sans font-light text-neutral-800">Andosol</span>
+
+                <!-- Feature 2: Sourcing -->
+                <div class="group relative h-[380px] overflow-hidden flex flex-col justify-end p-8 border border-neutral-100 bg-[#121212]">
+                    <div class="absolute inset-0 z-0 overflow-hidden">
+                        <img class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 opacity-55" src="https://images.unsplash.com/photo-1524486361537-8ad15938e1a3?q=80&w=800&auto=format&fit=crop" alt="Regenerative Sourcing"/>
+                        <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-transparent"></div>
+                    </div>
+                    <div class="relative z-10 space-y-3 text-white">
+                        <h3 class="font-serif-italic italic text-2xl font-display">Regenerative Sourcing</h3>
+                        <p class="font-sans font-light text-neutral-200 text-sm leading-relaxed max-h-0 opacity-0 group-hover:max-h-[100px] group-hover:opacity-100 overflow-hidden transition-all duration-500 ease-in-out">
+                            Bekerja sama langsung dengan petani lokal untuk menerapkan pertanian ramah lingkungan demi kelestarian tanah dan masa depan petani.
+                        </p>
+                        <p class="font-sans font-light text-neutral-400 text-xs tracking-wider group-hover:hidden transition-all duration-300">Arahkan kursor untuk info detail →</p>
+                    </div>
+                </div>
+
+                <!-- Feature 3: Terroir -->
+                <div class="group relative h-[380px] overflow-hidden flex flex-col justify-end p-8 border border-neutral-100 bg-[#121212]">
+                    <div class="absolute inset-0 z-0 overflow-hidden">
+                        <img class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 opacity-55" src="https://images.unsplash.com/photo-1501004318641-b39e6451bec6?q=80&w=800&auto=format&fit=crop" alt="Volcanic Terroir"/>
+                        <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-transparent"></div>
+                    </div>
+                    <div class="relative z-10 space-y-3 text-white">
+                        <h3 class="font-serif-italic italic text-2xl font-display">Volcanic Terroir</h3>
+                        <p class="font-sans font-light text-neutral-200 text-sm leading-relaxed max-h-0 opacity-0 group-hover:max-h-[100px] group-hover:opacity-100 overflow-hidden transition-all duration-500 ease-in-out">
+                            Biji kopi single-origin ditanam di ketinggian tinggi pada tanah vulkanik Andosol yang kaya mineral, menghasilkan cita rasa yang unik dan kaya rasa.
+                        </p>
+                        <p class="font-sans font-light text-neutral-400 text-xs tracking-wider group-hover:hidden transition-all duration-300">Arahkan kursor untuk info detail →</p>
                     </div>
                 </div>
             </div>
@@ -234,70 +343,116 @@
 @section('scripts')
 <script>
     document.addEventListener('DOMContentLoaded', () => {
-        // Custom Dropdown JS Handler
-        const dropdownTrigger = document.getElementById('custom-grind-trigger');
-        const dropdownOptions = document.getElementById('custom-grind-options');
-        const dropdownArrow = document.getElementById('custom-grind-arrow');
-        const selectedText = document.getElementById('custom-grind-selected-text');
+        // Inisialisasi galeri gambar dari backend
+        const galleryImages = @json($galleryImages);
+        let currentImageIndex = 0;
+
+        // Thumbnail active image changer JS
+        window.changeActiveImage = function(btn, imgUrl, index) {
+            currentImageIndex = index;
+            const mainImg = document.getElementById('main-product-image');
+            if (mainImg) {
+                mainImg.style.opacity = '0.3';
+                setTimeout(() => {
+                    mainImg.src = imgUrl;
+                    mainImg.style.opacity = '1';
+                }, 150);
+            }
+
+            // Update border style of thumbnails
+            document.querySelectorAll('.gallery-thumb').forEach((thumb, idx) => {
+                if (idx === index) {
+                    thumb.classList.add('border-[#121212]', 'border-2');
+                    thumb.classList.remove('border-neutral-200');
+                } else {
+                    thumb.classList.remove('border-[#121212]', 'border-2');
+                    thumb.classList.add('border-neutral-200');
+                }
+            });
+        };
+
+        // Fungsi mengganti gambar ke sebelumnya
+        window.prevImage = function() {
+            if (galleryImages.length <= 1) return;
+            currentImageIndex = (currentImageIndex - 1 + galleryImages.length) % galleryImages.length;
+            const targetUrl = galleryImages[currentImageIndex];
+            const thumbs = document.querySelectorAll('.gallery-thumb');
+            if (thumbs[currentImageIndex]) {
+                window.changeActiveImage(thumbs[currentImageIndex], targetUrl, currentImageIndex);
+            }
+        };
+
+        // Fungsi mengganti gambar ke berikutnya
+        window.nextImage = function() {
+            if (galleryImages.length <= 1) return;
+            currentImageIndex = (currentImageIndex + 1) % galleryImages.length;
+            const targetUrl = galleryImages[currentImageIndex];
+            const thumbs = document.querySelectorAll('.gallery-thumb');
+            if (thumbs[currentImageIndex]) {
+                window.changeActiveImage(thumbs[currentImageIndex], targetUrl, currentImageIndex);
+            }
+        };
+
+        // Horizontal Pill Selectors JS
+        const sizePills = document.querySelectorAll('.size-pill');
         const nativeSelect = document.getElementById('grind');
-        const optionItems = document.querySelectorAll('.custom-option');
         const priceDisplay = document.getElementById('product-price-display');
 
         function formatRupiah(num) {
             return 'Rp ' + num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
         }
 
-        if (dropdownTrigger && dropdownOptions) {
-            dropdownTrigger.addEventListener('click', (e) => {
-                e.stopPropagation();
-                const isHidden = dropdownOptions.classList.contains('hidden');
-                if (isHidden) {
-                    dropdownOptions.classList.remove('hidden');
-                    dropdownArrow.classList.add('rotate-180');
-                    setTimeout(() => {
-                        dropdownOptions.classList.remove('opacity-0');
-                        dropdownOptions.classList.add('opacity-100');
-                    }, 10);
-                } else {
-                    closeDropdown();
-                }
-            });
-
-            function closeDropdown() {
-                dropdownOptions.classList.remove('opacity-100');
-                dropdownOptions.classList.add('opacity-0');
-                dropdownArrow.classList.remove('rotate-180');
-                setTimeout(() => {
-                    dropdownOptions.classList.add('hidden');
-                }, 200);
-            }
-
-            optionItems.forEach(item => {
-                item.addEventListener('click', () => {
-                    const value = item.getAttribute('data-value');
-                    const price = parseInt(item.getAttribute('data-price')) || {{ (int)$product->price }};
-                    
-                    selectedText.innerText = value;
-                    if (nativeSelect) {
-                        nativeSelect.value = value;
-                    }
-                    
-                    // Update tampilan harga secara dinamis
-                    if (priceDisplay) {
-                        priceDisplay.innerText = formatRupiah(price);
-                    }
-                    
-                    closeDropdown();
+        sizePills.forEach(pill => {
+            pill.addEventListener('click', () => {
+                // Remove active classes
+                sizePills.forEach(p => {
+                    p.classList.remove('bg-[#121212]', 'text-white', 'border-[#121212]');
+                    p.classList.add('bg-white', 'text-[#121212]', 'border-neutral-200');
                 });
-            });
+                
+                // Add active classes to clicked
+                pill.classList.add('bg-[#121212]', 'text-white', 'border-[#121212]');
+                pill.classList.remove('bg-white', 'text-[#121212]', 'border-neutral-200');
 
-            // Klik di luar dropdown untuk menutup
-            document.addEventListener('click', (e) => {
-                if (!dropdownOptions.classList.contains('hidden') && !e.target.closest('#custom-grind-dropdown')) {
-                    closeDropdown();
+                const value = pill.getAttribute('data-value');
+                const price = parseInt(pill.getAttribute('data-price')) || {{ (int)$product->price }};
+                
+                if (nativeSelect) {
+                    nativeSelect.value = value;
+                }
+                
+                if (priceDisplay) {
+                    priceDisplay.innerText = formatRupiah(price);
                 }
             });
-        }
+        });
+
+        // Accordion JS Handler
+        const triggers = document.querySelectorAll('.accordion-trigger');
+        triggers.forEach(trigger => {
+            trigger.addEventListener('click', () => {
+                const content = trigger.nextElementSibling;
+                const icon = trigger.querySelector('.material-symbols-outlined');
+                
+                // Close other accordions
+                triggers.forEach(otherTrigger => {
+                    if (otherTrigger !== trigger) {
+                        const otherContent = otherTrigger.nextElementSibling;
+                        const otherIcon = otherTrigger.querySelector('.material-symbols-outlined');
+                        if (otherContent) otherContent.style.maxHeight = null;
+                        if (otherIcon) otherIcon.innerText = 'add';
+                    }
+                });
+
+                if (content.style.maxHeight) {
+                    content.style.maxHeight = null;
+                    if (icon) icon.innerText = 'add';
+                } else {
+                    content.style.maxHeight = content.scrollHeight + "px";
+                    if (icon) icon.innerText = 'remove';
+                }
+            });
+        });
 
         const addToBagBtn = document.getElementById('add-to-bag-btn');
         if (addToBagBtn) {
@@ -305,8 +460,8 @@
                 const grindSize = nativeSelect ? nativeSelect.value : '100gr';
                 
                 // Ambil harga yang sesuai dengan ukuran yang dipilih
-                const selectedOption = dropdownOptions.querySelector(`[data-value="${grindSize}"]`);
-                const currentPrice = selectedOption ? parseInt(selectedOption.getAttribute('data-price')) : {{ (int)$product->price }};
+                const selectedPill = document.querySelector(`.size-pill[data-value="${grindSize}"]`);
+                const currentPrice = selectedPill ? parseInt(selectedPill.getAttribute('data-price')) : {{ (int)$product->price }};
 
                 let cart = getCart();
                 let existingItem = cart.find(item => item.id === {{ $product->id }} && item.grind_size === grindSize);
@@ -320,7 +475,7 @@
                         price: currentPrice,
                         grind_size: grindSize,
                         quantity: 1,
-                        image: "https://lh3.googleusercontent.com/aida/AP1WRLsGnmckoSHSLe-DwOGsM6GmqQ5-_5i3etbFi2klrcBPyscEY_rjBMrryflSBZqdNeqwIQDsbl667aVTg-I9A3gq6AcwMti-D9ry52pa4e7dENL3iWKcRZGNZjmOyTHikIXVlPDsoPmGXbwYWqXAEklbq7eGo98p99QqfeGAFPm7t3uQ0AvOvpjXkEM3-Kqqf5La7THN_tBp7zUuPQiigpZM4VIgrGtG-ZA_079iNLWBPCyjHcAY_pfezQ"
+                        image: "{{ $product->image_path ? asset($product->image_path) : 'https://lh3.googleusercontent.com/aida/AP1WRLsGnmckoSHSLe-DwOGsM6GmqQ5-_5i3etbFi2klrcBPyscEY_rjBMrryflSBZqdNeqwIQDsbl667aVTg-I9A3gq6AcwMti-D9ry52pa4e7dENL3iWKcRZGNZjmOyTHikIXVlPDsoPmGXbwYWqXAEklbq7eGo98p99QqfeGAFPm7t3uQ0AvOvpjXkEM3-Kqqf5La7THN_tBp7zUuPQiigpZM4VIgrGtG-ZA_079iNLWBPCyjHcAY_pfezQ' }}"
                     });
                 }
                 

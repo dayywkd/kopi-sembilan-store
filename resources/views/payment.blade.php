@@ -128,9 +128,9 @@
                     <div class="bg-brand-cream border border-brand-accent/20 p-5 flex gap-4 items-start">
                         <span class="material-symbols-outlined text-brand-accent text-[22px] flex-shrink-0 mt-0.5">info</span>
                         <div>
-                            <p class="label-tiny text-brand-accent mb-1">Penting: Transfer Tepat</p>
+                            <p class="label-tiny text-brand-accent mb-1">Penting</p>
                             <p class="font-sans text-xs text-brand-accent leading-relaxed">
-                                Transfer dengan jumlah <strong>tepat</strong> sesuai nominal yang tertera, lalu cantumkan kode pesanan Anda di berita transfer.
+                                Transfer dengan jumlah tepat sesuai nominal yang tertera, lalu cantumkan kode pesanan Anda di berita transfer.
                             </p>
                         </div>
                     </div>
@@ -169,7 +169,7 @@
 
                         {{-- Jumlah Transfer --}}
                         <div class="bg-brand-cream border border-[#E5E7EB] p-6">
-                            <p class="label-tiny text-neutral-500 mb-3">Jumlah Transfer <span class="text-brand-accent font-bold">(Harus Tepat)</span></p>
+                            <p class="label-tiny text-neutral-500 mb-3">Jumlah Transfer <span class="text-brand-accent font-bold"></span></p>
                             <div class="flex items-end justify-between gap-4">
                                 <div>
                                     <p class="font-sans text-xs text-neutral-500 mb-1">Total yang harus ditransfer</p>
@@ -435,28 +435,24 @@
         let message = '';
         if (method === 'Bank Transfer') {
             message =
-                `Halo Toko Kopi Sembilan! 👋\n\n` +
-                `Saya ingin mengkonfirmasi pembayaran pesanan:\n` +
-                `━━━━━━━━━━━━━━━━━━━\n` +
-                `🧾 No. Pesanan : *${txId}*\n` +
-                `👤 Nama        : ${name}\n` +
-                `💳 Metode      : Bank Transfer BCA\n` +
-                `💰 Nominal     : Rp. ${total}\n` +
-                `━━━━━━━━━━━━━━━━━━━\n\n` +
-                `[Bukti transfer terlampir]\n\n` +
-                `Mohon segera diverifikasi. Terima kasih! 🙏`;
+                `Halo Toko Kopi Sembilan,\n\n` +
+                `Saya ingin melakukan konfirmasi pembayaran untuk pesanan berikut:\n\n` +
+                `- Nomor Pesanan: *${txId}*\n` +
+                `- Nama Lengkap: ${name}\n` +
+                `- Metode Pembayaran: Bank Transfer BCA\n` +
+                `- Nominal Transfer: Rp. ${total}\n\n` +
+                `[Bukti transfer telah saya lampirkan]\n\n` +
+                `Mohon bantuannya untuk segera diverifikasi. Terima kasih.`;
         } else {
             message =
-                `Halo Toko Kopi Sembilan! 👋\n\n` +
-                `Saya ingin mengkonfirmasi pembayaran QRIS:\n` +
-                `━━━━━━━━━━━━━━━━━━━\n` +
-                `🧾 No. Pesanan : *${txId}*\n` +
-                `👤 Nama        : ${name}\n` +
-                `💳 Metode      : QRIS\n` +
-                `💰 Nominal     : Rp. ${total}\n` +
-                `━━━━━━━━━━━━━━━━━━━\n\n` +
-                `[Bukti pembayaran QRIS terlampir]\n\n` +
-                `Mohon segera diproses. Terima kasih! 🙏`;
+                `Halo Toko Kopi Sembilan,\n\n` +
+                `Saya ingin melakukan konfirmasi pembayaran QRIS untuk pesanan berikut:\n\n` +
+                `- Nomor Pesanan: *${txId}*\n` +
+                `- Nama Lengkap: ${name}\n` +
+                `- Metode Pembayaran: QRIS\n` +
+                `- Nominal Pembayaran: Rp. ${total}\n\n` +
+                `[Bukti pembayaran QRIS telah saya lampirkan]\n\n` +
+                `Mohon bantuannya untuk segera diproses. Terima kasih.`;
         }
 
         const waBtn = document.getElementById('wa-confirm-btn');
