@@ -74,6 +74,29 @@ class ProductResource extends Resource
 
                 Forms\Components\Card::make()
                     ->schema([
+                        Forms\Components\Repeater::make('images')
+                            ->relationship('images')
+                            ->schema([
+                                Forms\Components\FileUpload::make('image_path')
+                                    ->image()
+                                    ->directory('images/products/gallery')
+                                    ->imageResizeMode('force')
+                                    ->imageCropAspectRatio('1:1')
+                                    ->label('Foto Sisi Lain')
+                                    ->required(),
+                                Forms\Components\TextInput::make('sort_order')
+                                    ->numeric()
+                                    ->default(0)
+                                    ->required()
+                                    ->label('Urutan'),
+                            ])
+                            ->grid(3)
+                            ->label('Galeri Foto Tambahan (Tampilan Sisi Lain)')
+                            ->default([])
+                    ])->columnSpan(2),
+
+                Forms\Components\Card::make()
+                    ->schema([
                         Forms\Components\Repeater::make('sizes')
                             ->schema([
                                 Forms\Components\TextInput::make('size')
