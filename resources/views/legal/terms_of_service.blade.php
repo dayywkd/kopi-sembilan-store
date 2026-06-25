@@ -5,12 +5,12 @@
 
 @section('content')
 <main class="mt-32 min-h-screen px-margin-mobile md:px-margin-desktop py-stack-xl max-w-4xl mx-auto text-[#121212]">
-    <header class="border-b border-[#E5E7EB] pb-8 mb-10">
+    <header class="border-b border-[#E5E7EB] pb-8 mb-10 reveal">
         <span class="label-tiny text-neutral-500 block mb-2">Legal</span>
         <h1 class="font-display text-5xl md:text-7xl uppercase italic leading-none">Terms of Service</h1>
     </header>
 
-    <div class="space-y-8 font-sans text-sm leading-relaxed text-neutral-600">
+    <div class="space-y-8 font-sans text-sm leading-relaxed text-neutral-600 reveal">
         <section>
             <h2 class="label-tiny text-[#121212] font-bold mb-3">Ketentuan Umum</h2>
             <p>Dengan menggunakan website Toko Kopi Sembilan, Anda menyetujui proses pembelian, pembayaran manual, pengiriman, dan kebijakan layanan yang berlaku.</p>

@@ -6,12 +6,12 @@
 @section('content')
 <main class="mt-32 min-h-screen px-margin-mobile md:px-margin-desktop py-stack-xl max-w-container-max mx-auto text-[#121212]">
     <div class="max-w-3xl mx-auto space-y-12">
-        <div class="border-b border-[#E5E7EB] pb-6">
+        <div class="border-b border-[#E5E7EB] pb-6 reveal">
             <h1 class="font-display text-5xl md:text-7xl uppercase italic mb-2">Kebijakan Privasi</h1>
             <p class="label-tiny text-neutral-500 font-semibold">Terakhir diperbarui: Juni 2026</p>
         </div>
 
-        <section class="space-y-6 font-sans text-sm leading-relaxed text-neutral-600">
+        <section class="space-y-6 font-sans text-sm leading-relaxed text-neutral-600 reveal">
             <h2 class="label-tiny text-neutral-800 font-bold border-b border-neutral-200 pb-2">01 / Informasi yang Kami Kumpulkan</h2>
             <p>
                 Toko Kopi Sembilan mengumpulkan informasi yang Anda berikan secara langsung saat melakukan checkout pesanan. Informasi ini meliputi:

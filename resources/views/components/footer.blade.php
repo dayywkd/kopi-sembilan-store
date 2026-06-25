@@ -42,15 +42,14 @@
         </div>
 
         <!-- Middle Section: Column Navigation -->
-        <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-y-12 gap-x-8 py-4">
+        <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-y-12 gap-x-8 py-4">
             <!-- Column 1: About -->
             <div class="flex flex-col gap-4">
                 <h4 class="text-xs font-bold uppercase tracking-widest text-brand-dark">About</h4>
                 <div class="flex flex-col gap-2 text-xs text-brand-dark font-medium">
                     <a class="hover:text-brand-accent transition-colors" href="{{ route('about') }}">Our Story</a>
-                    <a class="hover:text-brand-accent transition-colors" href="{{ route('about') }}#location">Locations</a>
+                    <a class="hover:text-brand-accent transition-colors" href="{{ route('location') }}">Locations</a>
                     <a class="hover:text-brand-accent transition-colors" href="{{ route('wholesale') }}">Wholesale</a>
-                    <a class="hover:text-brand-accent transition-colors" href="#">Careers</a>
                 </div>
             </div>
 
@@ -64,19 +63,18 @@
                 </div>
             </div>
 
-            <!-- Column 4: Support -->
+            <!-- Column 3: Support -->
             <div class="flex flex-col gap-4">
                 <h4 class="text-xs font-bold uppercase tracking-widest text-brand-dark">Support</h4>
                 <div class="flex flex-col gap-2 text-xs text-brand-dark font-medium">
-                    <a class="hover:text-brand-accent transition-colors" href="{{ route('about') }}">Contact Support</a>
                     <a class="hover:text-brand-accent transition-colors" href="{{ route('order.tracking.form') }}">Lacak Pesanan</a>
                     <a class="hover:text-brand-accent transition-colors" href="{{ route('legal.refund') }}">Refund Policy</a>
                     <a class="hover:text-brand-accent transition-colors" href="{{ route('legal.privacy') }}">Privacy Policy</a>
-                    <a class="hover:text-brand-accent transition-colors" href="#">Terms & Conditions</a>
+                    <a class="hover:text-brand-accent transition-colors" href="{{ route('legal.terms') }}">Terms & Conditions</a>
                 </div>
             </div>
 
-            <!-- Column 5: Visit Us -->
+            <!-- Column 4: Visit Us -->
             <div class="flex flex-col gap-4">
                 <h4 class="text-xs font-bold uppercase tracking-widest text-brand-dark">Visit Us</h4>
                 <p class="text-xs text-brand-dark leading-relaxed font-medium">
@@ -86,7 +84,7 @@
                 </p>
             </div>
 
-            <!-- Column 6: Operating Hours -->
+            <!-- Column 5: Operating Hours -->
             <div class="flex flex-col gap-4">
                 <h4 class="text-xs font-bold uppercase tracking-widest text-brand-dark">Operating Hours</h4>
                 <div class="flex flex-col gap-2 text-xs text-brand-dark font-medium">

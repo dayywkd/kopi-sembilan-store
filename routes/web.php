@@ -13,6 +13,7 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', [HomeController::class, 'index'])->name('home');
 Route::view('/about', 'about')->name('about');
 Route::view('/lab', 'lab')->name('lab');
+Route::view('/location', 'location')->name('location');
 Route::get('/reviews', [HomeController::class, 'reviews'])->name('reviews');
 Route::get('/faq', [HomeController::class, 'faq'])->name('faq');
 Route::get('/shop', [ProductController::class, 'index'])->name('shop');
@@ -75,7 +76,7 @@ Route::middleware(['auth', 'is_admin'])->prefix('admin')->name('admin.')->group(
 
 // Halaman Legal
 Route::view('/privacy-policy', 'legal.privacy_policy')->name('legal.privacy');
-Route::view('/terms-of-service', 'legal.terms_of_service')->name('legal.terms');
+Route::view('/terms-and-conditions', 'legal.terms_of_service')->name('legal.terms');
 Route::view('/refund-policy', 'legal.refund_policy')->name('legal.refund');
 
 // Route Pengujian Halaman Error (Temporer)

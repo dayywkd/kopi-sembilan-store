@@ -53,7 +53,7 @@
 <main class="mt-32 min-h-screen pb-24 bg-white">
     
     {{-- Header --}}
-    <section class="px-margin-mobile md:px-margin-desktop py-16 text-center max-w-container-max mx-auto border-b border-[#E5E7EB] mb-16">
+    <section class="px-margin-mobile md:px-margin-desktop py-16 text-center max-w-container-max mx-auto border-b border-[#E5E7EB] mb-16 reveal">
         <span class="label-tiny text-amber-600 block mb-3">FAQ</span>
         <h1 class="font-display text-4xl md:text-6xl uppercase italic text-brand-dark leading-tight">Pertanyaan Umum</h1>
         <p class="font-sans text-sm text-neutral-500 max-w-md mx-auto mt-4 leading-relaxed">
@@ -62,7 +62,7 @@
     </section>
 
     {{-- FAQ Content Section --}}
-    <section class="px-margin-mobile md:px-margin-desktop max-w-3xl mx-auto space-y-2">
+    <section class="px-margin-mobile md:px-margin-desktop max-w-3xl mx-auto space-y-2 reveal">
         
         @php
             $faqs = [
@@ -112,7 +112,7 @@
     </section>
 
     {{-- WhatsApp Call to Action Banner --}}
-    <section class="px-margin-mobile md:px-margin-desktop max-w-3xl mx-auto mt-20">
+    <section class="px-margin-mobile md:px-margin-desktop max-w-3xl mx-auto mt-20 reveal">
         <div class="bg-brand-cream border border-[#E5E7EB] p-8 md:p-12 text-center space-y-6">
             <span class="material-symbols-outlined text-amber-600 text-4xl">help_outline</span>
             <div class="space-y-2">

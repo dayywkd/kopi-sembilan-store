@@ -1,23 +1,25 @@
-<nav class="fixed top-0 left-0 w-full z-50 bg-transparent border-b border-transparent h-20 transition-all duration-500" id="main-nav">
-    <!-- Kontainer Navbar Menggunakan CSS Grid 3-Kolom untuk Alignment Tengah yang 100% Presisi & Simetris -->
-    <div class="grid grid-cols-3 items-center w-full max-w-[1440px] mx-auto px-6 md:px-16 h-full" id="main-nav-container">
+<nav class="fixed top-0 left-0 w-full z-50 bg-transparent border-b border-transparent h-20 transition-all duration-500" 
+     id="main-nav" 
+     @if(Route::is('about')) data-theme-default="dark" @endif>
+    <!-- Kontainer Navbar Menggunakan Flexbox Responsif untuk Alignment yang Sempurna -->
+    <div class="flex lg:grid lg:grid-cols-3 justify-between items-center w-full max-w-[1440px] mx-auto px-6 md:px-16 h-full" id="main-nav-container">
         
         <!-- Kolom 1 (Kiri): Logo Brand Toko Kopi 9 -->
         <div class="flex items-center justify-start">
             <a href="{{ route('home') }}" class="flex items-center">
-                <img alt="Toko Kopi Sembilan Logo" class="h-12 md:h-[52px] w-auto object-contain transition-transform duration-200 hover:scale-101" src="{{ asset('images/logo_toko_kopi_9.png') }}"/>
+                <img id="nav-logo" alt="Toko Kopi Sembilan Logo" class="h-12 md:h-[52px] w-auto object-contain transition-all duration-300 hover:scale-101" src="{{ asset('images/logo_toko_kopi_9.png') }}"/>
             </a>
         </div>
 
         <!-- Kolom 2 (Tengah Presisi): Menu Navigasi Utama (SHOP, ABOUT, WHOLESALE) -->
-        <div class="hidden lg:flex items-center justify-center gap-16 h-full text-[#111111]" style="font-family: 'Inter', 'Hanken Grotesk', sans-serif;">
-            <a class="text-[15px] font-medium tracking-[0.08em] uppercase pb-1 border-b-2 {{ Route::is('shop') ? 'border-[#111111] font-semibold' : 'border-transparent hover:border-[#111111] transition-all duration-200 ease-in-out opacity-90 hover:opacity-100' }}" href="{{ route('shop') }}">Shop</a>
-            <a class="text-[15px] font-medium tracking-[0.08em] uppercase pb-1 border-b-2 {{ Route::is('about') ? 'border-[#111111] font-semibold' : 'border-transparent hover:border-[#111111] transition-all duration-200 ease-in-out opacity-90 hover:opacity-100' }}" href="{{ route('about') }}">About</a>
-            <a class="text-[15px] font-medium tracking-[0.08em] uppercase pb-1 border-b-2 {{ Route::is('wholesale') ? 'border-[#111111] font-semibold' : 'border-transparent hover:border-[#111111] transition-all duration-200 ease-in-out opacity-90 hover:opacity-100' }}" href="{{ route('wholesale') }}">Wholesale</a>
+        <div id="nav-menu-center" class="hidden lg:flex items-center justify-center gap-16 h-full text-[#111111] transition-colors duration-300" style="font-family: 'Inter', 'Hanken Grotesk', sans-serif;">
+            <a class="text-[15px] font-medium tracking-[0.08em] uppercase pb-1 border-b-2 {{ Route::is('shop') ? 'border-current font-semibold' : 'border-transparent hover:border-current transition-all duration-200 ease-in-out opacity-90 hover:opacity-100' }}" href="{{ route('shop') }}">Shop</a>
+            <a class="text-[15px] font-medium tracking-[0.08em] uppercase pb-1 border-b-2 {{ Route::is('about') ? 'border-current font-semibold' : 'border-transparent hover:border-current transition-all duration-200 ease-in-out opacity-90 hover:opacity-100' }}" href="{{ route('about') }}">About</a>
+            <a class="text-[15px] font-medium tracking-[0.08em] uppercase pb-1 border-b-2 {{ Route::is('wholesale') ? 'border-current font-semibold' : 'border-transparent hover:border-current transition-all duration-200 ease-in-out opacity-90 hover:opacity-100' }}" href="{{ route('wholesale') }}">Wholesale</a>
         </div>
 
         <!-- Kolom 3 (Kanan): Ikon Utility (Search, Account, Cart) -->
-        <div class="flex items-center justify-end gap-6 text-[#111111]">
+        <div id="nav-menu-right" class="flex items-center justify-end gap-6 text-[#111111] transition-colors duration-300">
             <!-- Ikon Pencarian -->
             <button onclick="openSearchOverlay()" class="material-symbols-outlined text-[22px] font-light leading-none hover:opacity-70 transition-opacity duration-200 cursor-pointer" style="font-variation-settings: 'wght' 300, 'opsz' 24; font-size: 22px;" title="Cari Produk">
                 search
@@ -47,16 +49,18 @@
     </div>
 </nav>
 
-<!-- Mobile Navigation Drawer -->
-<div id="mobile-menu" class="fixed inset-0 bg-[#FFFFFF] text-[#121212] z-[55] flex flex-col justify-between p-8 transition-transform duration-500 translate-x-full">
+<!-- Mobile Navigation Drawer & Background Overlay -->
+<div id="mobile-menu-overlay" class="fixed inset-0 bg-black/40 backdrop-blur-[2px] z-[52] hidden opacity-0 transition-opacity duration-300" onclick="toggleMobileMenu()"></div>
+
+<div id="mobile-menu" class="fixed top-0 right-0 h-full w-full sm:w-[380px] bg-[#FFFFFF] text-[#121212] z-[55] flex flex-col justify-between p-8 transition-transform duration-500 translate-x-full shadow-2xl border-l border-neutral-100">
     <div class="flex justify-between items-center py-6 border-b border-neutral-200">
         <span class="label-tiny opacity-60">Menu</span>
         <button onclick="toggleMobileMenu()" class="material-symbols-outlined text-2xl hover:text-brand-accent transition-colors text-[#121212]">close</button>
     </div>
-    <div class="flex flex-col gap-8 text-4xl font-display italic my-auto text-[#121212]">
-        <a onclick="toggleMobileMenu()" class="hover:text-brand-accent transition-colors" href="{{ route('shop') }}">Shop</a>
-        <a onclick="toggleMobileMenu()" class="hover:text-brand-accent transition-colors" href="{{ route('about') }}">About</a>
-        <a onclick="toggleMobileMenu()" class="hover:text-brand-accent transition-colors" href="{{ route('wholesale') }}">Wholesale</a>
+    <div class="flex flex-col gap-6 text-2xl font-display italic my-auto text-[#121212] pl-2">
+        <a onclick="toggleMobileMenu()" class="hover:text-brand-accent transition-colors py-2 border-b border-neutral-50" href="{{ route('shop') }}">Shop</a>
+        <a onclick="toggleMobileMenu()" class="hover:text-brand-accent transition-colors py-2 border-b border-neutral-50" href="{{ route('about') }}">About</a>
+        <a onclick="toggleMobileMenu()" class="hover:text-brand-accent transition-colors py-2" href="{{ route('wholesale') }}">Wholesale</a>
     </div>
     <div class="pt-8 border-t border-neutral-200 flex justify-between items-center text-[#121212]">
         @auth

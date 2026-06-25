@@ -32,7 +32,7 @@
 
 @section('content')
 <main class="min-h-[80vh] flex items-center justify-center pt-32 pb-16 bg-white px-margin-mobile md:px-margin-desktop">
-    <div class="w-full max-w-md border border-[#E5E7EB] p-8 md:p-10 shadow-sm space-y-8 bg-[#FFFFFF]">
+    <div class="w-full max-w-md border border-[#E5E7EB] p-8 md:p-10 shadow-sm space-y-8 bg-[#FFFFFF] reveal">
         <div class="text-center space-y-2">
             <p class="label-tiny text-neutral-400">Order Tracking</p>
             <h1 class="font-display text-3xl font-bold italic text-brand-dark">Lacak Pesanan</h1>

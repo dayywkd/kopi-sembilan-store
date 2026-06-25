@@ -117,7 +117,7 @@
         @endif
 
         <!-- Grid Katalog -->
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
+        <div id="product-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
             @forelse ($products as $product)
                 <!-- Product Card -->
                 <div class="product-card bg-white p-6 flex flex-col justify-between h-full">
@@ -182,10 +182,10 @@
 </main>
 
 <!-- Drawer Overlay -->
-<div id="filter-drawer-overlay" class="fixed inset-0 bg-black/40 backdrop-blur-sm z-50 transition-opacity duration-300 hidden opacity-0" onclick="closeFilterDrawer()"></div>
+<div id="filter-drawer-overlay" class="fixed inset-0 bg-black/40 backdrop-blur-sm z-[60] transition-opacity duration-300 hidden opacity-0" onclick="closeFilterDrawer()"></div>
 
 <!-- Drawer Content -->
-<div id="filter-drawer" class="fixed top-0 right-0 h-full w-full max-w-md bg-white z-50 shadow-2xl transform translate-x-full transition-transform duration-300 flex flex-col">
+<div id="filter-drawer" class="fixed top-0 right-0 h-full w-full max-w-sm sm:max-w-md bg-white z-[65] shadow-2xl transform translate-x-full transition-transform duration-300 flex flex-col overflow-hidden">
     <!-- Header -->
     <div class="p-6 border-b border-neutral-100 flex items-center justify-between">
         <div>

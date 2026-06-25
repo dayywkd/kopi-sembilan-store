@@ -16,13 +16,13 @@
             letter-spacing: 0.25em;
         }
     }
-    input[type="text"], input[type="email"], select, textarea {
+    .wholesale-form input[type="text"], .wholesale-form input[type="email"], .wholesale-form select, .wholesale-form textarea {
         background: transparent !important;
         border: 1px solid #d1d5db !important;
         color: #121212 !important;
         border-radius: 0px !important;
     }
-    input[type="text"]:focus, input[type="email"]:focus, select:focus, textarea:focus {
+    .wholesale-form input[type="text"]:focus, .wholesale-form input[type="email"]:focus, .wholesale-form select:focus, .wholesale-form textarea:focus {
         outline: none !important;
         box-shadow: none !important;
         border-color: #121212 !important;
@@ -44,7 +44,7 @@
 
 @section('content')
 <main class="pt-32 min-h-screen bg-white">
-    <div class="max-w-2xl mx-auto px-margin-mobile py-16">
+    <div class="max-w-2xl mx-auto px-margin-mobile py-16 reveal">
         <div class="mb-12 text-center space-y-4">
             <p class="label-tiny text-neutral-400">Kemitraan B2B</p>
             <h1 class="font-display text-4xl md:text-5xl italic font-bold text-[#121212]">Wholesale Coffee.</h1>
@@ -59,7 +59,7 @@
             </div>
         @endif
 
-        <form action="{{ url('/wholesale') }}" method="POST" class="space-y-6 font-sans">
+        <form action="{{ url('/wholesale') }}" method="POST" class="wholesale-form space-y-6 font-sans">
             @csrf
             
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">

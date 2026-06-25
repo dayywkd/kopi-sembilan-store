@@ -69,7 +69,7 @@
 
 @section('content')
 <!-- Minimalist Hero Section (2-Column Premium Layout) -->
-<section class="min-h-[85vh] bg-white pt-20 border-b border-neutral-100 flex flex-col md:grid md:grid-cols-2">
+<section class="min-h-[85vh] bg-white pt-20 border-b border-neutral-100 flex flex-col md:grid md:grid-cols-2 reveal">
     <!-- Kolom Kiri: Teks & CTA -->
     <div class="flex flex-col justify-center items-start px-6 md:pl-20 md:pr-16 py-16 md:py-24 bg-white">
         <h1 class="font-sans font-bold text-4xl md:text-5xl lg:text-[54px] text-[#121212] leading-[1.1] tracking-tight mb-6">
@@ -106,7 +106,7 @@
 </section>
 
 <!-- Featured Best Seller Beans Section -->
-<section class="bg-white py-24 border-b border-neutral-100">
+<section class="bg-white py-24 border-b border-neutral-100 reveal">
     <div class="px-margin-mobile md:px-margin-desktop max-w-container-max mx-auto">
         <div class="mb-16 flex flex-col md:flex-row md:items-end justify-between gap-8">
             <div>
@@ -170,7 +170,7 @@
 </section>
 
 <!-- Minimalist Showroom Section -->
-<section id="visit" class="bg-brand-cream py-24">
+<section id="visit" class="bg-brand-cream py-24 reveal">
     <div class="px-margin-mobile md:px-margin-desktop max-w-container-max mx-auto">
         <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
             <div class="lg:col-span-5 space-y-6">

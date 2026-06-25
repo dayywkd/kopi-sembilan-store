@@ -6,12 +6,12 @@
 @section('content')
 <main class="mt-32 min-h-screen px-margin-mobile md:px-margin-desktop py-stack-xl max-w-container-max mx-auto text-[#121212]">
     <div class="max-w-3xl mx-auto space-y-12">
-        <div class="border-b border-[#E5E7EB] pb-6">
+        <div class="border-b border-[#E5E7EB] pb-6 reveal">
             <h1 class="font-display text-5xl md:text-7xl uppercase italic mb-2">Kebijakan Pengembalian</h1>
             <p class="label-tiny text-neutral-500 font-semibold">Terakhir diperbarui: Juni 2026</p>
         </div>
 
-        <section class="space-y-6 font-sans text-sm leading-relaxed text-neutral-600">
+        <section class="space-y-6 font-sans text-sm leading-relaxed text-neutral-600 reveal">
             <h2 class="label-tiny text-neutral-800 font-bold border-b border-neutral-200 pb-2">01 / Komitmen Kesegaran Produk</h2>
             <p>
                 Di Toko Kopi Sembilan, kami berkomitmen menyajikan biji kopi pilihan terbaik yang selalu segar (freshly roasted). Karena sifat produk kopi sebagai komoditas konsumsi makanan/minuman yang mudah berubah rasa tergantung penyimpanan, seluruh pesanan biji kopi yang telah diproses secara umum tidak dapat ditukar atau dikembalikan kecuali terjadi kesalahan dari pihak kami.

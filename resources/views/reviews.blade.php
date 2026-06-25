@@ -30,7 +30,7 @@
 <main class="mt-32 min-h-screen pb-24 bg-white">
     
     {{-- Hero Header --}}
-    <section class="px-margin-mobile md:px-margin-desktop py-16 text-center max-w-container-max mx-auto border-b border-[#E5E7EB] mb-16">
+    <section class="px-margin-mobile md:px-margin-desktop py-16 text-center max-w-container-max mx-auto border-b border-[#E5E7EB] mb-16 reveal">
         <span class="label-tiny text-amber-600 block mb-3">TESTIMONI</span>
         <h1 class="font-display text-4xl md:text-6xl uppercase italic text-brand-dark leading-tight">Ulasan Pelanggan</h1>
         <p class="font-sans text-sm text-neutral-500 max-w-md mx-auto mt-4 leading-relaxed">
@@ -39,7 +39,7 @@
     </section>
 
     {{-- Review Cards Grid --}}
-    <section class="px-margin-mobile md:px-margin-desktop max-w-container-max mx-auto">
+    <section class="px-margin-mobile md:px-margin-desktop max-w-container-max mx-auto reveal">
         @if($reviews->isEmpty())
             <div class="text-center py-20 border border-dashed border-[#E5E7EB] bg-brand-cream/10">
                 <span class="material-symbols-outlined text-neutral-300 text-5xl">rate_review</span>
