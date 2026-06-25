@@ -59,19 +59,8 @@
                 <h4 class="text-xs font-bold uppercase tracking-widest text-brand-dark">Shop</h4>
                 <div class="flex flex-col gap-2 text-xs text-brand-dark font-medium">
                     <a class="hover:text-brand-accent transition-colors" href="{{ route('shop') }}">Shop Coffee</a>
-                    <a class="hover:text-brand-accent transition-colors" href="{{ route('shop') }}?category=5">Subscriptions</a>
-                    <a class="hover:text-brand-accent transition-colors" href="#">Reviews</a>
-                    <a class="hover:text-brand-accent transition-colors" href="{{ route('about') }}#faq">FAQ</a>
-                </div>
-            </div>
-
-            <!-- Column 3: Guides -->
-            <div class="flex flex-col gap-4">
-                <h4 class="text-xs font-bold uppercase tracking-widest text-brand-dark">Guides</h4>
-                <div class="flex flex-col gap-2 text-xs text-brand-dark font-medium">
-                    <a class="hover:text-brand-accent transition-colors" href="#">Espresso Guide</a>
-                    <a class="hover:text-brand-accent transition-colors" href="#">AeroPress Guide</a>
-                    <a class="hover:text-brand-accent transition-colors" href="#">Brew Calculator</a>
+                    <a class="hover:text-brand-accent transition-colors" href="{{ route('reviews') }}">Reviews</a>
+                    <a class="hover:text-brand-accent transition-colors" href="{{ route('faq') }}">FAQ</a>
                 </div>
             </div>
 

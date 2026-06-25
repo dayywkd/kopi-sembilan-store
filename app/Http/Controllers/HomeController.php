@@ -52,4 +52,25 @@ class HomeController extends Controller
 
         return redirect()->back()->with('success', 'Formulir kerjasama B2B berhasil dikirim. Tim kami akan segera menghubungi Anda.');
     }
+
+    /**
+     * Menampilkan halaman ulasan pelanggan.
+     */
+    public function reviews()
+    {
+        $reviews = \App\Models\Review::with('product')
+            ->where('is_approved', true)
+            ->latest()
+            ->paginate(12);
+
+        return view('reviews', compact('reviews'));
+    }
+
+    /**
+     * Menampilkan halaman FAQ.
+     */
+    public function faq()
+    {
+        return view('faq');
+    }
 }
