@@ -154,7 +154,7 @@
                         
                         <div class="pt-4 space-y-3">
                             <p class="text-xs text-neutral-500 line-clamp-2 leading-relaxed min-h-[32px]">{{ $product->sensory_notes }}</p>
-                            <button onclick="addToBag({{ $product->id }}, '{{ $product->name }}', {{ $product->price }}, '{{ (is_array($product->sizes) && count($product->sizes) > 0) ? $product->sizes[0]['size'] : '100gr' }}')" class="w-full py-3.5 btn-dark label-tiny tracking-wider text-[11px]">
+                            <button onclick="addToBag({{ $product->id }}, '{{ $product->name }}', {{ $product->price }}, '{{ (is_array($product->sizes) && count($product->sizes) > 0) ? $product->sizes[0]['size'] : '100gr' }}', '{{ $product->image_url }}')" class="w-full py-3.5 btn-dark label-tiny tracking-wider text-[11px]">
                                 ADD TO BAG
                             </button>
                         </div>

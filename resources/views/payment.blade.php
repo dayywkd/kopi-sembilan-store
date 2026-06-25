@@ -400,13 +400,9 @@
                         @foreach ($order->items as $item)
                         <div class="flex gap-4 items-center">
                             <div class="w-14 h-18 bg-brand-cream border border-[#E5E7EB] overflow-hidden flex-shrink-0" style="height:72px;width:56px;">
-                                @if ($item->product && ($item->product->image_path ?? $item->product->image) && file_exists(public_path('storage/' . ($item->product->image_path ?? $item->product->image))))
+                                @if ($item->product)
                                     <img class="w-full h-full object-cover"
-                                         src="{{ asset('storage/' . ($item->product->image_path ?? $item->product->image)) }}"
-                                         alt="{{ $item->product_name }}">
-                                @elseif ($item->product && filter_var($item->product->image_path ?? $item->product->image, FILTER_VALIDATE_URL))
-                                    <img class="w-full h-full object-cover"
-                                         src="{{ $item->product->image_path ?? $item->product->image }}"
+                                         src="{{ $item->product->image_url }}"
                                          alt="{{ $item->product_name }}">
                                 @else
                                     <img class="w-full h-full object-cover"

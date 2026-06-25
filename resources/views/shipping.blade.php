@@ -391,13 +391,9 @@
                 <div class="border-b border-[#E5E7EB] pb-6 last:border-b-0 last:pb-0">
                     <div class="flex gap-4 items-center">
                         <div class="w-16 h-20 bg-neutral-50 border border-[#E5E7EB] overflow-hidden flex-shrink-0">
-                            @if ($item->product && ($item->product->image_path ?? $item->product->image) && file_exists(public_path('storage/' . ($item->product->image_path ?? $item->product->image))))
+                            @if ($item->product)
                                 <img class="w-full h-full object-cover"
-                                     src="{{ asset('storage/' . ($item->product->image_path ?? $item->product->image)) }}"
-                                     alt="{{ $item->product_name }}">
-                            @elseif ($item->product && filter_var($item->product->image_path ?? $item->product->image, FILTER_VALIDATE_URL))
-                                <img class="w-full h-full object-cover"
-                                     src="{{ $item->product->image_path ?? $item->product->image }}"
+                                     src="{{ $item->product->image_url }}"
                                      alt="{{ $item->product_name }}">
                             @else
                                 <img class="w-full h-full object-cover"
