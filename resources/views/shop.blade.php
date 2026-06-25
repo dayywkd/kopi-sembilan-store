@@ -124,7 +124,7 @@
                     <div>
                         <a href="{{ route('product.show', $product->slug) }}" class="block aspect-square overflow-hidden bg-brand-cream mb-6 border border-neutral-100">
                             @if($product->image_path)
-                                <img alt="{{ $product->name }}" class="w-full h-full object-cover" src="{{ asset($product->image_path) }}"/>
+                                <img alt="{{ $product->name }}" class="w-full h-full object-cover" src="{{ $product->image_url }}"/>
                             @else
                                 <div class="w-full h-full flex items-center justify-center text-neutral-300 text-xs tracking-widest font-mono">NO IMAGE</div>
                             @endif

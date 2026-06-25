@@ -72,4 +72,24 @@ class Product extends Model
     {
         return $this->reviews()->count();
     }
+
+    /**
+     * Mendapatkan URL gambar produk yang valid (mendukung seeder & upload baru)
+     */
+    public function getImageUrlAttribute()
+    {
+        if (!$this->image_path) {
+            return 'https://lh3.googleusercontent.com/aida-public/AB6AXuDb1xpGK5YLtJgXI-Ej1XU8ac6A9zyZ3XMT2g1GnouDhIOXyC-Fh84tjYy6_XxxAxnRgIQNWAC7YknFDTODxK-LmO33YfLZkTikQ2NqiTIx13hRNaJ_l5JBC_6eXsTpsGE5SaZhf-jW8qhKaqWnrC6r0exbZgrfWGpxCAKsHrS3IGSDSs8d2qdXT1iynwNKSuA0ZasXNXXWld-R4vJZkRF5jPsQlHUonMDp1PeAJAQdY4q6g0xNazyE_dgGTy_s46dg1Fdd0H1og7w';
+        }
+
+        if (filter_var($this->image_path, FILTER_VALIDATE_URL)) {
+            return $this->image_path;
+        }
+
+        if (file_exists(public_path($this->image_path))) {
+            return asset($this->image_path);
+        }
+
+        return asset('storage/' . $this->image_path);
+    }
 }

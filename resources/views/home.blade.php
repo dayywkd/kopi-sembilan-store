@@ -124,7 +124,7 @@
                 <div class="group flex flex-col h-full bg-white transition-all">
                     <a href="{{ route('product.show', $product->slug) }}" class="product-image-container block aspect-square mb-6">
                         @if($product->image_path)
-                            <img alt="{{ $product->name }}" class="w-full h-full object-cover" src="{{ asset($product->image_path) }}"/>
+                            <img alt="{{ $product->name }}" class="w-full h-full object-cover" src="{{ $product->image_url }}"/>
                         @else
                             <div class="w-full h-full flex items-center justify-center text-neutral-300 text-xs tracking-widest font-mono">NO IMAGE</div>
                         @endif

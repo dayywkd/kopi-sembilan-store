@@ -2,7 +2,7 @@
 
 @section('title', $product->name . ' | Toko Kopi Sembilan')
 @section('meta_description', 'Beli ' . $product->name . ' - Roast Level: ' . $product->roast_level . ', Altitude: ' . $product->altitude . '. Notes: ' . $product->sensory_notes . '. Dapatkan biji kopi pilihan berkualitas tinggi dari Toko Kopi Sembilan.')
-@section('meta_image', $product->image_path ? asset($product->image_path) : asset('images/hero_default.jpg'))
+@section('meta_image', $product->image_url)
 
 @section('styles')
 <style>
@@ -50,7 +50,7 @@
             <!-- Main Image Container -->
             <div class="w-full h-[350px] lg:h-[450px] flex items-center justify-center relative">
                 @if($product->image_path)
-                    <img id="main-product-image" alt="{{ $product->name }}" class="max-w-[80%] max-h-[80%] object-contain transition-all duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:scale-[1.02]" src="{{ asset($product->image_path) }}"/>
+                    <img id="main-product-image" alt="{{ $product->name }}" class="max-w-[80%] max-h-[80%] object-contain transition-all duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:scale-[1.02]" src="{{ $product->image_url }}"/>
                 @else
                     <div class="w-full h-full flex items-center justify-center text-neutral-300 text-xs tracking-widest font-mono">NO IMAGE</div>
                 @endif
@@ -69,8 +69,8 @@
             <!-- Thumbnail strip -->
             @php
                 $galleryImages = array_values(array_filter(array_merge(
-                    [$product->image_path ? asset($product->image_path) : null],
-                    $product->images->map(fn ($image) => asset($image->image_path))->all()
+                    [$product->image_path ? $product->image_url : null],
+                    $product->images->map(fn ($image) => $image->image_url)->all()
                 )));
             @endphp
             
@@ -454,7 +454,7 @@
                         price: currentPrice,
                         grind_size: grindSize,
                         quantity: 1,
-                        image: "{{ $product->image_path ? asset($product->image_path) : 'https://lh3.googleusercontent.com/aida/AP1WRLsGnmckoSHSLe-DwOGsM6GmqQ5-_5i3etbFi2klrcBPyscEY_rjBMrryflSBZqdNeqwIQDsbl667aVTg-I9A3gq6AcwMti-D9ry52pa4e7dENL3iWKcRZGNZjmOyTHikIXVlPDsoPmGXbwYWqXAEklbq7eGo98p99QqfeGAFPm7t3uQ0AvOvpjXkEM3-Kqqf5La7THN_tBp7zUuPQiigpZM4VIgrGtG-ZA_079iNLWBPCyjHcAY_pfezQ' }}"
+                        image: "{{ $product->image_url }}"
                     });
                 }
                 

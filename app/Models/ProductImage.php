@@ -20,4 +20,24 @@ class ProductImage extends Model
     {
         return $this->belongsTo(Product::class);
     }
+
+    /**
+     * Mendapatkan URL gambar galeri yang valid (mendukung seeder & upload baru)
+     */
+    public function getImageUrlAttribute()
+    {
+        if (!$this->image_path) {
+            return null;
+        }
+
+        if (filter_var($this->image_path, FILTER_VALIDATE_URL)) {
+            return $this->image_path;
+        }
+
+        if (file_exists(public_path($this->image_path))) {
+            return asset($this->image_path);
+        }
+
+        return asset('storage/' . $this->image_path);
+    }
 }
