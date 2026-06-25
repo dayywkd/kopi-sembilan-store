@@ -67,6 +67,10 @@ class ProductResource extends Resource
                             ->imageResizeMode('force')
                             ->imageCropAspectRatio('1:1')
                             ->label('Product Image')
+                            ->maxSize(2048)
+                            ->validationMessages([
+                                'max' => 'Ukuran file foto terlalu besar (maksimal 2MB).',
+                            ])
                             ->required(),
                         Forms\Components\Toggle::make('is_best_seller')
                             ->default(false),
@@ -83,6 +87,10 @@ class ProductResource extends Resource
                                     ->imageResizeMode('force')
                                     ->imageCropAspectRatio('1:1')
                                     ->label('Foto Sisi Lain')
+                                    ->maxSize(2048)
+                                    ->validationMessages([
+                                        'max' => 'Ukuran file foto terlalu besar (maksimal 2MB).',
+                                    ])
                                     ->required(),
                                 Forms\Components\TextInput::make('sort_order')
                                     ->numeric()
