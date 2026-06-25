@@ -290,7 +290,7 @@
                     </div>
                     <div class="meta-row">
                         <span>ID: {{ $order->transaction_id }}</span>
-                        <span>Kasir: Admin Utama</span>
+                        <span>Admin Kopi Sembilan</span>
                     </div>
                 </div>
                 
@@ -339,7 +339,11 @@
                 
                 <!-- FOOTER STRUK -->
                 <div class="receipt-footer">
-                    <div>Terima Kasih Atas Kunjungan Anda</div>
+                    @if ($order->status === 'Awaiting Payment')
+                        <div>Silakan Selesaikan Pembayaran Anda</div>
+                    @else
+                        <div>Terima Kasih Telah Berbelanja</div>
+                    @endif
                     <div class="receipt-footer-brand">KOPI SEMBILAN</div>
                 </div>
                 
