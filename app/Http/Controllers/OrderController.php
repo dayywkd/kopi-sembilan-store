@@ -386,12 +386,39 @@ class OrderController extends Controller
             'email_or_phone' => ['required', 'string'],
         ]);
 
-        $order = Order::where('transaction_id', $request->transaction_id)
-            ->where(function ($query) use ($request) {
-                $query->where('email', $request->email_or_phone)
-                      ->orWhere('phone', $request->email_or_phone);
-            })
-            ->first();
+        $transactionId = strtoupper(trim($request->transaction_id));
+        $emailOrPhone = trim($request->email_or_phone);
+
+        // Normalisasi nomor telepon
+        $cleanInput = preg_replace('/[^0-9]/', '', $emailOrPhone);
+
+        $order = Order::where(function ($q) use ($transactionId) {
+            $q->where('transaction_id', $transactionId)
+              ->orWhere('transaction_id', strtolower($transactionId));
+        })
+        ->where(function ($query) use ($emailOrPhone, $cleanInput) {
+            $query->where('email', $emailOrPhone)
+                  ->orWhere('email', strtolower($emailOrPhone))
+                  ->orWhere('phone', $emailOrPhone);
+            
+            if (!empty($cleanInput)) {
+                // Konversi 628... ke 08...
+                if (str_starts_with($cleanInput, '62')) {
+                    $altPhone = '0' . substr($cleanInput, 2);
+                    $query->orWhere('phone', $altPhone)
+                          ->orWhere('phone', $cleanInput);
+                } 
+                // Konversi 08... ke 628...
+                elseif (str_starts_with($cleanInput, '0')) {
+                    $altPhone = '62' . substr($cleanInput, 1);
+                    $query->orWhere('phone', $altPhone)
+                          ->orWhere('phone', $cleanInput);
+                }
+                
+                $query->orWhere('phone', $cleanInput);
+            }
+        })
+        ->first();
 
         if (!$order) {
             return back()

@@ -544,6 +544,15 @@
                                 </div>
                             @endif
                         </div>
+                        @if ($order->tracking_number)
+                        <div>
+                            <span class="label-tiny text-neutral-400 block mb-2 font-bold">Nomor Resi / Tracking Number</span>
+                            <div class="flex items-center gap-2">
+                                <span class="material-symbols-outlined text-[16px] text-neutral-400">local_shipping</span>
+                                <p class="text-neutral-600 font-sans text-sm font-semibold tracking-wider">{{ $order->tracking_number }}</p>
+                            </div>
+                        </div>
+                        @endif
                         <div>
                             <span class="label-tiny text-neutral-400 block mb-2 font-bold">Metode Pembayaran</span>
                             <div class="flex items-center gap-2">
