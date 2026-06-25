@@ -348,6 +348,30 @@
                     Fase {{ $currentIdx + 1 }} dari 5
                 </p>
             </div>
+
+            @if (!$isPickupOrder && $order->tracking_events)
+                <div class="mt-10 pt-8 border-t border-[#E5E7EB]">
+                    <div class="flex items-center justify-between gap-4 mb-5">
+                        <h2 class="label-tiny text-neutral-500 font-bold">Tracking Resi Real-Time</h2>
+                        <span class="text-[9px] text-neutral-400 uppercase tracking-widest">
+                            Sync: {{ optional($order->tracking_synced_at)->timezone('Asia/Jakarta')->format('d M H:i') }} WIB
+                        </span>
+                    </div>
+                    <div class="space-y-4">
+                        @foreach (array_reverse($order->tracking_events) as $event)
+                            <div class="border border-[#E5E7EB] bg-brand-cream p-4">
+                                <p class="label-tiny text-[9px] text-neutral-400 mb-1">
+                                    {{ !empty($event['datetime']) ? \Illuminate\Support\Carbon::parse($event['datetime'])->timezone('Asia/Jakarta')->format('d M Y H:i') . ' WIB' : 'Update Kurir' }}
+                                </p>
+                                <p class="font-sans text-sm font-semibold text-[#121212]">{{ $event['status'] ?? 'Update pengiriman' }}</p>
+                                @if (!empty($event['note']))
+                                    <p class="font-sans text-xs text-neutral-500 mt-1">{{ $event['note'] }}</p>
+                                @endif
+                            </div>
+                        @endforeach
+                    </div>
+                </div>
+            @endif
         </div>
 
         {{-- RIGHT: Order Detail ─────────────────────────────────── --}}
@@ -561,6 +585,14 @@
                 </a>
             </div>
             @endif
+
+            <div class="border-t border-[#E5E7EB] pt-8">
+                <a href="{{ route('order.invoice.download', $order->uuid) }}"
+                   class="inline-flex items-center gap-3 w-full justify-center border border-[#121212] text-[#121212] py-5 font-bold text-xs uppercase tracking-widest hover:bg-[#121212] hover:text-white transition-all duration-300 active:scale-[0.98]">
+                    <span class="material-symbols-outlined text-[20px]">picture_as_pdf</span>
+                    Download Invoice PDF
+                </a>
+            </div>
         </div>
 
     </section>

@@ -25,9 +25,10 @@ class CheckoutRequest extends FormRequest
             'email' => ['required', 'email', 'max:150'],
             'phone' => ['required', 'string', 'max:25'],
             'payment' => ['required', 'string', 'in:Bank Transfer,QRIS'],
-            'cart_data' => ['required', 'string'], // JSON payload dari local storage
+            'cart_data' => ['nullable', 'string'],
             'order_notes' => ['nullable', 'string', 'max:500'],
             'delivery_method' => ['required', 'string', 'in:shipping,pickup'],
+            'coupon_code' => ['nullable', 'string', 'max:50'],
         ];
 
         if ($this->input('delivery_method') === 'pickup') {

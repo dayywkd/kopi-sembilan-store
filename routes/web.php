@@ -19,6 +19,10 @@ Route::post('/product/{product_id}/review', [ProductController::class, 'storeRev
 
 // Manajemen Keranjang Belanja (Local Storage Sync)
 Route::get('/cart', [CartController::class, 'index'])->name('cart.index');
+Route::post('/cart/items', [CartController::class, 'store'])->name('cart.items.store');
+Route::patch('/cart/items', [CartController::class, 'update'])->name('cart.items.update');
+Route::delete('/cart/items', [CartController::class, 'destroy'])->name('cart.items.destroy');
+Route::post('/cart/sync', [CartController::class, 'sync'])->name('cart.sync');
 
 // Alur Checkout & Pelacakan Pesanan
 Route::get('/checkout', [OrderController::class, 'checkout'])->name('checkout');
@@ -28,6 +32,8 @@ Route::post('/order/tracking', [OrderController::class, 'findOrder'])->name('ord
 Route::get('/order/payment/{uuid}', [OrderController::class, 'payment'])->name('order.payment');
 Route::get('/order/tracking/{uuid}', [OrderController::class, 'tracking'])->name('order.tracking');
 Route::post('/order/confirm-delivery/{uuid}', [OrderController::class, 'confirmDelivery'])->name('order.confirm_delivery');
+Route::post('/order/payment/{uuid}/proof', [OrderController::class, 'uploadPaymentProof'])->name('order.payment.proof');
+Route::get('/order/invoice/{uuid}/download', [OrderController::class, 'downloadInvoice'])->name('order.invoice.download');
 
 // Halaman Kemitraan Wholesale B2B
 Route::get('/wholesale', [HomeController::class, 'wholesale'])->name('wholesale');
@@ -55,22 +61,19 @@ Route::post('/reset-password', [AuthController::class, 'resetPassword'])->name('
 Route::middleware(['auth'])->prefix('customer')->name('customer.')->group(function () {
     Route::get('/dashboard', [CustomerDashboardController::class, 'index'])->name('dashboard');
     Route::post('/profile/update', [CustomerDashboardController::class, 'updateProfile'])->name('profile.update');
+    Route::post('/addresses', [CustomerDashboardController::class, 'storeAddress'])->name('addresses.store');
+    Route::post('/addresses/{address}/default', [CustomerDashboardController::class, 'setDefaultAddress'])->name('addresses.default');
+    Route::delete('/addresses/{address}', [CustomerDashboardController::class, 'destroyAddress'])->name('addresses.destroy');
 });
 
-// Panel Admin (Protected)
+// Panel Admin (Protected - Filament Handles dashboard and CRUDs)
 Route::middleware(['auth', 'is_admin'])->prefix('admin')->name('admin.')->group(function () {
-    Route::get('/dashboard', [AdminDashboardController::class, 'index'])->name('dashboard');
-    Route::post('/order/update-status', [AdminDashboardController::class, 'updateStatus'])->name('order.update_status');
     Route::get('/order/{transaction_id}/print', [AdminDashboardController::class, 'printReceipt'])->name('order.print');
-    Route::post('/products/{id}/toggle-best-seller', [AdminDashboardController::class, 'toggleBestSeller'])->name('products.toggle_best_seller');
-    Route::post('/products/store', [AdminDashboardController::class, 'storeProduct'])->name('products.store');
-    Route::post('/products/{id}/update', [AdminDashboardController::class, 'updateProduct'])->name('products.update');
-    Route::post('/products/{id}/delete', [AdminDashboardController::class, 'destroyProduct'])->name('products.delete');
-    Route::post('/settings/update-couriers', [AdminDashboardController::class, 'updateCouriers'])->name('settings.update_couriers');
 });
 
 // Halaman Legal
 Route::view('/privacy-policy', 'legal.privacy_policy')->name('legal.privacy');
+Route::view('/terms-of-service', 'legal.terms_of_service')->name('legal.terms');
 Route::view('/refund-policy', 'legal.refund_policy')->name('legal.refund');
 
 // Route Pengujian Halaman Error (Temporer)

@@ -29,8 +29,21 @@ class Order extends Model
         'biteship_area_id',
         'biteship_area_name',
         'tracking_number',
+        'tracking_events',
+        'tracking_synced_at',
         'courier',
-        'shipping_service'
+        'shipping_service',
+        'user_id',
+        'coupon_code',
+        'discount_amount',
+        'payment_proof_path',
+        'payment_proof_uploaded_at',
+    ];
+
+    protected $casts = [
+        'tracking_events' => 'array',
+        'tracking_synced_at' => 'datetime',
+        'payment_proof_uploaded_at' => 'datetime',
     ];
 
     protected static function boot()
@@ -40,6 +53,17 @@ class Order extends Model
         static::creating(function ($model) {
             if (empty($model->uuid)) {
                 $model->uuid = (string) \Illuminate\Support\Str::uuid();
+            }
+        });
+
+        static::updated(function ($order) {
+            if ($order->isDirty('status')) {
+                try {
+                    \Illuminate\Support\Facades\Mail::to($order->email)
+                        ->send(new \App\Mail\OrderStatusChanged($order));
+                } catch (\Exception $e) {
+                    \Illuminate\Support\Facades\Log::error('Gagal mengirim email update status order #' . $order->transaction_id . ': ' . $e->getMessage());
+                }
             }
         });
     }

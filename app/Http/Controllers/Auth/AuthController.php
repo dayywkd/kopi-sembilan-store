@@ -21,7 +21,7 @@ class AuthController extends Controller
     {
         if (Auth::check()) {
             return Auth::user()->role === 'admin' 
-                ? redirect()->route('admin.dashboard')
+                ? redirect()->route('filament.admin.pages.dashboard')
                 : redirect()->route('customer.dashboard');
         }
         return view('auth.login');
@@ -42,7 +42,7 @@ class AuthController extends Controller
 
             // Redirect kondisional sesuai role (Smart Redirect)
             if (Auth::user()->role === 'admin') {
-                return redirect()->intended(route('admin.dashboard'));
+                return redirect()->intended(route('filament.admin.pages.dashboard'));
             }
             if ($request->has('redirect')) {
                 return redirect($request->input('redirect'));
@@ -62,7 +62,7 @@ class AuthController extends Controller
     {
         if (Auth::check()) {
             return Auth::user()->role === 'admin' 
-                ? redirect()->route('admin.dashboard')
+                ? redirect()->route('filament.admin.pages.dashboard')
                 : redirect()->route('customer.dashboard');
         }
         return view('auth.register');

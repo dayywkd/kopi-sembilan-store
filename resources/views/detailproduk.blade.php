@@ -68,30 +68,9 @@
 
             <!-- Thumbnail strip -->
             @php
-                $catSlug = $product->category->slug ?? '';
-                if ($catSlug === 'gear') {
-                    $extraImages = [
-                        "https://images.unsplash.com/photo-1579888944880-d98341148733?q=80&w=600&auto=format&fit=crop", // Copper detail
-                        "https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?q=80&w=600&auto=format&fit=crop", // Pour over
-                        "https://images.unsplash.com/photo-1514432324607-a09d9b4aefdd?q=80&w=600&auto=format&fit=crop"  // Minimal cup
-                    ];
-                } elseif ($catSlug === 'subscriptions') {
-                    $extraImages = [
-                        "https://images.unsplash.com/photo-1589739900243-4b52cd9b104e?q=80&w=600&auto=format&fit=crop", // Packaged box
-                        "https://images.unsplash.com/photo-1447933601403-0c6688de566e?q=80&w=600&auto=format&fit=crop", // Coffee bags array
-                        "https://images.unsplash.com/photo-1507133750040-4a8f57021571?q=80&w=600&auto=format&fit=crop"  // Morning coffee
-                    ];
-                } else {
-                    $extraImages = [
-                        "https://images.unsplash.com/photo-1514432324607-a09d9b4aefdd?q=80&w=600&auto=format&fit=crop", // Roasted coffee beans
-                        "https://images.unsplash.com/photo-1519708227418-c8fd9a32b7a2?q=80&w=600&auto=format&fit=crop", // Espresso extraction
-                        "https://images.unsplash.com/photo-1509042239860-f550ce710b93?q=80&w=600&auto=format&fit=crop"  // Coffee cup
-                    ];
-                }
-
                 $galleryImages = array_values(array_filter(array_merge(
                     [$product->image_path ? asset($product->image_path) : null],
-                    $extraImages
+                    $product->images->map(fn ($image) => asset($image->image_path))->all()
                 )));
             @endphp
             

@@ -78,7 +78,7 @@ class ProductController extends Controller
      */
     public function show($slug)
     {
-        $product = Product::with(['category', 'reviews'])->where('slug', $slug)->firstOrFail();
+        $product = Product::with(['category', 'reviews', 'images'])->where('slug', $slug)->firstOrFail();
         
         // Ambil grind sizes secara dinamis dari database (Opsi B)
         $grindSizes = Setting::getValue('grind_sizes', [
@@ -108,8 +108,9 @@ class ProductController extends Controller
             'customer_name' => $request->customer_name,
             'rating' => (int) $request->rating,
             'comment' => $request->comment,
+            'is_approved' => false,
         ]);
 
-        return redirect()->back()->with('review_success', 'Terima kasih! Ulasan Anda berhasil disimpan.');
+        return redirect()->back()->with('review_success', 'Terima kasih! Ulasan Anda masuk antrean moderasi admin.');
     }
 }

@@ -135,39 +135,77 @@
                         </div>
                     </div>
 
-                    {{-- Rekening BCA --}}
+                    {{-- Rekening Transfer --}}
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        {{-- Rekening BCA --}}
+                        <div class="border border-[#E5E7EB] bg-[#FFFFFF] p-7 space-y-6">
+                            <div class="flex items-center justify-between border-b border-[#E5E7EB] pb-5">
+                                <div>
+                                    <p class="label-tiny text-neutral-400 mb-1">Bank Tujuan</p>
+                                    <div class="flex items-center gap-3">
+                                        <div class="bg-[#005BAC] text-white font-black text-xs px-2.5 py-1 font-sans" style="letter-spacing:0.05em">BCA</div>
+                                        <span class="font-display text-xl italic text-[#121212]">Bank Central Asia</span>
+                                    </div>
+                                </div>
+                                <span class="material-symbols-outlined text-neutral-300 text-3xl">account_balance</span>
+                            </div>
+
+                            <div class="space-y-4">
+                                {{-- Nomor Rekening --}}
+                                <div>
+                                    <p class="label-tiny text-neutral-400 mb-1">No. Rekening</p>
+                                    <div class="flex items-center gap-2">
+                                        <p id="rek-bca" class="font-sans text-xl font-bold tracking-wider text-[#121212]">5550305307</p>
+                                        <button onclick="copyToClipboard('5550305307', 'btn-copy-rek-bca')" id="btn-copy-rek-bca" class="p-1.5 border border-[#E5E7EB] hover:border-[#121212] transition-colors group" title="Salin nomor rekening">
+                                            <span class="material-symbols-outlined text-[14px] text-neutral-400 group-hover:text-[#121212] transition-colors">content_copy</span>
+                                        </button>
+                                    </div>
+                                </div>
+
+                                {{-- Atas Nama --}}
+                                <div>
+                                    <p class="label-tiny text-neutral-400 mb-1">Atas Nama</p>
+                                    <p class="font-sans text-base font-semibold text-[#121212]">Muhammad Fahad</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        {{-- Rekening BRI --}}
+                        <div class="border border-[#E5E7EB] bg-[#FFFFFF] p-7 space-y-6">
+                            <div class="flex items-center justify-between border-b border-[#E5E7EB] pb-5">
+                                <div>
+                                    <p class="label-tiny text-neutral-400 mb-1">Bank Tujuan</p>
+                                    <div class="flex items-center gap-3">
+                                        <div class="bg-[#00529C] text-white font-black text-xs px-2.5 py-1 font-sans" style="letter-spacing:0.05em">BRI</div>
+                                        <span class="font-display text-xl italic text-[#121212]">Bank Rakyat Indonesia</span>
+                                    </div>
+                                </div>
+                                <span class="material-symbols-outlined text-neutral-300 text-3xl">account_balance</span>
+                            </div>
+
+                            <div class="space-y-4">
+                                {{-- Nomor Rekening --}}
+                                <div>
+                                    <p class="label-tiny text-neutral-400 mb-1">No. Rekening</p>
+                                    <div class="flex items-center gap-2">
+                                        <p id="rek-bri" class="font-sans text-xl font-bold tracking-wider text-[#121212]">010901031684534</p>
+                                        <button onclick="copyToClipboard('010901031684534', 'btn-copy-rek-bri')" id="btn-copy-rek-bri" class="p-1.5 border border-[#E5E7EB] hover:border-[#121212] transition-colors group" title="Salin nomor rekening">
+                                            <span class="material-symbols-outlined text-[14px] text-neutral-400 group-hover:text-[#121212] transition-colors">content_copy</span>
+                                        </button>
+                                    </div>
+                                </div>
+
+                                {{-- Atas Nama --}}
+                                <div>
+                                    <p class="label-tiny text-neutral-400 mb-1">Atas Nama</p>
+                                    <p class="font-sans text-base font-semibold text-[#121212]">Muhammad Fahad</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    {{-- Jumlah Transfer --}}
                     <div class="border border-[#E5E7EB] bg-[#FFFFFF] p-7 space-y-6">
-                        <div class="flex items-center justify-between border-b border-[#E5E7EB] pb-5">
-                            <div>
-                                <p class="label-tiny text-neutral-400 mb-1">Bank Tujuan</p>
-                                <div class="flex items-center gap-3">
-                                    <div class="bg-[#005BAC] text-white font-black text-lg px-3 py-1 font-sans" style="letter-spacing:0.05em">BCA</div>
-                                    <span class="font-display text-2xl italic text-[#121212]">Bank Central Asia</span>
-                                </div>
-                            </div>
-                            <span class="material-symbols-outlined text-neutral-300 text-4xl">account_balance</span>
-                        </div>
-
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                            {{-- Nomor Rekening --}}
-                            <div>
-                                <p class="label-tiny text-neutral-400 mb-2">No. Rekening</p>
-                                <div class="flex items-center gap-3">
-                                    <p id="rek-number" class="font-sans text-2xl font-bold tracking-widest text-[#121212]">1234567890</p>
-                                    <button onclick="copyToClipboard('1234567890', 'btn-copy-rek')" id="btn-copy-rek" class="p-1.5 border border-[#E5E7EB] hover:border-[#121212] transition-colors group" title="Salin nomor rekening">
-                                        <span class="material-symbols-outlined text-[16px] text-neutral-400 group-hover:text-[#121212] transition-colors">content_copy</span>
-                                    </button>
-                                </div>
-                            </div>
-
-                            {{-- Atas Nama --}}
-                            <div>
-                                <p class="label-tiny text-neutral-400 mb-2">Atas Nama</p>
-                                <p class="font-sans text-lg font-semibold text-[#121212]">Toko Kopi Sembilan</p>
-                            </div>
-                        </div>
-
-                        {{-- Jumlah Transfer --}}
                         <div class="bg-brand-cream border border-[#E5E7EB] p-6">
                             <p class="label-tiny text-neutral-500 mb-3">Jumlah Transfer <span class="text-brand-accent font-bold"></span></p>
                             <div class="flex items-end justify-between gap-4">
@@ -206,9 +244,9 @@
 
                     <div class="space-y-4">
                         @foreach ([
-                            ['Buka aplikasi m-banking atau ATM Bank BCA Anda.', 'phone_android'],
-                            ['Pilih menu Transfer → ke Rekening BCA.', 'compare_arrows'],
-                            ['Masukkan nomor rekening <strong class="text-[#121212]">1234567890</strong>.', 'dialpad'],
+                            ['Buka aplikasi m-banking atau ATM Bank Anda.', 'phone_android'],
+                            ['Pilih menu Transfer → ke Rekening Bank (BCA atau BRI).', 'compare_arrows'],
+                            ['Masukkan nomor rekening tujuan (<strong class="text-[#121212]">5550305307</strong> untuk BCA atau <strong class="text-[#121212]">010901031684534</strong> untuk BRI) atas nama <strong class="text-[#121212]">Muhammad Fahad</strong>.', 'dialpad'],
                             ['Masukkan nominal transfer <strong class="text-amber-600">PERSIS TEPAT</strong> sesuai yang tertera.', 'payments'],
                             ['Isi berita transfer dengan kode pesanan: <strong class="font-mono text-[#121212]">' . $order->transaction_id . '</strong>', 'edit_note'],
                             ['Konfirmasi dan selesaikan transfer. Simpan bukti transfer Anda.', 'check_circle'],
@@ -225,13 +263,25 @@
 
                     {{-- Konfirmasi via WhatsApp --}}
                     <div class="border-b border-[#E5E7EB] pb-3 mt-10">
-                        <h2 class="label-tiny text-neutral-500">03 / Konfirmasi Pembayaran</h2>
+                        <h2 class="label-tiny text-neutral-500">03 / Upload Bukti Pembayaran</h2>
                     </div>
 
                     <div class="bg-brand-cream border border-[#E5E7EB] p-6 space-y-5">
                         <p class="font-sans text-sm text-neutral-600 leading-relaxed">
-                            Setelah transfer, kirim bukti pembayaran ke WhatsApp kami agar pesanan diproses lebih cepat.
+                            Setelah transfer, unggah bukti pembayaran di sini agar tim admin bisa memverifikasi manual dari dashboard.
                         </p>
+                        @if ($order->payment_proof_path)
+                            <div class="bg-white border border-green-200 text-green-800 px-4 py-3 text-[11px] uppercase tracking-wide">
+                                Bukti pembayaran sudah diterima {{ optional($order->payment_proof_uploaded_at)->timezone('Asia/Jakarta')->format('d M Y H:i') }} WIB.
+                            </div>
+                        @endif
+                        <form action="{{ route('order.payment.proof', $order->uuid) }}" method="POST" enctype="multipart/form-data" class="space-y-3">
+                            @csrf
+                            <input type="file" name="payment_proof" accept="image/*,.pdf" required class="w-full bg-white border border-[#E5E7EB] p-3 text-xs">
+                            <button type="submit" class="w-full bg-[#121212] text-white font-semibold py-4 text-sm uppercase tracking-widest hover:bg-neutral-800 transition-colors duration-300 active:scale-[0.98]">
+                                Upload Bukti Bayar
+                            </button>
+                        </form>
                         <a id="wa-confirm-btn" href="#" target="_blank" rel="noopener noreferrer"
                            class="w-full flex items-center justify-center gap-3 bg-[#25D366] text-white font-semibold py-4 text-sm uppercase tracking-widest hover:bg-[#128C7E] transition-colors duration-300 active:scale-[0.98]">
                             <svg class="fill-current" style="width:20px;height:20px;" viewBox="0 0 24 24">
@@ -266,7 +316,7 @@
                         {{-- QRIS Image --}}
                         <div class="relative inline-block">
                             <div class="w-56 h-56 md:w-64 md:h-64 mx-auto bg-white p-3 border border-[#E5E7EB] shadow-lg">
-                                <img src="{{ asset('images/qris-toko.png') }}"
+                                <img src="{{ asset('images/qris-toko.jpg') }}"
                                      alt="QRIS Toko Kopi Sembilan"
                                      class="w-full h-full object-contain">
                             </div>
@@ -304,12 +354,24 @@
 
                     {{-- Konfirmasi via WhatsApp --}}
                     <div class="border-b border-[#E5E7EB] pb-3 mt-6">
-                        <h2 class="label-tiny text-neutral-500">03 / Sudah Bayar? Konfirmasi ke Kami</h2>
+                        <h2 class="label-tiny text-neutral-500">03 / Upload Bukti Pembayaran</h2>
                     </div>
                     <div class="bg-brand-cream border border-[#E5E7EB] p-6 space-y-5">
                         <p class="font-sans text-sm text-neutral-600 leading-relaxed">
-                            Kirim bukti pembayaran QRIS ke WhatsApp kami agar pesanan segera diproses.
+                            Unggah bukti pembayaran QRIS agar tim kami bisa memverifikasi manual.
                         </p>
+                        @if ($order->payment_proof_path)
+                            <div class="bg-white border border-green-200 text-green-800 px-4 py-3 text-[11px] uppercase tracking-wide">
+                                Bukti pembayaran sudah diterima {{ optional($order->payment_proof_uploaded_at)->timezone('Asia/Jakarta')->format('d M Y H:i') }} WIB.
+                            </div>
+                        @endif
+                        <form action="{{ route('order.payment.proof', $order->uuid) }}" method="POST" enctype="multipart/form-data" class="space-y-3">
+                            @csrf
+                            <input type="file" name="payment_proof" accept="image/*,.pdf" required class="w-full bg-white border border-[#E5E7EB] p-3 text-xs">
+                            <button type="submit" class="w-full bg-[#121212] text-white font-semibold py-4 text-sm uppercase tracking-widest hover:bg-neutral-800 transition-colors duration-300 active:scale-[0.98]">
+                                Upload Bukti Bayar
+                            </button>
+                        </form>
                         <a id="wa-confirm-btn" href="#" target="_blank" rel="noopener noreferrer"
                            class="w-full flex items-center justify-center gap-3 bg-[#25D366] text-white font-semibold py-4 text-sm uppercase tracking-widest hover:bg-[#128C7E] transition-colors duration-300 active:scale-[0.98]">
                             <svg class="fill-current" style="width:20px;height:20px;" viewBox="0 0 24 24">
@@ -416,6 +478,11 @@
                     <span class="material-symbols-outlined text-[16px]">track_changes</span>
                     Lihat Status Pesanan
                 </a>
+                <a href="{{ route('order.invoice.download', $order->uuid) }}"
+                   class="w-full flex items-center justify-center gap-2 border border-[#E5E7EB] bg-white py-4 text-[#121212] hover:bg-brand-cream transition-all label-tiny text-[10px] font-bold">
+                    <span class="material-symbols-outlined text-[16px]">picture_as_pdf</span>
+                    Download Invoice PDF
+                </a>
             </div>
         </div>
     </div>
@@ -439,7 +506,7 @@
                 `Saya ingin melakukan konfirmasi pembayaran untuk pesanan berikut:\n\n` +
                 `- Nomor Pesanan: *${txId}*\n` +
                 `- Nama Lengkap: ${name}\n` +
-                `- Metode Pembayaran: Bank Transfer BCA\n` +
+                `- Metode Pembayaran: Bank Transfer BCA/BRI\n` +
                 `- Nominal Transfer: Rp. ${total}\n\n` +
                 `[Bukti transfer telah saya lampirkan]\n\n` +
                 `Mohon bantuannya untuk segera diverifikasi. Terima kasih.`;

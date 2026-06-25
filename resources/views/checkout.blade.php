@@ -217,10 +217,22 @@
                     </div>
                 </section>
 
+                <!-- Section 2: Promo Code -->
+                <section class="space-y-4">
+                    <div class="border-b border-neutral-200 pb-2">
+                        <h2 class="label-tiny opacity-60">02 / Promo Code</h2>
+                    </div>
+                    <div class="flex flex-col gap-2">
+                        <label class="label-tiny text-[10px] opacity-60">Kode Promo / Kupon</label>
+                        <input id="coupon-code" name="coupon_code" value="{{ old('coupon_code') }}" class="w-full py-3 px-4 outline-none text-sm placeholder:opacity-30 uppercase" placeholder="CONTOH: KOPI9HEMAT" type="text">
+                        <p class="text-[10px] text-neutral-400 uppercase tracking-wider">Diskon diverifikasi ulang di server saat pesanan dibuat.</p>
+                    </div>
+                </section>
+
                 <!-- Section 2: Payment Method -->
                 <section class="space-y-6">
                     <div class="border-b border-neutral-200 pb-2">
-                        <h2 class="label-tiny opacity-60">02 / Payment Method</h2>
+                        <h2 class="label-tiny opacity-60">03 / Payment Method</h2>
                     </div>
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-[#121212]">
                         <label class="cursor-pointer relative">
@@ -270,7 +282,10 @@
                         <span class="opacity-60">Shipping / Ongkir</span>
                         <span id="summary-shipping" class="font-semibold text-[#121212]">Rp 0</span>
                     </div>
-                    
+                    <div class="flex justify-between text-neutral-400">
+                        <span>Promo</span>
+                        <span id="summary-coupon-note">Dihitung saat konfirmasi</span>
+                    </div>
 
 
                     <div class="flex justify-between font-display text-2xl border-t border-neutral-200 pt-6 uppercase text-[#121212]">
@@ -303,6 +318,8 @@
 
 @section('scripts')
 <script>
+    window.serverCart = @json($serverCart ?? []);
+
     let globalSubtotal = 0;
 
     function formatRupiah(num) {

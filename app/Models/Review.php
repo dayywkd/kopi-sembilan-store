@@ -14,7 +14,12 @@ class Review extends Model
         'product_id',
         'customer_name',
         'rating',
-        'comment'
+        'comment',
+        'is_approved',
+    ];
+
+    protected $casts = [
+        'is_approved' => 'boolean',
     ];
 
     /**

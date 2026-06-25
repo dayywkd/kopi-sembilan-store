@@ -26,7 +26,7 @@
             <!-- Ikon Akun -->
             @auth
                 @if (Auth::user()->role === 'admin')
-                    <a href="{{ route('admin.dashboard') }}" class="material-symbols-outlined text-[22px] font-light leading-none hover:opacity-70 transition-opacity duration-200" style="font-variation-settings: 'wght' 300, 'opsz' 24; font-size: 22px;" title="Dashboard Admin">person</a>
+                    <a href="/admin" class="material-symbols-outlined text-[22px] font-light leading-none hover:opacity-70 transition-opacity duration-200" style="font-variation-settings: 'wght' 300, 'opsz' 24; font-size: 22px;" title="Dashboard Admin">person</a>
                 @else
                     <a href="{{ route('customer.dashboard') }}" class="material-symbols-outlined text-[22px] font-light leading-none hover:opacity-70 transition-opacity duration-200" style="font-variation-settings: 'wght' 300, 'opsz' 24; font-size: 22px;" title="Dashboard Pelanggan">person</a>
                 @endif
@@ -61,7 +61,7 @@
     <div class="pt-8 border-t border-neutral-200 flex justify-between items-center text-[#121212]">
         @auth
             @if (Auth::user()->role === 'admin')
-                <a onclick="toggleMobileMenu()" href="{{ route('admin.dashboard') }}" class="label-tiny flex items-center gap-2 opacity-80 hover:opacity-100 transition-opacity text-[#121212]"><span class="material-symbols-outlined text-base">person</span> Admin Panel</a>
+                <a onclick="toggleMobileMenu()" href="/admin" class="label-tiny flex items-center gap-2 opacity-80 hover:opacity-100 transition-opacity text-[#121212]"><span class="material-symbols-outlined text-base">person</span> Admin Panel</a>
             @else
                 <a onclick="toggleMobileMenu()" href="{{ route('customer.dashboard') }}" class="label-tiny flex items-center gap-2 opacity-80 hover:opacity-100 transition-opacity text-[#121212]"><span class="material-symbols-outlined text-base">person</span> Account</a>
             @endif

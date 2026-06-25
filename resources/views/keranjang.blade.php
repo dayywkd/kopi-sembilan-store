@@ -96,9 +96,12 @@
 
 @section('scripts')
 <script>
+    window.serverCart = @json($serverCart ?? []);
+
     function saveCart(cart) {
         localStorage.setItem('cart', JSON.stringify(cart));
         updateCartCount();
+        syncCartToServer(cart);
         renderCart();
     }
 

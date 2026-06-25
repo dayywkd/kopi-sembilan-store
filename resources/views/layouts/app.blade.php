@@ -3,6 +3,7 @@
 <head>
     <meta charset="utf-8"/>
     <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>@yield('title', 'Toko Kopi Sembilan | Specialty Coffee | SCA Certified | Roastery')</title>
     <meta name="description" content="@yield('meta_description', 'Toko Kopi Sembilan menyediakan biji kopi pilihan (specialty coffee) berkualitas tinggi yang dipanggang dengan standar SCA Certified Roastery.')">
     <meta name="keywords" content="toko kopi, biji kopi, specialty coffee, roastery, kopi tuban, kopi sembilan, kopi indonesia">
@@ -197,14 +198,34 @@
             }
         });
 
-        // LocalStorage Cart Helper Functions
+        // Server-synced Cart Helper Functions
+        window.serverCart = window.serverCart || [];
+
         function getCart() {
-            return JSON.parse(localStorage.getItem('cart')) || [];
+            const localCart = JSON.parse(localStorage.getItem('cart')) || [];
+            if (localCart.length === 0 && Array.isArray(window.serverCart) && window.serverCart.length > 0) {
+                localStorage.setItem('cart', JSON.stringify(window.serverCart));
+                return window.serverCart;
+            }
+            return localCart;
         }
 
         function saveCart(cart) {
             localStorage.setItem('cart', JSON.stringify(cart));
             updateCartCount();
+            syncCartToServer(cart);
+        }
+
+        function syncCartToServer(cart) {
+            fetch('{{ route('cart.sync') }}', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
+                    'Accept': 'application/json'
+                },
+                body: JSON.stringify({ cart })
+            }).catch(() => {});
         }
 
         function updateCartCount() {
@@ -337,6 +358,10 @@
 
         // Scroll Reveal Observer
         document.addEventListener('DOMContentLoaded', () => {
+            const localCart = JSON.parse(localStorage.getItem('cart')) || [];
+            if (localCart.length > 0) {
+                syncCartToServer(localCart);
+            }
             updateCartCount();
 
             const revealElements = document.querySelectorAll('.reveal');

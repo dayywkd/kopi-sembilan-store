@@ -44,7 +44,17 @@ class Product extends Model
      */
     public function reviews(): HasMany
     {
+        return $this->hasMany(Review::class)->where('is_approved', true);
+    }
+
+    public function allReviews(): HasMany
+    {
         return $this->hasMany(Review::class);
+    }
+
+    public function images(): HasMany
+    {
+        return $this->hasMany(ProductImage::class)->orderBy('sort_order');
     }
 
     /**

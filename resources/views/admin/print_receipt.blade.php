@@ -192,7 +192,7 @@
 
 <div class="no-print" style="text-align: center; margin-bottom: 20px;">
     <button onclick="window.print()" class="no-print-btn">Cetak Dokumen</button>
-    <a href="{{ route('admin.dashboard') }}" style="display: inline-block; margin-top: 10px; color: #000000; font-size: 12px;">&larr; Kembali ke Dashboard</a>
+    <a href="/admin/orders" style="display: inline-block; margin-top: 10px; color: #000000; font-size: 12px;">&larr; Kembali ke Dashboard</a>
 </div>
 
 <div class="container">

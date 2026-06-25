@@ -3,11 +3,15 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\CheckoutRequest;
+use App\Models\CartItem;
+use App\Models\Coupon;
 use App\Models\Order;
 use App\Models\OrderItem;
 use App\Models\Product;
 use App\Models\Setting;
+use App\Support\SimplePdf;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Cache;
@@ -20,7 +24,9 @@ class OrderController extends Controller
      */
     public function checkout()
     {
-        return view('checkout');
+        $serverCart = $this->cartPayload();
+
+        return view('checkout', compact('serverCart'));
     }
 
     /**
@@ -28,8 +34,10 @@ class OrderController extends Controller
      */
     public function process(CheckoutRequest $request)
     {
-        // Decode JSON data belanja dari client
-        $cartItems = json_decode($request->cart_data, true);
+        $cartItems = $this->cartPayload();
+        if (empty($cartItems)) {
+            $cartItems = json_decode($request->cart_data, true);
+        }
 
         if (!$cartItems || count($cartItems) === 0) {
             return redirect()->back()
@@ -197,7 +205,21 @@ class OrderController extends Controller
                 $shippingCost = 0;
             }
 
-            $totalPaid = $subtotal + $shippingCost;
+            $coupon = null;
+            $discountAmount = 0;
+            if ($request->filled('coupon_code')) {
+                $coupon = Coupon::where('code', strtoupper(trim($request->coupon_code)))->first();
+                if (!$coupon) {
+                    throw new \Exception('Kode promo tidak ditemukan.');
+                }
+
+                $discountAmount = $coupon->discountFor($subtotal);
+                if ($discountAmount <= 0) {
+                    throw new \Exception('Kode promo tidak berlaku untuk pesanan ini.');
+                }
+            }
+
+            $totalPaid = max(0, $subtotal - $discountAmount) + $shippingCost;
 
             // Generate Transaction ID unik berformat KS9-****** (6 digit angka acak)
             do {
@@ -225,6 +247,7 @@ class OrderController extends Controller
 
             $order = Order::create([
                 'transaction_id' => $transactionId,
+                'user_id' => Auth::id(),
                 'first_name' => $request->first_name,
                 'last_name' => $request->last_name,
                 'email' => $request->email,
@@ -238,6 +261,8 @@ class OrderController extends Controller
                 'payment_method' => $request->payment,
                 'subtotal' => $subtotal,
                 'shipping_cost' => $shippingCost,
+                'coupon_code' => $coupon?->code,
+                'discount_amount' => $discountAmount,
                 'total_paid' => $totalPaid,
                 'status' => 'Awaiting Payment',
                 'courier' => $courierVal,
@@ -259,6 +284,10 @@ class OrderController extends Controller
                 }
             }
 
+            if ($coupon) {
+                $coupon->increment('used_count');
+            }
+
             // Update profile address if logged in
             if (\Illuminate\Support\Facades\Auth::check()) {
                 if (!$isPickup) {
@@ -278,6 +307,8 @@ class OrderController extends Controller
             }
 
             DB::commit();
+
+            $this->clearCart();
 
             // Kirim email konfirmasi ke pelanggan
             try {
@@ -315,7 +346,57 @@ class OrderController extends Controller
             ->where('uuid', $uuid)
             ->firstOrFail();
 
+        $this->syncTracking($order);
+
         return view('shipping', compact('order'));
+    }
+
+    public function uploadPaymentProof(Request $request, $uuid)
+    {
+        $order = Order::where('uuid', $uuid)->firstOrFail();
+
+        $request->validate([
+            'payment_proof' => ['required', 'file', 'mimes:jpg,jpeg,png,pdf,webp', 'max:4096'],
+        ]);
+
+        $path = $request->file('payment_proof')->store('payment-proofs', 'public');
+        $order->update([
+            'payment_proof_path' => $path,
+            'payment_proof_uploaded_at' => now(),
+        ]);
+
+        return back()->with('success', 'Bukti pembayaran berhasil diunggah. Tim kami akan memverifikasi secara manual.');
+    }
+
+    public function downloadInvoice($uuid)
+    {
+        $order = Order::with('items')->where('uuid', $uuid)->firstOrFail();
+        $lines = [
+            'INVOICE TOKO KOPI SEMBILAN',
+            'No: ' . $order->transaction_id,
+            'Tanggal: ' . $order->created_at->timezone('Asia/Jakarta')->format('d M Y H:i') . ' WIB',
+            'Pelanggan: ' . $order->first_name . ' ' . $order->last_name,
+            'Email: ' . $order->email,
+            'Status: ' . $order->status,
+            'Metode Pembayaran: ' . $order->payment_method . ' (Manual)',
+            ' ',
+            'Item:',
+        ];
+
+        foreach ($order->items as $item) {
+            $lines[] = '- ' . $item->product_name . ' ' . $item->grind_size . ' x' . $item->quantity . ' Rp ' . number_format($item->price * $item->quantity, 0, ',', '.');
+        }
+
+        $lines[] = ' ';
+        $lines[] = 'Subtotal: Rp ' . number_format($order->subtotal, 0, ',', '.');
+        $lines[] = 'Diskon: Rp ' . number_format($order->discount_amount ?? 0, 0, ',', '.');
+        $lines[] = 'Ongkir: Rp ' . number_format($order->shipping_cost, 0, ',', '.');
+        $lines[] = 'Total: Rp ' . number_format($order->total_paid, 0, ',', '.');
+
+        return response(SimplePdf::fromLines($lines), 200, [
+            'Content-Type' => 'application/pdf',
+            'Content-Disposition' => 'attachment; filename="invoice-' . $order->transaction_id . '.pdf"',
+        ]);
     }
 
     public function showTrackingForm()
@@ -635,6 +716,94 @@ class OrderController extends Controller
         return [];
     }
 
+    private function cartPayload(): array
+    {
+        $items = CartItem::with('product')
+            ->when(Auth::check(), fn ($query) => $query->where('user_id', Auth::id()))
+            ->unless(Auth::check(), fn ($query) => $query->where('session_id', session()->getId()))
+            ->get();
+
+        return $items->filter(fn ($item) => $item->product)
+            ->map(function ($item) {
+                $product = $item->product;
+                $price = (float) $product->price;
+                foreach (($product->sizes ?? []) as $size) {
+                    if (($size['size'] ?? null) === $item->grind_size) {
+                        $price = (float) $size['price'];
+                    }
+                }
+
+                return [
+                    'id' => $product->id,
+                    'name' => $product->name,
+                    'price' => $price,
+                    'grind_size' => $item->grind_size,
+                    'quantity' => $item->quantity,
+                    'image' => $product->image_path ? asset($product->image_path) : '',
+                ];
+            })->values()->all();
+    }
+
+    private function clearCart(): void
+    {
+        CartItem::when(Auth::check(), fn ($query) => $query->where('user_id', Auth::id()))
+            ->unless(Auth::check(), fn ($query) => $query->where('session_id', session()->getId()))
+            ->delete();
+    }
+
+    private function syncTracking(Order $order): void
+    {
+        if (!$order->tracking_number || !$order->courier || $order->courier === 'pickup') {
+            return;
+        }
+
+        if ($order->tracking_synced_at && $order->tracking_synced_at->gt(now()->subMinutes(20))) {
+            return;
+        }
+
+        if (config('services.biteship.mock', false)) {
+            $order->update([
+                'tracking_events' => [
+                    ['datetime' => now()->subHours(4)->toDateTimeString(), 'status' => 'Paket diterima kurir', 'note' => 'Tuban'],
+                    ['datetime' => now()->subHour()->toDateTimeString(), 'status' => 'Dalam perjalanan', 'note' => 'Transit hub'],
+                ],
+                'tracking_synced_at' => now(),
+            ]);
+            return;
+        }
+
+        $apiKey = config('services.biteship.api_key');
+        if (!$apiKey) {
+            return;
+        }
+
+        try {
+            $baseUrl = rtrim(config('services.biteship.base_url', 'https://api.biteship.com/v1'), '/');
+            $response = Http::withHeaders(['authorization' => $apiKey])
+                ->get($baseUrl . '/trackings/' . urlencode($order->tracking_number) . '/couriers/' . urlencode($order->courier));
+
+            if (!$response->successful()) {
+                Log::warning('Biteship tracking failed: ' . $response->body());
+                return;
+            }
+
+            $data = $response->json();
+            $history = $data['history'] ?? $data['data']['history'] ?? [];
+            $events = collect($history)->map(fn ($event) => [
+                'datetime' => $event['updated_at'] ?? $event['created_at'] ?? $event['datetime'] ?? null,
+                'status' => $event['status'] ?? $event['message'] ?? 'Update pengiriman',
+                'note' => $event['note'] ?? $event['location'] ?? '',
+            ])->values()->all();
+
+            $order->update([
+                'tracking_events' => $events,
+                'tracking_synced_at' => now(),
+            ]);
+        } catch (\Exception $e) {
+            Log::warning('Biteship tracking exception: ' . $e->getMessage());
+        }
+    }
+
     public function confirmDelivery($uuid)
     {
         $order = Order::where('uuid', $uuid)->firstOrFail();
@@ -643,13 +812,6 @@ class OrderController extends Controller
             $order->update([
                 'status' => 'Delivered'
             ]);
-
-            // Kirim email notifikasi bahwa pesanan telah diterima
-            try {
-                \Illuminate\Support\Facades\Mail::to($order->email)->send(new \App\Mail\OrderStatusChanged($order));
-            } catch (\Exception $e) {
-                \Illuminate\Support\Facades\Log::error("Gagal mengirim email update status Delivered #{$order->transaction_id}: " . $e->getMessage());
-            }
 
             return redirect()->back()->with('confirm_success', 'Terima kasih! Pesanan Anda telah ditandai sebagai Diterima.');
         }
