@@ -149,7 +149,7 @@ class AuthController extends Controller
                 $message->to($request->email);
                 $message->subject('Reset Password | Toko Kopi Sembilan');
             });
-        } catch (\Exception $e) {
+        } catch (\Throwable $e) {
             logger()->error('Gagal mengirim email reset password: ' . $e->getMessage());
         }
 
