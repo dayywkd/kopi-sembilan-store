@@ -263,25 +263,13 @@
 
                     {{-- Konfirmasi via WhatsApp --}}
                     <div class="border-b border-[#E5E7EB] pb-3 mt-10">
-                        <h2 class="label-tiny text-neutral-500">03 / Upload Bukti Pembayaran</h2>
+                        <h2 class="label-tiny text-neutral-500">03 / Konfirmasi Pembayaran</h2>
                     </div>
 
                     <div class="bg-brand-cream border border-[#E5E7EB] p-6 space-y-5">
                         <p class="font-sans text-sm text-neutral-600 leading-relaxed">
-                            Setelah transfer, unggah bukti pembayaran di sini agar tim admin bisa memverifikasi manual dari dashboard.
+                            Setelah melakukan transfer, silakan kirimkan bukti pembayaran Anda langsung ke WhatsApp kami untuk konfirmasi instan.
                         </p>
-                        @if ($order->payment_proof_path)
-                            <div class="bg-white border border-green-200 text-green-800 px-4 py-3 text-[11px] uppercase tracking-wide">
-                                Bukti pembayaran sudah diterima {{ optional($order->payment_proof_uploaded_at)->timezone('Asia/Jakarta')->format('d M Y H:i') }} WIB.
-                            </div>
-                        @endif
-                        <form action="{{ route('order.payment.proof', $order->uuid) }}" method="POST" enctype="multipart/form-data" class="space-y-3">
-                            @csrf
-                            <input type="file" name="payment_proof" accept="image/*,.pdf" required class="w-full bg-white border border-[#E5E7EB] p-3 text-xs">
-                            <button type="submit" class="w-full bg-[#121212] text-white font-semibold py-4 text-sm uppercase tracking-widest hover:bg-neutral-800 transition-colors duration-300 active:scale-[0.98]">
-                                Upload Bukti Bayar
-                            </button>
-                        </form>
                         <a id="wa-confirm-btn" href="#" target="_blank" rel="noopener noreferrer"
                            class="w-full flex items-center justify-center gap-3 bg-[#25D366] text-white font-semibold py-4 text-sm uppercase tracking-widest hover:bg-[#128C7E] transition-colors duration-300 active:scale-[0.98]">
                             <svg class="fill-current" style="width:20px;height:20px;" viewBox="0 0 24 24">
@@ -354,24 +342,12 @@
 
                     {{-- Konfirmasi via WhatsApp --}}
                     <div class="border-b border-[#E5E7EB] pb-3 mt-6">
-                        <h2 class="label-tiny text-neutral-500">03 / Upload Bukti Pembayaran</h2>
+                        <h2 class="label-tiny text-neutral-500">03 / Konfirmasi Pembayaran</h2>
                     </div>
                     <div class="bg-brand-cream border border-[#E5E7EB] p-6 space-y-5">
                         <p class="font-sans text-sm text-neutral-600 leading-relaxed">
-                            Unggah bukti pembayaran QRIS agar tim kami bisa memverifikasi manual.
+                            Setelah melakukan scan, silakan kirimkan bukti pembayaran QRIS Anda langsung ke WhatsApp kami untuk konfirmasi instan.
                         </p>
-                        @if ($order->payment_proof_path)
-                            <div class="bg-white border border-green-200 text-green-800 px-4 py-3 text-[11px] uppercase tracking-wide">
-                                Bukti pembayaran sudah diterima {{ optional($order->payment_proof_uploaded_at)->timezone('Asia/Jakarta')->format('d M Y H:i') }} WIB.
-                            </div>
-                        @endif
-                        <form action="{{ route('order.payment.proof', $order->uuid) }}" method="POST" enctype="multipart/form-data" class="space-y-3">
-                            @csrf
-                            <input type="file" name="payment_proof" accept="image/*,.pdf" required class="w-full bg-white border border-[#E5E7EB] p-3 text-xs">
-                            <button type="submit" class="w-full bg-[#121212] text-white font-semibold py-4 text-sm uppercase tracking-widest hover:bg-neutral-800 transition-colors duration-300 active:scale-[0.98]">
-                                Upload Bukti Bayar
-                            </button>
-                        </form>
                         <a id="wa-confirm-btn" href="#" target="_blank" rel="noopener noreferrer"
                            class="w-full flex items-center justify-center gap-3 bg-[#25D366] text-white font-semibold py-4 text-sm uppercase tracking-widest hover:bg-[#128C7E] transition-colors duration-300 active:scale-[0.98]">
                             <svg class="fill-current" style="width:20px;height:20px;" viewBox="0 0 24 24">
@@ -476,8 +452,8 @@
                 </a>
                 <a href="{{ route('order.invoice.download', $order->uuid) }}"
                    class="w-full flex items-center justify-center gap-2 border border-[#E5E7EB] bg-white py-4 text-[#121212] hover:bg-brand-cream transition-all label-tiny text-[10px] font-bold">
-                    <span class="material-symbols-outlined text-[16px]">picture_as_pdf</span>
-                    Download Invoice PDF
+                    <span class="material-symbols-outlined text-[16px]">receipt</span>
+                    Unduh Foto Struk
                 </a>
             </div>
         </div>

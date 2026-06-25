@@ -371,32 +371,7 @@ class OrderController extends Controller
     public function downloadInvoice($uuid)
     {
         $order = Order::with('items')->where('uuid', $uuid)->firstOrFail();
-        $lines = [
-            'INVOICE TOKO KOPI SEMBILAN',
-            'No: ' . $order->transaction_id,
-            'Tanggal: ' . $order->created_at->timezone('Asia/Jakarta')->format('d M Y H:i') . ' WIB',
-            'Pelanggan: ' . $order->first_name . ' ' . $order->last_name,
-            'Email: ' . $order->email,
-            'Status: ' . $order->status,
-            'Metode Pembayaran: ' . $order->payment_method . ' (Manual)',
-            ' ',
-            'Item:',
-        ];
-
-        foreach ($order->items as $item) {
-            $lines[] = '- ' . $item->product_name . ' ' . $item->grind_size . ' x' . $item->quantity . ' Rp ' . number_format($item->price * $item->quantity, 0, ',', '.');
-        }
-
-        $lines[] = ' ';
-        $lines[] = 'Subtotal: Rp ' . number_format($order->subtotal, 0, ',', '.');
-        $lines[] = 'Diskon: Rp ' . number_format($order->discount_amount ?? 0, 0, ',', '.');
-        $lines[] = 'Ongkir: Rp ' . number_format($order->shipping_cost, 0, ',', '.');
-        $lines[] = 'Total: Rp ' . number_format($order->total_paid, 0, ',', '.');
-
-        return response(SimplePdf::fromLines($lines), 200, [
-            'Content-Type' => 'application/pdf',
-            'Content-Disposition' => 'attachment; filename="invoice-' . $order->transaction_id . '.pdf"',
-        ]);
+        return view('order.receipt', compact('order'));
     }
 
     public function showTrackingForm()

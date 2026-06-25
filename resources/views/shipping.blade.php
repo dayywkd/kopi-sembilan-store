@@ -585,8 +585,8 @@
             <div class="border-t border-[#E5E7EB] pt-8">
                 <a href="{{ route('order.invoice.download', $order->uuid) }}"
                    class="inline-flex items-center gap-3 w-full justify-center border border-[#121212] text-[#121212] py-5 font-bold text-xs uppercase tracking-widest hover:bg-[#121212] hover:text-white transition-all duration-300 active:scale-[0.98]">
-                    <span class="material-symbols-outlined text-[20px]">picture_as_pdf</span>
-                    Download Invoice PDF
+                    <span class="material-symbols-outlined text-[20px]">receipt</span>
+                    Unduh Foto Struk
                 </a>
             </div>
         </div>
