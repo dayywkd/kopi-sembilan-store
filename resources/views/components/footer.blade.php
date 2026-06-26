@@ -33,7 +33,7 @@
                 <span class="text-xs text-neutral-500 uppercase tracking-widest font-semibold">Subscribe and receive 10% off your first coffee order.</span>
                 <span class="font-display text-xl font-bold italic text-brand-dark -mt-1">Join the Toko Kopi Sembilan Family</span>
                 <form onsubmit="event.preventDefault(); showToast('Terima kasih telah berlangganan!');" class="flex border border-neutral-300 rounded-full overflow-hidden p-1 bg-white w-full max-w-md items-center mt-1">
-                    <input type="email" placeholder="Enter your email address" class="flex-grow px-5 py-2 text-xs bg-white text-brand-dark border-none focus:ring-0 outline-none placeholder:opacity-50" required />
+                    <input type="email" placeholder="Enter your email address" class="flex-grow px-5 py-2 text-xs bg-white text-brand-dark placeholder:opacity-50 focus:ring-0 focus:outline-none" style="border: none !important; outline: none !important; box-shadow: none !important; margin: 0 !important;" required />
                     <button type="submit" class="bg-brand-dark text-white px-6 py-2.5 rounded-full font-bold text-[10px] uppercase tracking-widest hover:bg-brand-accent transition-colors">
                         Sign up
                     </button>
