@@ -63,14 +63,19 @@
             <nav class="text-xs text-neutral-400 mb-3 uppercase tracking-widest">
                 <a href="{{ route('home') }}" class="hover:text-brand-dark transition-colors">Home</a>
                 <span class="mx-2">&middot;</span>
-                <span class="text-neutral-600 font-semibold">Speciality Coffee</span>
+                <span class="text-neutral-600 font-semibold">Specialty Coffee</span>
             </nav>
-            <h1 class="font-display text-4xl md:text-5xl italic font-bold text-brand-dark">Speciality Coffee</h1>
+            <h1 class="font-display text-4xl md:text-5xl italic font-bold text-brand-dark">Specialty Coffee</h1>
         </div>
 
         <!-- Circular Category Navigation -->
         <div class="flex flex-wrap items-center justify-center gap-6 md:gap-10 my-10">
-            @foreach ($categories as $cat)
+            @php
+                $filteredCategories = $categories->filter(function($cat) {
+                    return in_array($cat->slug, ['single-origin', 'espresso-blends']);
+                });
+            @endphp
+            @foreach ($filteredCategories as $cat)
                 @php
                     $imgPath = $categoryImages[$cat->slug] ?? 'images/products/aurora_medium.jpg';
                     $isActive = (string)$defaultCategory === (string)$cat->id;
@@ -78,13 +83,16 @@
                     $targetUrl = $isActive 
                         ? route('shop', request()->except('category')) 
                         : route('shop', array_merge(request()->except('category'), ['category' => $cat->id]));
+                    
+                    // Map name
+                    $displayName = $cat->slug === 'single-origin' ? 'FILTER' : ($cat->slug === 'espresso-blends' ? 'ESPRESSO' : $cat->name);
                 @endphp
                 <a href="{{ $targetUrl }}" class="group flex flex-col items-center">
                     <div class="w-20 h-20 md:w-24 md:h-24 rounded-full bg-neutral-50 border {{ $isActive ? 'border-2 border-[#121212] ring-4 ring-neutral-100' : 'border-neutral-200 hover:border-[#121212]/50' }} flex items-center justify-center overflow-hidden transition-all duration-300">
-                        <img src="{{ asset($imgPath) }}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" alt="{{ $cat->name }}">
+                        <img src="{{ asset($imgPath) }}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" alt="{{ $displayName }}">
                     </div>
                     <span class="text-[10px] md:text-[11px] tracking-widest uppercase mt-3 transition-colors duration-300 {{ $isActive ? 'font-bold text-[#121212] border-b border-[#121212] pb-0.5' : 'font-medium text-neutral-400 group-hover:text-[#121212]' }}">
-                        {{ $cat->name }}
+                        {{ $displayName }}
                     </span>
                 </a>
             @endforeach
@@ -228,10 +236,13 @@
                     <input type="radio" name="category" value="ALL" {{ $defaultCategory === 'ALL' ? 'checked' : '' }} class="text-brand-accent focus:ring-brand-accent border-neutral-300">
                     <span class="text-xs font-semibold text-neutral-600 uppercase tracking-wider">Semua Kopi</span>
                 </label>
-                @foreach ($categories as $category)
+                @foreach ($filteredCategories as $category)
+                    @php
+                        $displayName = $category->slug === 'single-origin' ? 'FILTER' : ($category->slug === 'espresso-blends' ? 'ESPRESSO' : $category->name);
+                    @endphp
                     <label class="flex items-center gap-3 cursor-pointer">
                         <input type="radio" name="category" value="{{ $category->id }}" {{ (string)$defaultCategory === (string)$category->id ? 'checked' : '' }} class="text-brand-accent focus:ring-brand-accent border-neutral-300">
-                        <span class="text-xs font-semibold text-neutral-600 uppercase tracking-wider">{{ $category->name }}</span>
+                        <span class="text-xs font-semibold text-neutral-600 uppercase tracking-wider">{{ $displayName }}</span>
                     </label>
                 @endforeach
             </div>

@@ -85,6 +85,15 @@
 
 <main class="mt-32 min-h-screen px-margin-mobile md:px-margin-desktop py-stack-xl max-w-container-max mx-auto bg-white">
 
+    @auth
+        <div class="mb-6">
+            <a href="{{ route('customer.dashboard') }}" class="inline-flex items-center gap-1.5 text-[10px] font-bold text-neutral-400 hover:text-black transition-colors uppercase tracking-widest">
+                <span class="material-symbols-outlined text-[14px]">arrow_back</span>
+                Kembali ke Dashboard
+            </a>
+        </div>
+    @endauth
+
     @if (session('confirm_success'))
         <div class="mb-8 bg-green-50 border border-green-200 text-green-800 p-6 text-xs uppercase tracking-widest font-bold">
             {{ session('confirm_success') }}
@@ -113,11 +122,11 @@
                         default            => 'Order Confirmed',
                     };
                     $headerColor = match($order->status) {
-                        'Awaiting Payment' => 'text-amber-600',
-                        'Paid'             => 'text-blue-600',
-                        'Packing'          => 'text-yellow-600',
-                        'Shipped'          => 'text-green-600',
-                        'Delivered'        => 'text-emerald-600',
+                        'Awaiting Payment' => 'text-[#5B5B5B]',
+                        'Paid'             => 'text-[#000000]',
+                        'Packing'          => 'text-[#5B5B5B]',
+                        'Shipped'          => 'text-[#000000]',
+                        'Delivered'        => 'text-[#000000]',
                         default            => 'text-neutral-500',
                     };
                 @endphp
@@ -186,12 +195,12 @@
                     </p>
                 </div>
             </div>
-            <form action="{{ route('order.confirm_delivery', $order->uuid) }}" method="POST" class="flex-shrink-0">
+            <form action="{{ route('order.confirm_delivery', $order->uuid) }}" method="POST" class="w-full md:w-auto flex-shrink-0">
                 @csrf
                 <button type="submit"
-                        class="flex items-center gap-2 bg-brand-dark hover:bg-brand-accent text-white font-bold text-xs uppercase tracking-widest px-6 py-4 transition-colors duration-300 active:scale-[0.98] whitespace-nowrap cursor-pointer">
+                        class="w-full md:w-auto flex items-center justify-center gap-2 bg-brand-dark hover:bg-brand-accent text-white font-bold text-xs uppercase tracking-widest px-4 py-3.5 md:px-6 md:py-4 transition-colors duration-300 active:scale-[0.98] md:whitespace-nowrap cursor-pointer text-center">
                     <span class="material-symbols-outlined text-[18px]">done_all</span>
-                    {{ $isPickupOrder ? 'Konfirmasi Pesanan Telah Diambil' : 'Konfirmasi Pesanan Tiba' }}
+                    <span>{{ $isPickupOrder ? 'Konfirmasi Pesanan Telah Diambil' : 'Konfirmasi Pesanan Tiba' }}</span>
                 </button>
             </form>
         </div>

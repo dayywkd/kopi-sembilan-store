@@ -108,14 +108,17 @@ class ProductResource extends Resource
                         Forms\Components\Repeater::make('sizes')
                             ->schema([
                                 Forms\Components\TextInput::make('size')
-                                    ->required(),
+                                    ->required()
+                                    ->numeric()
+                                    ->suffix('gram')
+                                    ->helperText('Contoh: 250 untuk 250g, 1000 untuk 1kg'),
                                 Forms\Components\TextInput::make('price')
                                     ->numeric()
                                     ->prefix('Rp')
                                     ->required(),
                             ])
                             ->default([
-                                ['size' => '100gr', 'price' => 0]
+                                ['size' => 100, 'price' => 0]
                             ])
                             ->columns(2)
                             ->label('Packaging Varian Size & Price')

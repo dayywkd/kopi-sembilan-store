@@ -137,7 +137,7 @@
                         
                         <div class="col-span-full flex flex-col gap-2">
                             <label class="label-tiny text-[10px] opacity-60">Phone Number / Nomor HP</label>
-                            <input id="phone" name="phone" value="{{ auth()->check() ? (auth()->user()->phone ?? old('phone')) : old('phone') }}" class="w-full py-3 px-4 outline-none text-sm placeholder:opacity-40 font-sans" placeholder="08XXXXXXXXXX" required type="text">
+                            <input id="phone" name="phone" value="{{ old('phone') ?? (auth()->check() ? auth()->user()->phone : '') }}" class="w-full py-3 px-4 outline-none text-sm placeholder:opacity-40 font-sans" placeholder="08XXXXXXXXXX" required type="text">
                             @error('phone')
                                 <span class="text-xs text-red-500 uppercase tracking-widest">{{ $message }}</span>
                             @enderror
@@ -173,7 +173,7 @@
                         <!-- Address field container -->
                         <div id="address-field-container" class="col-span-full flex flex-col gap-2">
                             <label class="label-tiny text-[10px] opacity-60">Shipping Address</label>
-                            <textarea id="address" name="address" class="w-full py-3 px-4 outline-none text-sm placeholder:opacity-20 resize-none min-h-[80px]" placeholder="STREET, BUILDING, UNIT" required>{{ auth()->check() ? (auth()->user()->address ?? old('address')) : old('address') }}</textarea>
+                            <textarea id="address" name="address" class="w-full py-3 px-4 outline-none text-sm placeholder:opacity-20 resize-none min-h-[80px]" placeholder="STREET, BUILDING, UNIT" required>{{ old('address') ?? (auth()->check() ? auth()->user()->address : '') }}</textarea>
                             @error('address')
                                 <span class="text-xs text-red-500 uppercase tracking-widest">{{ $message }}</span>
                             @enderror
@@ -182,20 +182,20 @@
                         <!-- Area search field container -->
                         <div id="area-search-field-container" class="col-span-full flex flex-col gap-2 relative text-[#121212]">
                             <label class="label-tiny text-[10px] text-neutral-500 font-semibold">Cari Wilayah (Kecamatan, Kota, atau Kode Pos)</label>
-                            <input id="area-search" type="text" class="w-full py-3 px-4 outline-none text-sm placeholder:opacity-40 bg-[#FFFFFF] border border-[#E5E7EB] text-[#121212] focus:border-brand-accent transition-all font-sans" placeholder="Ketik minimal 3 karakter untuk mencari wilayah..." autocomplete="off" value="{{ auth()->check() ? (auth()->user()->biteship_area_name ?? '') : '' }}" required>
+                            <input id="area-search" type="text" class="w-full py-3 px-4 outline-none text-sm placeholder:opacity-40 bg-[#FFFFFF] border border-[#E5E7EB] text-[#121212] focus:border-brand-accent transition-all font-sans" placeholder="Ketik minimal 3 karakter untuk mencari wilayah..." autocomplete="off" value="{{ old('biteship_area_name') ?? (auth()->check() ? auth()->user()->biteship_area_name : '') }}" required>
                             <div id="area-suggestions" class="absolute left-0 right-0 top-[100%] z-50 bg-[#FFFFFF] border border-[#E5E7EB] divide-y divide-[#E5E7EB] max-h-60 overflow-y-auto hidden shadow-lg">
                                 <!-- suggestions populated dynamically -->
                             </div>
-                            <input type="hidden" name="biteship_area_id" id="biteship-area-id" value="{{ auth()->check() ? (auth()->user()->biteship_area_id ?? old('biteship_area_id')) : old('biteship_area_id') }}">
-                            <input type="hidden" name="biteship_area_name" id="biteship-area-name" value="{{ auth()->check() ? (auth()->user()->biteship_area_name ?? old('biteship_area_name')) : old('biteship_area_name') }}">
+                            <input type="hidden" name="biteship_area_id" id="biteship-area-id" value="{{ old('biteship_area_id') ?? (auth()->check() ? auth()->user()->biteship_area_id : '') }}">
+                            <input type="hidden" name="biteship_area_name" id="biteship-area-name" value="{{ old('biteship_area_name') ?? (auth()->check() ? auth()->user()->biteship_area_name : '') }}">
                             @error('biteship_area_id')
                                 <span class="text-xs text-red-500 uppercase tracking-widest">{{ $message }}</span>
                             @enderror
                         </div>
 
                         <!-- Hidden inputs for city and postal code, populated automatically by Biteship area selection -->
-                        <input id="city" name="city" value="{{ auth()->check() ? (auth()->user()->city ?? old('city')) : old('city') }}" type="hidden">
-                        <input id="postal-code" name="postal_code" value="{{ auth()->check() ? (auth()->user()->postal_code ?? old('postal_code')) : old('postal_code') }}" type="hidden">
+                        <input id="city" name="city" value="{{ old('city') ?? (auth()->check() ? auth()->user()->city : '') }}" type="hidden">
+                        <input id="postal-code" name="postal_code" value="{{ old('postal_code') ?? (auth()->check() ? auth()->user()->postal_code : '') }}" type="hidden">
 
                         <!-- Hidden input for courier (selected courier code) -->
                         <input type="hidden" name="courier" id="courier" value="{{ old('courier') }}">
@@ -225,7 +225,7 @@
                     <div class="flex flex-col gap-2">
                         <label class="label-tiny text-[10px] opacity-60">Kode Promo / Kupon</label>
                         <input id="coupon-code" name="coupon_code" value="{{ old('coupon_code') }}" class="w-full py-3 px-4 outline-none text-sm placeholder:opacity-30 uppercase" placeholder="CONTOH: KOPI9HEMAT" type="text">
-                        <p class="text-[10px] text-neutral-400 uppercase tracking-wider">Diskon diverifikasi ulang di server saat pesanan dibuat.</p>
+                        <p id="coupon-feedback" class="text-[10px] text-neutral-400 uppercase tracking-wider">Diskon diverifikasi ulang di server saat pesanan dibuat.</p>
                     </div>
                 </section>
 
@@ -239,7 +239,7 @@
                             <input class="sr-only peer" name="payment" type="radio" value="Transfer BCA" {{ old('payment', 'Transfer BCA') === 'Transfer BCA' ? 'checked' : '' }}>
                             <div class="border border-neutral-300 p-6 flex flex-col gap-2 h-full peer-checked:bg-[#121212] peer-checked:text-white peer-checked:border-transparent transition-colors">
                                 <div class="flex justify-between items-start">
-                                    <span class="label-tiny font-bold">Transfer BCA</span>
+                                    <span class="label-tiny font-bold">BCA</span>
                                     <span class="material-symbols-outlined text-[20px]">account_balance</span>
                                 </div>
                                 <p class="text-[11px] opacity-70 mt-auto">Transfer ke Rekening BCA Toko Kopi Sembilan</p>
@@ -249,7 +249,7 @@
                             <input class="sr-only peer" name="payment" type="radio" value="Transfer BRI" {{ old('payment') === 'Transfer BRI' ? 'checked' : '' }}>
                             <div class="border border-neutral-300 p-6 flex flex-col gap-2 h-full peer-checked:bg-[#121212] peer-checked:text-white peer-checked:border-transparent transition-colors">
                                 <div class="flex justify-between items-start">
-                                    <span class="label-tiny font-bold">Transfer BRI</span>
+                                    <span class="label-tiny font-bold">BRI</span>
                                     <span class="material-symbols-outlined text-[20px]">account_balance</span>
                                 </div>
                                 <p class="text-[11px] opacity-70 mt-auto">Transfer ke Rekening BRI Toko Kopi Sembilan</p>
@@ -262,7 +262,7 @@
                                     <span class="label-tiny font-bold">QRIS / Instant</span>
                                     <span class="material-symbols-outlined text-[20px]">qr_code_2</span>
                                 </div>
-                                <p class="text-[11px] opacity-70 mt-auto">Proses instan &amp; otomatis terverifikasi via QR Code</p>
+                                <p class="text-[11px] opacity-70 mt-auto">Proses verifikasi manual via WhatsApp setelah Anda mengirimkan bukti transfer</p>
                             </div>
                         </label>
                     </div>
@@ -379,6 +379,8 @@
     @endif
 
     let globalSubtotal = 0;
+    let globalDiscount = 0;
+    let currentShippingCost = null;
 
     function formatRupiah(num) {
         return 'Rp. ' + num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
@@ -404,7 +406,7 @@
         cart.forEach(item => {
             const itemTotal = item.price * item.quantity;
             globalSubtotal += itemTotal;
-            const grindLabel = item.grind_size ? item.grind_size : 'WHOLE BEAN';
+            const displaySize = item.grind_size ? formatSizeJS(item.grind_size) : 'WHOLE BEAN';
             
             html += `
                 <div class="flex gap-4 items-center text-[#121212]">
@@ -414,7 +416,7 @@
                     <div class="flex-grow flex flex-col justify-between">
                         <div>
                             <h4 class="font-display text-sm uppercase italic leading-tight text-[#121212]">${item.name}</h4>
-                            <p class="label-tiny text-[9px] text-neutral-400 mt-1">${grindLabel} | QTY: ${item.quantity}</p>
+                            <p class="label-tiny text-[9px] text-neutral-400 mt-1">${displaySize} | QTY: ${item.quantity}</p>
                         </div>
                         <span class="font-sans text-xs font-semibold mt-2 text-neutral-800">${formatRupiah(itemTotal)}</span>
                     </div>
@@ -425,13 +427,27 @@
         container.innerHTML = html;
         document.getElementById('summary-subtotal').textContent = formatRupiah(globalSubtotal);
         
-        let shipping = 0;
         if (customShippingCost !== null) {
-            shipping = customShippingCost;
+            currentShippingCost = customShippingCost;
         }
         
-        const total = globalSubtotal + shipping;
-        document.getElementById('summary-shipping').textContent = customShippingCost !== null ? (shipping === 0 ? "FREE" : formatRupiah(shipping)) : "Rp. 0";
+        let shipping = currentShippingCost !== null ? currentShippingCost : 0;
+        const total = Math.max(0, globalSubtotal + shipping - globalDiscount);
+        
+        document.getElementById('summary-shipping').textContent = currentShippingCost !== null ? (shipping === 0 ? "FREE" : formatRupiah(shipping)) : "Rp. 0";
+        
+        // Render diskon kupon
+        const couponNoteEl = document.getElementById('summary-coupon-note');
+        if (couponNoteEl) {
+            if (globalDiscount > 0) {
+                couponNoteEl.textContent = '- ' + formatRupiah(globalDiscount);
+                couponNoteEl.className = 'font-semibold text-green-600';
+            } else {
+                couponNoteEl.textContent = 'Dihitung saat konfirmasi';
+                couponNoteEl.className = '';
+            }
+        }
+        
         document.getElementById('summary-total').textContent = formatRupiah(total);
     }
 
@@ -476,8 +492,8 @@
         cart.forEach(item => {
             const itemTotal = item.price * item.quantity;
             subtotal += itemTotal;
-            const grindLabel = item.grind_size ? item.grind_size : 'WHOLE BEAN';
-            cartText += `- ${item.name} (${grindLabel}) x ${item.quantity} = ${formatRupiah(itemTotal)}\n`;
+            const displaySize = item.grind_size ? formatSizeJS(item.grind_size) : 'WHOLE BEAN';
+            cartText += `- ${item.name} (${displaySize}) x ${item.quantity} = ${formatRupiah(itemTotal)}\n`;
         });
         
         let receiptInfoText = '';
@@ -740,7 +756,7 @@
                                     });
                                 });
                             } else {
-                                suggestionsDiv.innerHTML = '<div class="p-3 text-xs opacity-60 text-amber-500">Tidak ada wilayah yang cocok.</div>';
+                                suggestionsDiv.innerHTML = '<div class="p-3 text-xs opacity-60 text-neutral-500">Tidak ada wilayah yang cocok.</div>';
                             }
                         })
                         .catch(err => {
@@ -828,6 +844,79 @@
             waBtn.addEventListener('click', function(e) {
                 updateWhatsappLink();
             });
+        }
+
+        // Validasi Kupon Real-Time via AJAX
+        const couponInput = document.getElementById('coupon-code');
+        const couponFeedback = document.getElementById('coupon-feedback');
+        let couponTimeout = null;
+
+        function checkCoupon() {
+            const code = couponInput.value.trim();
+            if (code.length === 0) {
+                globalDiscount = 0;
+                if (couponFeedback) {
+                    couponFeedback.textContent = 'Diskon diverifikasi ulang di server saat pesanan dibuat.';
+                    couponFeedback.className = 'text-[10px] text-neutral-400 uppercase tracking-wider';
+                }
+                renderSummary();
+                return;
+            }
+
+            if (couponFeedback) {
+                couponFeedback.textContent = 'Memvalidasi kupon...';
+                couponFeedback.className = 'text-[10px] text-neutral-500 uppercase tracking-wider font-semibold animate-pulse';
+            }
+
+            fetch('/api/validate-coupon', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
+                    'Accept': 'application/json'
+                },
+                body: JSON.stringify({
+                    coupon_code: code,
+                    subtotal: globalSubtotal
+                })
+            })
+            .then(res => res.json())
+            .then(data => {
+                if (data.success) {
+                    globalDiscount = parseFloat(data.discount);
+                    if (couponFeedback) {
+                        couponFeedback.textContent = `✓ Kupon diterapkan: ${data.message} (Diskon ${formatRupiah(globalDiscount)})`;
+                        couponFeedback.className = 'text-[10px] text-green-600 uppercase tracking-wider font-bold';
+                    }
+                } else {
+                    globalDiscount = 0;
+                    if (couponFeedback) {
+                        couponFeedback.textContent = data.message;
+                        couponFeedback.className = 'text-[10px] text-red-600 uppercase tracking-wider font-bold';
+                    }
+                }
+                renderSummary();
+            })
+            .catch(err => {
+                console.error(err);
+                globalDiscount = 0;
+                if (couponFeedback) {
+                    couponFeedback.textContent = 'Gagal memvalidasi kupon. Silakan coba lagi.';
+                    couponFeedback.className = 'text-[10px] text-neutral-500 uppercase tracking-wider';
+                }
+                renderSummary();
+            });
+        }
+
+        if (couponInput) {
+            couponInput.addEventListener('change', checkCoupon);
+            couponInput.addEventListener('input', () => {
+                clearTimeout(couponTimeout);
+                couponTimeout = setTimeout(checkCoupon, 600);
+            });
+            if (couponInput.value.trim().length > 0) {
+                setTimeout(checkCoupon, 300);
+            }
         }
 
         // Salin data order notes dari local storage ke input form sebelum checkout

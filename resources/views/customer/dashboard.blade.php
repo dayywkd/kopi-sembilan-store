@@ -127,13 +127,13 @@
             <h2 class="label-tiny text-neutral-800 mb-6 font-bold">Order History &amp; Tracking</h2>
             
             <div class="border border-neutral-200 bg-white shadow-sm">
-                <!-- Table Header -->
-                <div class="grid grid-cols-12 gap-4 px-6 py-4 bg-neutral-50 border-b border-neutral-200 label-tiny text-[#121212] text-xs font-bold">
-                    <div class="col-span-3 md:col-span-2">Order ID</div>
-                    <div class="col-span-4 md:col-span-3">Date &amp; Time</div>
-                    <div class="col-span-3 md:col-span-2 text-right">Total Paid</div>
-                    <div class="col-span-2 md:col-span-3 text-center">Fulfillment Status</div>
-                    <div class="col-span-12 md:col-span-2 text-right mt-2 md:mt-0">Action</div>
+                <!-- Table Header (Hanya Desktop) -->
+                <div class="hidden md:grid grid-cols-12 gap-4 px-6 py-4 bg-neutral-50 border-b border-neutral-200 label-tiny text-[#121212] text-xs font-bold">
+                    <div class="col-span-2">Order ID</div>
+                    <div class="col-span-3">Date &amp; Time</div>
+                    <div class="col-span-2 text-right">Total Paid</div>
+                    <div class="col-span-3 text-center">Fulfillment Status</div>
+                    <div class="col-span-2 text-right">Action</div>
                 </div>
 
                 <!-- Table Content -->
@@ -142,7 +142,7 @@
                         @php
                             $statusClass = 'border-neutral-300 text-neutral-500 bg-transparent';
                             if ($order->status === 'Awaiting Payment') {
-                                $statusClass = 'border-amber-200 text-amber-800 bg-amber-50';
+                                $statusClass = 'border-[#D7D5D5] text-[#5B5B5B] bg-[#F9F9F9]';
                             } elseif ($order->status === 'Paid') {
                                 $statusClass = 'border-blue-200 text-blue-800 bg-blue-50';
                             } elseif ($order->status === 'Packing') {
@@ -152,45 +152,46 @@
                             } elseif ($order->status === 'Delivered') {
                                 $statusClass = 'border-emerald-200 text-emerald-800 bg-emerald-50';
                             }
+
+                            $statusLabel = match($order->status) {
+                                'Awaiting Payment' => 'Belum Bayar',
+                                'Paid'             => 'Dibayar',
+                                'Packing'          => 'Dikemas',
+                                'Shipped'          => 'Dikirim',
+                                'Delivered'        => 'Sampai ✓',
+                                default            => $order->status,
+                            };
                         @endphp
-                        <div class="grid grid-cols-12 gap-4 px-6 py-5 order-row items-center">
+
+                        <!-- Tampilan Desktop (Grid Table) -->
+                        <div class="hidden md:grid grid-cols-12 gap-4 px-6 py-5 order-row items-center">
                             <!-- Order ID -->
-                            <div class="col-span-3 md:col-span-2 font-mono text-sm font-semibold text-[#121212]">
+                            <div class="col-span-2 font-mono text-sm font-semibold text-[#121212]">
                                 #{{ $order->transaction_id }}
                             </div>
                             
                             <!-- Date & Time -->
-                            <div class="col-span-4 md:col-span-3 text-sm text-neutral-600">
+                            <div class="col-span-3 text-sm text-neutral-600">
                                 {{ $order->created_at->timezone('Asia/Jakarta')->format('M d, Y — H:i') }}
                             </div>
                             
                             <!-- Total Paid -->
-                            <div class="col-span-3 md:col-span-2 text-right font-semibold text-sm text-[#121212]">
+                            <div class="col-span-2 text-right font-semibold text-sm text-[#121212]">
                                 {{ $order->formatted_total_paid }}
                             </div>
                             
                             <!-- Status -->
-                            <div class="col-span-2 md:col-span-3 flex justify-center">
+                            <div class="col-span-3 flex justify-center">
                                 <span class="px-3 py-1 border text-[9px] uppercase font-bold tracking-widest {{ $statusClass }}">
-                                    @php
-                                        $statusLabel = match($order->status) {
-                                            'Awaiting Payment' => 'Belum Bayar',
-                                            'Paid'             => 'Dibayar',
-                                            'Packing'          => 'Dikemas',
-                                            'Shipped'          => 'Dikirim',
-                                            'Delivered'        => 'Sampai ✓',
-                                            default            => $order->status,
-                                        };
-                                    @endphp
                                     {{ $statusLabel }}
                                 </span>
                             </div>
                             
                             <!-- Action Link -->
-                            <div class="col-span-12 md:col-span-2 text-right">
+                            <div class="col-span-2 text-right">
                                 @if ($order->status === 'Awaiting Payment')
                                     @if ($order->uuid)
-                                        <a href="{{ route('order.payment', $order->uuid) }}" class="label-tiny text-[10px] text-amber-700 underline underline-offset-4 hover:text-amber-800 transition-colors font-bold">
+                                        <a href="{{ route('order.payment', $order->uuid) }}" class="label-tiny text-[10px] text-black underline underline-offset-4 hover:text-neutral-600 transition-colors font-bold">
                                             BAYAR
                                         </a>
                                     @else
@@ -206,6 +207,51 @@
                                     @else
                                         <span class="label-tiny text-[10px] text-neutral-400 cursor-not-allowed font-semibold">
                                             LACAK
+                                        </span>
+                                    @endif
+                                @endif
+                            </div>
+                        </div>
+
+                        <!-- Tampilan Mobile (Card-like layout) -->
+                        <div class="block md:hidden p-5 space-y-4 order-row">
+                            <div class="flex justify-between items-center">
+                                <span class="font-mono text-xs font-bold text-[#121212]">#{{ $order->transaction_id }}</span>
+                                <span class="px-2.5 py-0.5 border text-[8px] uppercase font-bold tracking-wider {{ $statusClass }}">
+                                    {{ $statusLabel }}
+                                </span>
+                            </div>
+                            
+                            <div class="flex justify-between text-xs text-neutral-500">
+                                <div>
+                                    <p class="text-[9px] uppercase tracking-wider text-neutral-400 font-sans">Date &amp; Time</p>
+                                    <p class="font-semibold text-neutral-700 mt-0.5">{{ $order->created_at->timezone('Asia/Jakarta')->format('M d, Y — H:i') }}</p>
+                                </div>
+                                <div class="text-right">
+                                    <p class="text-[9px] uppercase tracking-wider text-neutral-400 font-sans">Total Paid</p>
+                                    <p class="font-bold text-[#121212] mt-0.5">{{ $order->formatted_total_paid }}</p>
+                                </div>
+                            </div>
+                            
+                            <div class="pt-2 border-t border-neutral-100 flex justify-end">
+                                @if ($order->status === 'Awaiting Payment')
+                                    @if ($order->uuid)
+                                        <a href="{{ route('order.payment', $order->uuid) }}" class="inline-block bg-black text-white text-center px-4 py-1.5 rounded-full font-bold text-[9px] uppercase tracking-wider hover:bg-neutral-800 transition-colors">
+                                            Bayar Sekarang
+                                        </a>
+                                    @else
+                                        <span class="inline-block bg-neutral-200 text-neutral-400 text-center px-4 py-1.5 rounded-full font-bold text-[9px] uppercase tracking-wider cursor-not-allowed">
+                                            Bayar
+                                        </span>
+                                    @endif
+                                @else
+                                    @if ($order->uuid)
+                                        <a href="{{ route('order.tracking', $order->uuid) }}" class="inline-block border border-[#121212] text-[#121212] text-center px-4 py-1.5 rounded-full font-semibold text-[9px] uppercase tracking-wider hover:bg-[#121212] hover:text-white transition-colors">
+                                            Lacak Pesanan
+                                        </a>
+                                    @else
+                                        <span class="inline-block border border-neutral-200 text-neutral-400 text-center px-4 py-1.5 rounded-full font-semibold text-[9px] uppercase tracking-wider cursor-not-allowed">
+                                            Lacak
                                         </span>
                                     @endif
                                 @endif
@@ -283,7 +329,7 @@
                                     });
                                 });
                             } else {
-                                suggestionsDiv.innerHTML = '<div class="p-3 text-xs text-amber-600">Tidak ada wilayah yang cocok.</div>';
+                                suggestionsDiv.innerHTML = '<div class="p-3 text-xs text-neutral-500">Tidak ada wilayah yang cocok.</div>';
                             }
                         })
                         .catch(err => {

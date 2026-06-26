@@ -20,8 +20,8 @@
         border-color: #121212;
     }
     .avatar-circle {
-        background-color: #FAF6F0;
-        color: #d97706;
+        background-color: #D7D5D5; /* SOFT MIST */
+        color: #000000; /* DEEP BLACK */
     }
 </style>
 @endsection
@@ -31,7 +31,7 @@
     
     {{-- Hero Header --}}
     <section class="px-margin-mobile md:px-margin-desktop py-16 text-center max-w-container-max mx-auto border-b border-[#E5E7EB] mb-16 reveal">
-        <span class="label-tiny text-amber-600 block mb-3">TESTIMONI</span>
+        <span class="label-tiny text-[#5B5B5B] block mb-3">TESTIMONI</span>
         <h1 class="font-display text-4xl md:text-6xl uppercase italic text-brand-dark leading-tight">Ulasan Pelanggan</h1>
         <p class="font-sans text-sm text-neutral-500 max-w-md mx-auto mt-4 leading-relaxed">
             Temukan pendapat tulus dari para pelanggan setia kami tentang cita rasa kopi terbaik dari Roastery Toko Kopi Sembilan.
@@ -54,7 +54,7 @@
                             {{-- Rating Stars --}}
                             <div class="flex items-center gap-1">
                                 @for($i = 1; $i <= 5; $i++)
-                                    <span class="material-symbols-outlined text-[18px] {{ $i <= $review->rating ? 'text-amber-500' : 'text-neutral-200' }}" style="font-variation-settings: 'FILL' 1, 'wght' 400">
+                                    <span class="material-symbols-outlined text-[18px] {{ $i <= $review->rating ? 'text-[#000000]' : 'text-[#D7D5D5]' }}" style="font-variation-settings: 'FILL' 1, 'wght' 400">
                                         star
                                     </span>
                                 @endfor
@@ -78,7 +78,7 @@
                                 
                                 @if($review->product)
                                     <a href="{{ route('product.show', $review->product->slug) }}" 
-                                       class="inline-flex items-center gap-1 text-[11px] font-semibold text-amber-600 hover:text-brand-dark transition-colors mt-2 uppercase tracking-wider">
+                                       class="inline-flex items-center gap-1 text-[11px] font-semibold text-[#000000] hover:text-[#5B5B5B] transition-colors mt-2 uppercase tracking-wider">
                                         <span class="material-symbols-outlined text-[12px]">local_cafe</span>
                                         {{ $review->product->name }}
                                     </a>

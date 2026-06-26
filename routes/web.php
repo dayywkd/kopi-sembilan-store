@@ -46,6 +46,7 @@ Route::post('/wholesale', [HomeController::class, 'submitWholesale']);
 Route::get('/api/cities', [OrderController::class, 'getCities']);
 Route::post('/api/shipping-cost', [OrderController::class, 'calculateShipping']);
 Route::get('/api/biteship/search-areas', [OrderController::class, 'searchAreas']);
+Route::post('/api/validate-coupon', [OrderController::class, 'validateCoupon']);
 
 // Autentikasi Kustom
 Route::get('/login', [AuthController::class, 'showLogin'])->name('login');

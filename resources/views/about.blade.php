@@ -97,19 +97,19 @@
         
         <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
             <div class="bg-white/5 backdrop-blur-md p-8 border border-white/10 space-y-4 hover:scale-[1.03] transition-transform duration-500 shadow-xl group">
-                <h3 class="text-lg font-bold text-white group-hover:text-amber-400 transition-colors">Sourcing Terpilih</h3>
+                <h3 class="text-lg font-bold text-white group-hover:text-neutral-300 transition-colors">Sourcing Terpilih</h3>
                 <p class="text-xs text-neutral-300 leading-relaxed font-light">
                     Kami bermitra secara bertanggung jawab dengan petani lokal untuk mendapatkan ceri kopi pilihan yang matang sempurna. Setiap lot biji kopi melewati proses kurasi ketat.
                 </p>
             </div>
             <div class="bg-white/5 backdrop-blur-md p-8 border border-white/10 space-y-4 hover:scale-[1.03] transition-transform duration-500 shadow-xl group">
-                <h3 class="text-lg font-bold text-white group-hover:text-amber-400 transition-colors">Standar SCA Certified</h3>
+                <h3 class="text-lg font-bold text-white group-hover:text-neutral-300 transition-colors">Standar SCA Certified</h3>
                 <p class="text-xs text-neutral-300 leading-relaxed font-light">
                     Setiap profil sangrai dianalisis dan di-evaluasi sesuai standar Specialty Coffee Association (SCA) untuk menjamin kualitas rasa serta konsistensi tingkat kematangan biji kopi.
                 </p>
             </div>
             <div class="bg-white/5 backdrop-blur-md p-8 border border-white/10 space-y-4 hover:scale-[1.03] transition-transform duration-500 shadow-xl group">
-                <h3 class="text-lg font-bold text-white group-hover:text-amber-400 transition-colors">Kemurnian Rasa</h3>
+                <h3 class="text-lg font-bold text-white group-hover:text-neutral-300 transition-colors">Kemurnian Rasa</h3>
                 <p class="text-xs text-neutral-300 leading-relaxed font-light">
                     Tujuan utama kami adalah menyajikan karakter rasa asli (*terroir*) dari setiap daerah asal kopi tanpa manipulasi tambahan, menghasilkan seduhan yang bersih dan kaya.
                 </p>

@@ -27,7 +27,7 @@
     <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
     
     <!-- Google Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@100;300;400;700;900&family=Playfair+Display:ital,wght@0,700;0,900;1,700&display=swap" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
     <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
     
     <!-- Tailwind Configuration -->
@@ -71,16 +71,16 @@
                         "stack-lg": "64px"
                     },
                     "fontFamily": {
-                        "display": ["Playfair Display", "serif"],
-                        "sans": ["Hanken Grotesk", "sans-serif"],
-                        "headline-lg": ["Playfair Display"],
-                        "button": ["Hanken Grotesk"],
-                        "display-lg-mobile": ["Playfair Display"],
-                        "display-lg": ["Playfair Display"],
-                        "headline-md": ["Playfair Display"],
-                        "body-lg": ["Hanken Grotesk"],
-                        "body-md": ["Hanken Grotesk"],
-                        "label-caps": ["Hanken Grotesk"]
+                        "display": ["Adelle Sans Ara", "Outfit", "sans-serif"],
+                        "sans": ["Outfit", "sans-serif"],
+                        "headline-lg": ["Adelle Sans Ara", "Outfit", "sans-serif"],
+                        "button": ["Outfit", "sans-serif"],
+                        "display-lg-mobile": ["Adelle Sans Ara", "Outfit", "sans-serif"],
+                        "display-lg": ["Adelle Sans Ara", "Outfit", "sans-serif"],
+                        "headline-md": ["Adelle Sans Ara", "Outfit", "sans-serif"],
+                        "body-lg": ["Outfit", "sans-serif"],
+                        "body-md": ["Outfit", "sans-serif"],
+                        "label-caps": ["Outfit", "sans-serif"]
                     }
                 }
             }
@@ -100,7 +100,12 @@
             -webkit-font-smoothing: antialiased;
             scrollbar-width: thin;
             scrollbar-color: #E5E7EB #FFFFFF;
-            font-family: 'Hanken Grotesk', sans-serif;
+            font-family: 'Outfit', sans-serif;
+            font-weight: 300;
+        }
+        h1, h2, h3, h4, h5, h6, .font-display {
+            font-family: 'Adelle Sans Ara', 'Outfit', sans-serif;
+            font-weight: 600;
         }
         .scroll-container {
             width: 100%;
@@ -120,6 +125,22 @@
         .delay-200 { transition-delay: 200ms; }
         .delay-300 { transition-delay: 300ms; }
         .delay-400 { transition-delay: 400ms; }
+        
+        /* Animasi Keranjang Belanja Goyang */
+        @keyframes cart-shake {
+            0% { transform: scale(1); }
+            15% { transform: scale(1.15) rotate(-12deg); }
+            30% { transform: scale(1.15) rotate(14deg); }
+            45% { transform: scale(1.15) rotate(-12deg); }
+            60% { transform: scale(1.15) rotate(14deg); }
+            75% { transform: scale(1.05) rotate(-6deg); }
+            90% { transform: scale(1.05) rotate(6deg); }
+            100% { transform: scale(1) rotate(0deg); }
+        }
+        .animate-cart-shake {
+            animation: cart-shake 0.6s cubic-bezier(.36,.07,.19,.97) both;
+            transform-origin: bottom center;
+        }
     </style>
     @yield('styles')
 </head>
@@ -248,16 +269,27 @@
         window.addEventListener('scroll', updateNavbar);
         document.addEventListener('DOMContentLoaded', updateNavbar);
 
+        function formatSizeJS(size) {
+            if (!size) return '';
+            const sizeStr = size.toString().trim().toLowerCase();
+            if (sizeStr.includes('gr') || sizeStr.includes('kg') || sizeStr.endsWith('g')) {
+                return size;
+            }
+            const num = parseFloat(sizeStr);
+            if (!isNaN(num)) {
+                if (num >= 1000) {
+                    return (num / 1000) + 'kg';
+                }
+                return num + 'gr';
+            }
+            return size;
+        }
+
         // Server-synced Cart Helper Functions
         window.serverCart = window.serverCart || [];
 
         function getCart() {
-            const localCart = JSON.parse(localStorage.getItem('cart')) || [];
-            if (localCart.length === 0 && Array.isArray(window.serverCart) && window.serverCart.length > 0) {
-                localStorage.setItem('cart', JSON.stringify(window.serverCart));
-                return window.serverCart;
-            }
-            return localCart;
+            return JSON.parse(localStorage.getItem('cart')) || [];
         }
 
         function saveCart(cart) {
@@ -286,8 +318,8 @@
             .then(data => {
                 if (data && data.cart) {
                     window.serverCart = data.cart;
-                    localStorage.setItem('cart', JSON.stringify(data.cart));
-                    updateCartCount();
+                    // Mencegah delay visual pada ikon keranjang di navbar dengan tidak menimpa
+                    // localStorage secara asinkron setelah response server tiba (sumber kebenaran tetap lokal).
                     if (typeof renderCart === 'function') {
                         renderCart();
                     }
@@ -296,18 +328,45 @@
             .catch(() => {});
         }
 
+        let currentCartCount = null;
+
         function updateCartCount() {
             const cart = getCart();
             const totalItems = cart.reduce((sum, item) => sum + parseInt(item.quantity || 1), 0);
             const cartCountEl = document.getElementById('cart-count');
+            const cartIconBtn = document.getElementById('cart-icon-btn');
+            
             if (cartCountEl) {
                 if (totalItems > 0) {
                     cartCountEl.textContent = totalItems;
                     cartCountEl.classList.remove('hidden');
+                    cartCountEl.style.display = 'flex';
                 } else {
                     cartCountEl.classList.add('hidden');
+                    cartCountEl.style.display = 'none';
                 }
             }
+
+            // Trigger animasi goyang jika jumlah produk bertambah
+            if (currentCartCount !== null && totalItems > currentCartCount) {
+                if (cartIconBtn) {
+                    cartIconBtn.classList.remove('animate-cart-shake');
+                    void cartIconBtn.offsetWidth; // Force reflow untuk me-restart animasi
+                    cartIconBtn.classList.add('animate-cart-shake');
+                    
+                    // Tambahkan juga animasi bounce/pulse kecil pada badge angka agar menarik
+                    if (cartCountEl) {
+                        cartCountEl.classList.remove('scale-100');
+                        cartCountEl.classList.add('scale-125');
+                        setTimeout(() => {
+                            cartCountEl.classList.remove('scale-125');
+                            cartCountEl.classList.add('scale-100');
+                        }, 300);
+                    }
+                }
+            }
+
+            currentCartCount = totalItems;
         }
 
         function showToast(message) {
@@ -433,7 +492,14 @@
                 window.serverCart = [];
             }
 
-            const localCart = JSON.parse(localStorage.getItem('cart')) || [];
+            let localCart = JSON.parse(localStorage.getItem('cart')) || [];
+            
+            // Restorasi awal dari server ke local storage jika local storage kosong
+            if (localCart.length === 0 && Array.isArray(window.serverCart) && window.serverCart.length > 0) {
+                localStorage.setItem('cart', JSON.stringify(window.serverCart));
+                localCart = window.serverCart;
+            }
+
             if (localCart.length > 0 && !checkoutSuccess) {
                 syncCartToServer(localCart);
             }

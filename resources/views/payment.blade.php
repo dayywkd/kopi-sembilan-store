@@ -88,12 +88,21 @@
 @section('content')
 <main class="mt-32 min-h-screen px-margin-mobile md:px-margin-desktop py-stack-xl max-w-container-max mx-auto bg-white">
 
+    @auth
+        <div class="mb-6">
+            <a href="{{ route('customer.dashboard') }}" class="inline-flex items-center gap-1.5 text-[10px] font-bold text-neutral-400 hover:text-black transition-colors uppercase tracking-widest">
+                <span class="material-symbols-outlined text-[14px]">arrow_back</span>
+                Kembali ke Dashboard
+            </a>
+        </div>
+    @endauth
+
     {{-- Header --}}
     <section class="mb-12 border-b border-[#E5E7EB] pb-8">
         <div class="grid grid-cols-12 items-end gap-4">
             <div class="col-span-12 md:col-span-8">
                 <span class="label-tiny block mb-2 text-neutral-500">
-                    <span class="text-amber-500">●</span>&nbsp; Menunggu Pembayaran
+                    <span class="text-neutral-500">●</span>&nbsp; Menunggu Pembayaran
                 </span>
                 <h1 class="font-display text-5xl md:text-7xl uppercase italic leading-none text-[#121212]">
                     @if ($order->payment_method === 'QRIS')
@@ -251,7 +260,7 @@
                             ['Buka aplikasi m-banking atau ATM Bank Anda.', 'phone_android'],
                             ['Pilih menu Transfer → ke Rekening Bank (BCA atau BRI).', 'compare_arrows'],
                             ['Masukkan nomor rekening tujuan (<strong class="text-[#121212]">5550305307</strong> untuk BCA atau <strong class="text-[#121212]">010901031684534</strong> untuk BRI) atas nama <strong class="text-[#121212]">Muhammad Fahad</strong>.', 'dialpad'],
-                            ['Masukkan nominal transfer <strong class="text-amber-600">PERSIS TEPAT</strong> sesuai yang tertera.', 'payments'],
+                            ['Masukkan nominal transfer <strong class="text-black underline underline-offset-2">PERSIS TEPAT</strong> sesuai yang tertera.', 'payments'],
                             ['Isi berita transfer dengan kode pesanan: <strong class="font-mono text-[#121212]">' . $order->transaction_id . '</strong>', 'edit_note'],
                             ['Konfirmasi dan selesaikan transfer. Simpan bukti transfer Anda.', 'check_circle'],
                         ] as $i => [$step, $icon])
@@ -333,7 +342,7 @@
                             ['Buka aplikasi pembayaran Anda (GoPay, OVO, Dana, ShopeePay, m-banking, dll.)', 'phone_android'],
                             ['Pilih menu <strong class="text-[#121212]">Scan QR</strong> atau <strong class="text-[#121212]">QRIS</strong>.', 'qr_code_scanner'],
                             ['Arahkan kamera ke QR code di atas.', 'photo_camera'],
-                            ['Pastikan nominal pembayaran sesuai: <strong class="font-mono text-amber-600 font-bold">Rp. ' . number_format($order->total_paid, 0, ',', '.') . '</strong>', 'payments'],
+                            ['Pastikan nominal pembayaran sesuai: <strong class="font-mono text-black font-bold">Rp. ' . number_format($order->total_paid, 0, ',', '.') . '</strong>', 'payments'],
                             ['Konfirmasi pembayaran dan selesai!', 'check_circle'],
                         ] as $i => [$step, $icon])
                         <div class="flex items-start gap-4 py-4 border-b border-[#E5E7EB]/50 last:border-0">

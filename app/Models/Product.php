@@ -105,4 +105,21 @@ class Product extends Model
 
         return asset('storage/' . $this->image_path);
     }
+
+    /**
+     * Helper untuk memformat size varian kemasan
+     */
+    public static function formatSize(mixed $size): string
+    {
+        if (is_numeric($size)) {
+            $val = (float) $size;
+            if ($val >= 1000) {
+                $kgVal = $val / 1000;
+                return $kgVal . 'kg';
+            }
+            return $val . 'gr';
+        }
+
+        return (string) $size;
+    }
 }

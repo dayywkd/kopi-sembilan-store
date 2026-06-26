@@ -313,15 +313,23 @@
                 
                 <!-- RINGKASAN BIAYA -->
                 <div class="receipt-total-section">
-                    @if($order->shipping_cost > 0)
+                    @if($order->shipping_cost > 0 || $order->discount_amount > 0)
                         <div class="total-row">
                             <span>Subtotal</span>
                             <span>Rp {{ number_format($order->subtotal, 0, ',', '.') }}</span>
                         </div>
-                        <div class="total-row">
-                            <span>Ongkir</span>
-                            <span>Rp {{ number_format($order->shipping_cost, 0, ',', '.') }}</span>
-                        </div>
+                        @if($order->shipping_cost > 0)
+                            <div class="total-row">
+                                <span>Ongkir</span>
+                                <span>Rp {{ number_format($order->shipping_cost, 0, ',', '.') }}</span>
+                            </div>
+                        @endif
+                        @if($order->discount_amount > 0)
+                            <div class="total-row">
+                                <span>Diskon ({{ $order->coupon_code }})</span>
+                                <span>-Rp {{ number_format($order->discount_amount, 0, ',', '.') }}</span>
+                            </div>
+                        @endif
                         <div class="receipt-divider"></div>
                     @endif
                     

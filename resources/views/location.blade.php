@@ -32,7 +32,7 @@
     
     {{-- Header --}}
     <section class="px-margin-mobile md:px-margin-desktop py-16 text-center max-w-container-max mx-auto border-b border-[#E5E7EB] mb-16 reveal">
-        <span class="label-tiny text-amber-600 block mb-3">KUNJUNGI KAMI</span>
+        <span class="label-tiny text-[#5B5B5B] block mb-3">KUNJUNGI KAMI</span>
         <h1 class="font-display text-4xl md:text-6xl uppercase italic text-brand-dark leading-tight">Lokasi Roastery</h1>
         <p class="font-sans text-sm text-neutral-500 max-w-md mx-auto mt-4 leading-relaxed">
             Menyajikan kopi segar beraroma khas yang dipanggang langsung di Kutorejo, Tuban. Datang dan rasakan aromanya.
@@ -57,8 +57,8 @@
             <div class="space-y-4">
                 <h3 class="label-tiny text-neutral-400">Kontak WA</h3>
                 <div class="flex items-center gap-3">
-                    <span class="material-symbols-outlined text-amber-600">call</span>
-                    <a href="https://wa.me/6285336688839" target="_blank" class="font-sans text-base font-bold text-neutral-800 hover:text-amber-600 transition-colors">
+                    <span class="material-symbols-outlined text-[#000000]">call</span>
+                    <a href="https://wa.me/6285336688839" target="_blank" class="font-sans text-base font-bold text-neutral-800 hover:text-[#5B5B5B] transition-colors">
                         085336688839
                     </a>
                 </div>

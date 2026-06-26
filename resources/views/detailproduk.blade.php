@@ -132,7 +132,7 @@
                         @endphp
                         <select class="hidden" id="grind">
                             @foreach ($availableSizes as $sizeOpt)
-                                <option value="{{ $sizeOpt['size'] }}" data-price="{{ $sizeOpt['price'] }}">{{ $sizeOpt['size'] }}</option>
+                                <option value="{{ $sizeOpt['size'] }}" data-price="{{ $sizeOpt['price'] }}">{{ \App\Models\Product::formatSize($sizeOpt['size']) }}</option>
                             @endforeach
                         </select>
                         
@@ -143,7 +143,7 @@
                                         class="size-pill px-6 py-3 border text-[11px] font-sans font-bold uppercase tracking-widest transition-all duration-150 {{ $index === 0 ? 'bg-[#121212] text-white border-[#121212]' : 'bg-white text-[#121212] border-neutral-200 hover:border-[#121212]' }}"
                                         data-value="{{ $sizeOpt['size'] }}" 
                                         data-price="{{ $sizeOpt['price'] }}">
-                                    {{ $sizeOpt['size'] }}
+                                    {{ \App\Models\Product::formatSize($sizeOpt['size']) }}
                                 </button>
                             @endforeach
                         </div>

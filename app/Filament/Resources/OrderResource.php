@@ -25,15 +25,23 @@ class OrderResource extends Resource
             ->schema([
                 Forms\Components\Card::make()
                     ->schema([
+                        Forms\Components\TextInput::make('courier')
+                            ->disabled()
+                            ->label('Metode Pengiriman')
+                            ->dehydrated(false)
+                            ->formatStateUsing(fn ($state) => $state === 'pickup' ? 'Ambil di Toko (Local Pickup)' : (empty($state) ? 'Kirim Kurir' : 'Kirim Kurir (' . strtoupper($state) . ')')),
                         Forms\Components\Select::make('status')
-                            ->options([
-                                'Awaiting Payment' => 'Awaiting Payment',
-                                'Paid' => 'Paid',
-                                'Packing' => 'Packing',
-                                'Shipped' => 'Shipped',
-                                'Delivered' => 'Delivered',
-                                'Cancelled' => 'Cancelled',
-                            ])
+                            ->options(function ($get) {
+                                $isPickup = $get('courier') === 'pickup';
+                                return [
+                                    'Awaiting Payment' => 'Awaiting Payment',
+                                    'Paid' => 'Paid (Lunas)',
+                                    'Packing' => $isPickup ? 'Packing (Sedang Disiapkan)' : 'Packing (Sedang Dikemas)',
+                                    'Shipped' => $isPickup ? 'Ready For Pickup (Siap Diambil)' : 'Shipped (Dalam Pengiriman)',
+                                    'Delivered' => $isPickup ? 'Picked Up (Telah Diambil)' : 'Delivered (Pesanan Tiba)',
+                                    'Cancelled' => 'Cancelled',
+                                ];
+                            })
                             ->required(),
                         Forms\Components\Select::make('payment_method')
                             ->options([
@@ -46,7 +54,8 @@ class OrderResource extends Resource
                             ->required(),
                         Forms\Components\TextInput::make('tracking_number')
                             ->maxLength(255)
-                            ->label('Nomor Resi / Tracking Number'),
+                            ->label('Nomor Resi / Tracking Number')
+                            ->hidden(fn ($get) => $get('courier') === 'pickup'),
                     ])
             ]);
     }
@@ -79,6 +88,17 @@ class OrderResource extends Resource
                     ->sortable(),
                 Tables\Columns\TextColumn::make('status')
                     ->badge()
+                    ->formatStateUsing(function (string $state, $record): string {
+                        if ($record->courier === 'pickup') {
+                            return match ($state) {
+                                'Packing' => 'Packing (Prep)',
+                                'Shipped' => 'Ready For Pickup',
+                                'Delivered' => 'Picked Up',
+                                default => $state
+                            };
+                        }
+                        return $state;
+                    })
                     ->color(fn (string $state): string => match ($state) {
                         'Awaiting Payment' => 'warning',
                         'Paid' => 'info',

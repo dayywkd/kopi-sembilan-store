@@ -84,7 +84,7 @@
         </a>
         
         <div class="font-sans text-[11px] text-neutral-500 space-y-1">
-            <p class="tracking-wider uppercase">Toko Kopi Sembilan — Speciality Coffee Roasters</p>
+            <p class="tracking-wider uppercase">Toko Kopi Sembilan — Specialty Coffee Roasters</p>
             <p class="flex items-center gap-1">
                 <span>Over 10,000</span>
                 <span class="flex text-[#121212]">

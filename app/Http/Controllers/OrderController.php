@@ -9,6 +9,7 @@ use App\Models\Order;
 use App\Models\OrderItem;
 use App\Models\Product;
 use App\Models\Setting;
+use App\Models\Courier;
 use App\Support\SimplePdf;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -158,7 +159,10 @@ class OrderController extends Controller
                                 ];
                             }
 
-                            $activeCouriers = Setting::getValue('active_couriers', 'jne,jnt');
+                            $activeCouriers = Courier::where('is_active', true)->pluck('code')->implode(',');
+                            if (empty($activeCouriers)) {
+                                $activeCouriers = 'jne,jnt';
+                            }
                             $response = Http::withHeaders([
                                 'authorization' => $apiKey
                             ])->post($endpoint, [
@@ -546,7 +550,10 @@ class OrderController extends Controller
         ]);
 
         if (config('services.biteship.mock', false)) {
-            $couriers = ['jne', 'jnt', 'sicepat'];
+            $couriers = Courier::where('is_active', true)->pluck('code')->toArray();
+            if (empty($couriers)) {
+                $couriers = ['jne', 'jnt', 'sicepat'];
+            }
             $rates = [];
             foreach ($couriers as $courier) {
                 $mockCosts = $this->getMockCosts($courier);
@@ -619,7 +626,10 @@ class OrderController extends Controller
             $destPostalCode = (int) $request->destination_postal_code;
             $originPostalCode = 62311; // Kode pos toko (Tuban)
 
-            $activeCouriers = Setting::getValue('active_couriers', 'jne,jnt');
+            $activeCouriers = Courier::where('is_active', true)->pluck('code')->implode(',');
+            if (empty($activeCouriers)) {
+                $activeCouriers = 'jne,jnt';
+            }
             $response = Http::withHeaders([
                 'authorization' => $apiKey
             ])->post($endpoint, [
@@ -827,5 +837,64 @@ class OrderController extends Controller
         }
 
         return redirect()->back()->withErrors(['error' => 'Pesanan tidak dalam status pengiriman.']);
+    }
+
+    public function validateCoupon(Request $request)
+    {
+        $request->validate([
+            'coupon_code' => ['required', 'string', 'max:50'],
+            'subtotal' => ['required', 'numeric', 'min:0'],
+        ]);
+
+        $couponCode = strtoupper(trim($request->coupon_code));
+        $subtotal = (float) $request->subtotal;
+
+        $coupon = Coupon::where('code', $couponCode)->first();
+
+        if (!$coupon) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Kode kupon tidak valid.'
+            ]);
+        }
+
+        if (!$coupon->is_active) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Kupon ini sedang tidak aktif.'
+            ]);
+        }
+
+        if ($coupon->expires_at && $coupon->expires_at->isPast()) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Kupon ini sudah kadaluarsa.'
+            ]);
+        }
+
+        if ($coupon->usage_limit !== null && $coupon->used_count >= $coupon->usage_limit) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Kupon ini sudah mencapai batas pemakaian.'
+            ]);
+        }
+
+        if ($subtotal < (float) $coupon->minimum_subtotal) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Minimal belanja untuk kupon ini adalah Rp ' . number_format($coupon->minimum_subtotal, 0, ',', '.') . '.'
+            ]);
+        }
+
+        $discount = $coupon->discountFor($subtotal);
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Kupon berhasil diterapkan.',
+            'code' => $coupon->code,
+            'type' => $coupon->type,
+            'value' => $coupon->value,
+            'discount' => $discount,
+        ]);
     }
 }

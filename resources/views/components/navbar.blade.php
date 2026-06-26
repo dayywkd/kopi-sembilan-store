@@ -21,25 +21,24 @@
         <!-- Kolom 3 (Kanan): Ikon Utility (Search, Account, Cart) -->
         <div id="nav-menu-right" class="flex items-center justify-end gap-6 text-[#111111] transition-colors duration-300">
             <!-- Ikon Pencarian -->
-            <button onclick="openSearchOverlay()" class="material-symbols-outlined text-[22px] font-light leading-none hover:opacity-70 transition-opacity duration-200 cursor-pointer" style="font-variation-settings: 'wght' 300, 'opsz' 24; font-size: 22px;" title="Cari Produk">
+            <button onclick="openSearchOverlay()" class="material-symbols-outlined text-[22px] font-light leading-none hover:opacity-70 transition-opacity duration-200 cursor-pointer" style="font-variation-settings: 'wght' 300, 'opsz' 24; font-size: 22px;">
                 search
             </button>
 
             <!-- Ikon Akun -->
             @auth
                 @if (Auth::user()->role === 'admin')
-                    <a href="/admin" class="material-symbols-outlined text-[22px] font-light leading-none hover:opacity-70 transition-opacity duration-200" style="font-variation-settings: 'wght' 300, 'opsz' 24; font-size: 22px;" title="Dashboard Admin">person</a>
+                    <a href="/admin" class="material-symbols-outlined text-[22px] font-light leading-none hover:opacity-70 transition-opacity duration-200" style="font-variation-settings: 'wght' 300, 'opsz' 24; font-size: 22px;">person</a>
                 @else
-                    <a href="{{ route('customer.dashboard') }}" class="material-symbols-outlined text-[22px] font-light leading-none hover:opacity-70 transition-opacity duration-200" style="font-variation-settings: 'wght' 300, 'opsz' 24; font-size: 22px;" title="Dashboard Pelanggan">person</a>
+                    <a href="{{ route('customer.dashboard') }}" class="material-symbols-outlined text-[22px] font-light leading-none hover:opacity-70 transition-opacity duration-200" style="font-variation-settings: 'wght' 300, 'opsz' 24; font-size: 22px;">person</a>
                 @endif
             @else
-                <a href="{{ route('login') }}" class="material-symbols-outlined text-[22px] font-light leading-none hover:opacity-70 transition-opacity duration-200" style="font-variation-settings: 'wght' 300, 'opsz' 24; font-size: 22px;" title="Login / Daftar">person</a>
+                <a href="{{ route('login') }}" class="material-symbols-outlined text-[22px] font-light leading-none hover:opacity-70 transition-opacity duration-200" style="font-variation-settings: 'wght' 300, 'opsz' 24; font-size: 22px;">person</a>
             @endauth
 
-            <!-- Ikon Keranjang Belanja dengan Badge Hitam Minimalis -->
-            <a href="{{ route('cart.index') }}" class="material-symbols-outlined text-[22px] font-light leading-none hover:opacity-70 transition-opacity duration-200 relative" style="font-variation-settings: 'wght' 300, 'opsz' 24; font-size: 22px;" title="Keranjang Belanja">
+            <a id="cart-icon-btn" href="{{ route('cart.index') }}" class="material-symbols-outlined text-[22px] font-light leading-none hover:opacity-70 transition-opacity duration-200 relative inline-block" style="font-variation-settings: 'wght' 300, 'opsz' 24; font-size: 22px;">
                 shopping_bag
-                <span id="cart-count" class="absolute -top-1.5 -right-1.5 bg-[#111111] text-white text-[9px] w-3.5 h-3.5 rounded-full flex items-center justify-center font-bold border border-white hidden">0</span>
+                <span id="cart-count" class="absolute -top-2.5 -right-2.5 bg-[#111111] text-white text-[10px] font-bold border border-[#FFFFFF] leading-none flex-shrink-0 aspect-square hidden" style="box-sizing: border-box; width: 20px; height: 20px; min-width: 20px; min-height: 20px; border-radius: 50%; display: flex; align-items: center; justify-content: center; padding: 0; line-height: 1;">0</span>
             </a>
 
             <!-- Hamburger Menu Mobile (Hanya tampil di layar < lg) -->

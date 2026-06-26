@@ -253,6 +253,12 @@
                 <td>Biaya Pengiriman:</td>
                 <td class="text-right">Rp. {{ number_format($order->shipping_cost, 0, ',', '.') }}</td>
             </tr>
+            @if($order->discount_amount > 0)
+            <tr>
+                <td>Diskon Kupon ({{ $order->coupon_code }}):</td>
+                <td class="text-right">-Rp. {{ number_format($order->discount_amount, 0, ',', '.') }}</td>
+            </tr>
+            @endif
             <tr class="grand-total">
                 <td>Total Pembayaran:</td>
                 <td class="text-right">Rp. {{ number_format($order->total_paid, 0, ',', '.') }}</td>
