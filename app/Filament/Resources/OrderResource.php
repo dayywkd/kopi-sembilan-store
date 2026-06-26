@@ -51,9 +51,16 @@ class OrderResource extends Resource
                     ->searchable()
                     ->sortable()
                     ->fontFamily(\Filament\Support\Enums\FontFamily::Mono),
-                Tables\Columns\TextColumn::make('name')
-                    ->searchable()
-                    ->sortable(),
+                Tables\Columns\TextColumn::make('first_name')
+                    ->label('Nama')
+                    ->searchable(query: function (Builder $query, string $search): Builder {
+                        return $query->where(function ($q) use ($search) {
+                            $q->where('first_name', 'like', "%{$search}%")
+                              ->orWhere('last_name', 'like', "%{$search}%");
+                        });
+                    })
+                    ->sortable()
+                    ->formatStateUsing(fn ($record) => trim($record->first_name . ' ' . $record->last_name)),
                 Tables\Columns\TextColumn::make('email')
                     ->searchable()
                     ->toggleable(isToggledHiddenByDefault: true),
