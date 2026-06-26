@@ -749,7 +749,7 @@ class OrderController extends Controller
                     'price' => $price,
                     'grind_size' => $item->grind_size,
                     'quantity' => $item->quantity,
-                    'image' => $product->image_path ? asset($product->image_path) : '',
+                    'image' => $product->image_url,
                 ];
             })->values()->all();
     }

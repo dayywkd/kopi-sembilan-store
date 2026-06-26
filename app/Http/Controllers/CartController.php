@@ -91,27 +91,25 @@ class CartController extends Controller
     public function sync(Request $request)
     {
         $data = $request->validate([
-            'cart' => ['required', 'array'],
+            'cart' => ['present', 'array'],
             'cart.*.id' => ['required', 'integer', 'exists:products,id'],
             'cart.*.grind_size' => ['nullable', 'string', 'max:50'],
             'cart.*.quantity' => ['required', 'integer', 'min:1', 'max:99'],
         ]);
 
-        foreach ($data['cart'] as $item) {
-            $product = Product::find($item['id']);
-            if (!$product) {
-                continue;
-            }
+        // Hapus semua item keranjang milik user/session saat ini agar sinkronisasi bersih
+        $this->queryCart()->delete();
 
-            $grindSize = $item['grind_size'] ?? ($product->sizes[0]['size'] ?? '100gr');
-            $cartItem = $this->queryCart()
-                ->where('product_id', $product->id)
-                ->where('grind_size', $grindSize)
-                ->first();
+        // Masukkan kembali item yang dikirim dari client jika ada
+        if (!empty($data['cart'])) {
+            foreach ($data['cart'] as $item) {
+                $product = Product::find($item['id']);
+                if (!$product) {
+                    continue;
+                }
 
-            if ($cartItem) {
-                $cartItem->update(['quantity' => (int) $item['quantity']]);
-            } else {
+                $grindSize = $item['grind_size'] ?? ($product->sizes[0]['size'] ?? '100gr');
+                
                 CartItem::create($this->identity() + [
                     'product_id' => $product->id,
                     'grind_size' => $grindSize,
@@ -155,7 +153,7 @@ class CartController extends Controller
                     'price' => $price,
                     'grind_size' => $item->grind_size,
                     'quantity' => $item->quantity,
-                    'image' => $product->image_path ? asset($product->image_path) : '',
+                    'image' => $product->image_url,
                 ];
             })->values()->all();
     }
