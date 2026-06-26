@@ -35,6 +35,15 @@ class OrderResource extends Resource
                                 'Cancelled' => 'Cancelled',
                             ])
                             ->required(),
+                        Forms\Components\Select::make('payment_method')
+                            ->options([
+                                'Transfer BCA' => 'Transfer BCA',
+                                'Transfer BRI' => 'Transfer BRI',
+                                'QRIS' => 'QRIS',
+                                'Bank Transfer' => 'Bank Transfer (Lama)',
+                            ])
+                            ->label('Metode Pembayaran')
+                            ->required(),
                         Forms\Components\TextInput::make('tracking_number')
                             ->maxLength(255)
                             ->label('Nomor Resi / Tracking Number'),
@@ -91,6 +100,17 @@ class OrderResource extends Resource
                     })
                     ->color(fn (?string $state): string => $state === 'pickup' ? 'success' : 'primary')
                     ->sortable(),
+                Tables\Columns\TextColumn::make('payment_method')
+                    ->label('Metode Bayar')
+                    ->badge()
+                    ->color(fn (string $state): string => match ($state) {
+                        'Transfer BCA' => 'info',
+                        'Transfer BRI' => 'success',
+                        'QRIS' => 'warning',
+                        'Bank Transfer' => 'gray',
+                        default => 'neutral'
+                    })
+                    ->sortable(),
                 Tables\Columns\TextColumn::make('created_at')
                     ->label('Tanggal Order')
                     ->dateTime()
@@ -126,7 +146,15 @@ class OrderResource extends Resource
                               ->orWhereNull('courier')
                               ->orWhere('courier', '');
                         });
-                    })
+                    }),
+                Tables\Filters\SelectFilter::make('payment_method')
+                    ->label('Metode Bayar')
+                    ->options([
+                        'Transfer BCA' => 'Transfer BCA',
+                        'Transfer BRI' => 'Transfer BRI',
+                        'QRIS' => 'QRIS',
+                        'Bank Transfer' => 'Bank Transfer (Lama)',
+                    ])
             ])
             ->actions([
                 Tables\Actions\Action::make('printReceipt')
