@@ -100,17 +100,29 @@ class ProductController extends Controller
             'customer_name' => ['required', 'string', 'max:255'],
             'rating' => ['required', 'integer', 'min:1', 'max:5'],
             'comment' => ['nullable', 'string', 'max:1000'],
+            'order_id' => ['nullable', 'exists:orders,id'],
         ]);
 
         $product = Product::findOrFail($product_id);
 
+        // Mencegah double submission ulasan untuk produk yang sama dalam pesanan yang sama
+        if ($request->filled('order_id')) {
+            $exists = \App\Models\Review::where('order_id', $request->order_id)
+                ->where('product_id', $product_id)
+                ->exists();
+            if ($exists) {
+                return redirect()->back()->with('review_error', 'Anda sudah memberikan ulasan untuk produk ini.');
+            }
+        }
+
         $product->reviews()->create([
+            'order_id' => $request->order_id,
             'customer_name' => $request->customer_name,
             'rating' => (int) $request->rating,
             'comment' => $request->comment,
-            'is_approved' => false,
+            'is_approved' => true,
         ]);
 
-        return redirect()->back()->with('review_success', 'Terima kasih! Ulasan Anda masuk antrean moderasi admin.');
+        return redirect()->back()->with('review_success', 'Terima kasih! Ulasan Anda berhasil dipublikasikan.');
     }
 }

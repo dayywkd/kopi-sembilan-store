@@ -262,6 +262,7 @@
 
         function saveCart(cart) {
             localStorage.setItem('cart', JSON.stringify(cart));
+            window.serverCart = cart; // Sinkronkan state memori global agar tidak mem-backfill data lama
             updateCartCount();
             syncCartToServer(cart);
         }
@@ -275,7 +276,24 @@
                     'Accept': 'application/json'
                 },
                 body: JSON.stringify({ cart })
-            }).catch(() => {});
+            })
+            .then(response => {
+                if (response.ok) {
+                    return response.json();
+                }
+                throw new Error('Network response was not ok.');
+            })
+            .then(data => {
+                if (data && data.cart) {
+                    window.serverCart = data.cart;
+                    localStorage.setItem('cart', JSON.stringify(data.cart));
+                    updateCartCount();
+                    if (typeof renderCart === 'function') {
+                        renderCart();
+                    }
+                }
+            })
+            .catch(() => {});
         }
 
         function updateCartCount() {

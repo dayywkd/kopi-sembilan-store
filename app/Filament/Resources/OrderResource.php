@@ -164,6 +164,7 @@ class OrderResource extends Resource
                     ->url(fn (Order $record): string => route('admin.order.print', $record->transaction_id))
                     ->openUrlInNewTab(),
                 Tables\Actions\EditAction::make(),
+                Tables\Actions\DeleteAction::make(),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([

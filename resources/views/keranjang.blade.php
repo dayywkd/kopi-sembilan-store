@@ -100,6 +100,7 @@
 
     function saveCart(cart) {
         localStorage.setItem('cart', JSON.stringify(cart));
+        window.serverCart = cart; // Sinkronkan state memori global agar tidak mem-backfill data lama
         updateCartCount();
         syncCartToServer(cart);
         renderCart();

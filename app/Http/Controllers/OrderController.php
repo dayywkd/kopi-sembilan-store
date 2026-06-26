@@ -325,8 +325,11 @@ class OrderController extends Controller
             DB::rollBack();
             Log::error('Checkout Error: ' . $e->getMessage());
             
+            $productsStock = Product::select('id', 'name', 'stock', 'status')->get()->keyBy('id')->toArray();
+            
             return redirect()->back()
                 ->withInput()
+                ->with('sync_products_stock', $productsStock)
                 ->withErrors(['error' => 'Gagal memproses pesanan: ' . $e->getMessage()]);
         }
     }

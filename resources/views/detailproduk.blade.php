@@ -47,6 +47,12 @@
         <!-- Left Side: Product Gallery & Thumbnails (60% Desktop Width) -->
         <div class="col-span-12 lg:col-span-7 bg-white flex flex-col justify-center gap-6 p-8 md:p-12 relative group min-h-[450px] items-center">
             
+            <!-- Back to Shop Link -->
+            <a href="{{ route('shop') }}" class="absolute top-6 left-6 z-10 flex items-center gap-2 text-neutral-400 hover:text-[#121212] transition-colors text-[10px] sm:text-xs font-sans font-bold tracking-widest uppercase">
+                <span class="material-symbols-outlined text-[16px] sm:text-[18px]">arrow_back</span>
+                Kembali ke Katalog
+            </a>
+
             <!-- Main Image Container -->
             <div class="w-full h-[350px] lg:h-[450px] flex items-center justify-center relative">
                 @if($product->image_path)

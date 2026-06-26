@@ -330,6 +330,54 @@
 <script>
     window.serverCart = @json($serverCart ?? []);
 
+    // Fallback sinkronisasi stok jika terjadi konflik checkout akibat stok habis/tidak mencukupi
+    @if (session('sync_products_stock'))
+        (function() {
+            const dbStock = @json(session('sync_products_stock'));
+            let localCart = JSON.parse(localStorage.getItem('cart')) || [];
+            let updated = false;
+            let messages = [];
+
+            localCart = localCart.filter(item => {
+                const stockData = dbStock[item.id];
+                if (!stockData || stockData.stock <= 0 || stockData.status === 'SOLD OUT') {
+                    messages.push(`Produk "${item.name}" telah habis dan dihapus dari keranjang.`);
+                    updated = true;
+                    return false;
+                }
+                if (item.quantity > stockData.stock) {
+                    messages.push(`Stok "${item.name}" tidak mencukupi. Jumlah disesuaikan menjadi ${stockData.stock}.`);
+                    item.quantity = stockData.stock;
+                    updated = true;
+                }
+                return true;
+            });
+
+            if (updated) {
+                localStorage.setItem('cart', JSON.stringify(localCart));
+                window.serverCart = localCart;
+                
+                // Memicu sync ke database keranjang di server
+                fetch('{{ route('cart.sync') }}', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                        'Accept': 'application/json'
+                    },
+                    body: JSON.stringify({ cart: localCart })
+                }).then(() => {
+                    if (messages.length > 0) {
+                        alert("Pemberitahuan Stok Keranjang:\n\n" + messages.join("\n"));
+                    }
+                    window.location.reload();
+                }).catch(() => {
+                    window.location.reload();
+                });
+            }
+        })();
+    @endif
+
     let globalSubtotal = 0;
 
     function formatRupiah(num) {
@@ -458,7 +506,7 @@
                         `Catatan: ${orderNotes}\n\n` +
                         footerText;
                         
-        const phoneNumber = '6285855180131';
+        const phoneNumber = '6285336688839';
         const waUrl = `https://wa.me/${phoneNumber}?text=${encodeURIComponent(message)}`;
         
         const waButton = document.getElementById('whatsapp-fallback-button');
@@ -825,11 +873,6 @@
                 }
                 
                 document.getElementById('cart-data-input').value = JSON.stringify(cart);
-                
-                setTimeout(() => {
-                    localStorage.removeItem('cart');
-                    localStorage.removeItem('order_notes');
-                }, 100);
             });
         }
 

@@ -12,6 +12,19 @@ class Product extends Model
 {
     use HasFactory;
 
+    protected static function boot()
+    {
+        parent::boot();
+
+        static::saving(function ($product) {
+            if ($product->stock <= 0) {
+                $product->status = 'SOLD OUT';
+            } else {
+                $product->status = 'AVAILABLE';
+            }
+        });
+    }
+
     protected $fillable = [
         'category_id',
         'name',

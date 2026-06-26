@@ -166,10 +166,17 @@
                     </div>
                     
                     <div class="pt-6">
-                        <button onclick="addToBag({{ $product->id }}, '{{ $product->name }}', {{ $product->price }}, '{{ (is_array($product->sizes) && count($product->sizes) > 0) ? $product->sizes[0]['size'] : '100gr' }}', '{{ $product->image_url }}')" 
-                                class="w-full py-3.5 btn-dark label-tiny tracking-wider text-[11px] font-bold">
-                            ADD TO BAG
-                        </button>
+                        @if ($product->stock <= 0 || $product->status === 'SOLD OUT')
+                            <button disabled 
+                                    class="w-full py-3.5 bg-neutral-200 border border-neutral-300 text-neutral-400 label-tiny tracking-wider text-[11px] font-bold cursor-not-allowed">
+                                SOLD OUT
+                            </button>
+                        @else
+                            <button onclick="addToBag({{ $product->id }}, '{{ $product->name }}', {{ $product->price }}, '{{ (is_array($product->sizes) && count($product->sizes) > 0) ? $product->sizes[0]['size'] : '100gr' }}', '{{ $product->image_url }}')" 
+                                    class="w-full py-3.5 btn-dark label-tiny tracking-wider text-[11px] font-bold">
+                                ADD TO BAG
+                            </button>
+                        @endif
                     </div>
                 </div>
             @empty

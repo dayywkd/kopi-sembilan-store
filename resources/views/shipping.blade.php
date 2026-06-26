@@ -386,6 +386,12 @@
                         {{ session('review_success') }}
                     </div>
                 @endif
+                
+                @if (session('review_error'))
+                    <div class="mb-4 bg-red-50 border border-red-200 text-red-800 p-4 text-xs font-bold uppercase tracking-wider">
+                        {{ session('review_error') }}
+                    </div>
+                @endif
 
                 @foreach ($order->items as $item)
                 <div class="border-b border-[#E5E7EB] pb-6 last:border-b-0 last:pb-0">
@@ -413,32 +419,60 @@
                     </div>
 
                     @if ($order->status === 'Delivered' && $item->product)
-                    <div class="mt-4 md:ml-20 bg-brand-cream p-4 border border-[#E5E7EB]">
-                        <span class="label-tiny text-[9px] text-brand-accent font-bold block mb-2">Tulis Ulasan untuk {{ $item->product_name }}</span>
-                        <form action="{{ route('product.review.store', $item->product_id) }}" method="POST" class="space-y-3">
-                            @csrf
-                            <input type="hidden" name="customer_name" value="{{ $order->first_name }} {{ $order->last_name }}">
-                            
-                            <div class="flex items-center gap-3">
-                                <label class="label-tiny text-[8px] text-neutral-400 font-bold">Rating:</label>
-                                <div class="flex gap-1.5 rating-stars" data-item-id="{{ $item->id }}">
-                                    @for ($i = 1; $i <= 5; $i++)
-                                        <button type="button" class="star-btn text-neutral-300 hover:text-brand-accent transition-colors" data-value="{{ $i }}" onclick="setRating({{ $item->id }}, {{ $i }})">
-                                            <span class="material-symbols-outlined text-[16px]">star</span>
-                                        </button>
-                                    @endfor
-                                </div>
-                                <input type="hidden" name="rating" id="rating-input-{{ $item->id }}" value="5">
-                            </div>
+                        @php
+                            $existingReview = \App\Models\Review::where('order_id', $order->id)
+                                ->where('product_id', $item->product_id)
+                                ->first();
+                        @endphp
 
-                            <div class="flex gap-2">
-                                <input type="text" name="comment" class="flex-grow py-2 px-3 outline-none text-xs bg-white border border-[#E5E7EB] text-[#121212] focus:border-brand-accent" placeholder="Tulis pendapat Anda tentang kopi ini...">
-                                <button type="submit" class="bg-brand-dark text-white px-4 py-2 text-[10px] font-bold uppercase tracking-wider hover:bg-brand-accent hover:border-brand-accent hover:text-white border border-brand-dark transition-all">
-                                    Kirim
-                                </button>
+                        @if ($existingReview)
+                            <div class="mt-4 md:ml-20 bg-neutral-50 p-4 border border-[#E5E7EB] text-xs">
+                                <div class="flex items-center justify-between mb-2">
+                                    <span class="label-tiny text-[9px] text-emerald-600 font-bold flex items-center gap-1">
+                                        <span class="material-symbols-outlined text-[14px]">check_circle</span>
+                                        Ulasan Terkirim
+                                    </span>
+                                    <div class="flex gap-0.5 text-brand-accent">
+                                        @for ($i = 1; $i <= 5; $i++)
+                                            <span class="material-symbols-outlined text-[14px] {{ $i <= $existingReview->rating ? 'fill-current' : 'text-neutral-300' }}" style="font-variation-settings: 'FILL' {{ $i <= $existingReview->rating ? 1 : 0 }}, 'wght' 200">star</span>
+                                        @endfor
+                                    </div>
+                                </div>
+                                @if ($existingReview->comment)
+                                    <p class="font-sans text-neutral-600 italic">"{{ $existingReview->comment }}"</p>
+                                @else
+                                    <p class="font-sans text-neutral-400 italic">Tanpa komentar.</p>
+                                @endif
                             </div>
-                        </form>
-                    </div>
+                        @else
+                            <div class="mt-4 md:ml-20 bg-brand-cream p-4 border border-[#E5E7EB]">
+                                <span class="label-tiny text-[9px] text-brand-accent font-bold block mb-2">Tulis Ulasan untuk {{ $item->product_name }}</span>
+                                <form action="{{ route('product.review.store', $item->product_id) }}" method="POST" class="space-y-3">
+                                    @csrf
+                                    <input type="hidden" name="customer_name" value="{{ $order->first_name }} {{ $order->last_name }}">
+                                    <input type="hidden" name="order_id" value="{{ $order->id }}">
+                                    
+                                    <div class="flex items-center gap-3">
+                                        <label class="label-tiny text-[8px] text-neutral-400 font-bold">Rating:</label>
+                                        <div class="flex gap-1.5 rating-stars" data-item-id="{{ $item->id }}">
+                                            @for ($i = 1; $i <= 5; $i++)
+                                                <button type="button" class="star-btn text-neutral-300 hover:text-brand-accent transition-colors" data-value="{{ $i }}" onclick="setRating({{ $item->id }}, {{ $i }})">
+                                                    <span class="material-symbols-outlined text-[16px]">star</span>
+                                                </button>
+                                            @endfor
+                                        </div>
+                                        <input type="hidden" name="rating" id="rating-input-{{ $item->id }}" value="5">
+                                    </div>
+
+                                    <div class="flex gap-2">
+                                        <input type="text" name="comment" class="flex-grow py-2 px-3 outline-none text-xs bg-white border border-[#E5E7EB] text-[#121212] focus:border-brand-accent" placeholder="Tulis pendapat Anda tentang kopi ini...">
+                                        <button type="submit" class="bg-brand-dark text-white px-4 py-2 text-[10px] font-bold uppercase tracking-wider hover:bg-brand-accent hover:border-brand-accent hover:text-white border border-brand-dark transition-all">
+                                            Kirim
+                                        </button>
+                                    </div>
+                                </form>
+                            </div>
+                        @endif
                     @endif
                 </div>
                 @endforeach
