@@ -50,7 +50,7 @@ class Order extends Model
     {
         parent::boot();
 
-        static::creating(function ($model) {
+        static::saving(function ($model) {
             if (empty($model->uuid)) {
                 $model->uuid = (string) \Illuminate\Support\Str::uuid();
             }

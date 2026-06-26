@@ -426,6 +426,11 @@ class OrderController extends Controller
                 ->withInput();
         }
 
+        if (empty($order->uuid)) {
+            $order->uuid = (string) \Illuminate\Support\Str::uuid();
+            $order->save();
+        }
+
         return redirect()->route('order.tracking', $order->uuid);
     }
 

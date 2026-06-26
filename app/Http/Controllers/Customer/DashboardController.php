@@ -17,6 +17,14 @@ class DashboardController extends Controller
     {
         $orders = Order::where('email', Auth::user()->email)->latest()->get();
 
+        // Backfill UUID secara dinamis jika ada order lama yang belum memilikinya
+        foreach ($orders as $order) {
+            if (empty($order->uuid)) {
+                $order->uuid = (string) \Illuminate\Support\Str::uuid();
+                $order->save();
+            }
+        }
+
         return view('customer.dashboard', compact('orders'));
     }
 

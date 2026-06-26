@@ -149,8 +149,15 @@ class AuthController extends Controller
                 $message->to($request->email);
                 $message->subject('Reset Password | Toko Kopi Sembilan');
             });
+            logger()->info('Email reset password berhasil dikirim ke: ' . $request->email);
         } catch (\Throwable $e) {
-            logger()->error('Gagal mengirim email reset password: ' . $e->getMessage());
+            logger()->error('Gagal mengirim email reset password', [
+                'email'     => $request->email,
+                'mailer'    => config('mail.default'),
+                'error'     => $e->getMessage(),
+                'class'     => get_class($e),
+                'trace'     => $e->getTraceAsString(),
+            ]);
         }
 
         return back()->with('status', 'Tautan untuk memperbarui kata sandi telah dikirim ke email Anda.');

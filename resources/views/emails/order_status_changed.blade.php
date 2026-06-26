@@ -252,7 +252,7 @@
     </table>
 
     <div class="button-container">
-        <a href="{{ route('order.tracking', $order->uuid) }}" class="btn">Lacak Status Pesanan</a>
+        <a href="{{ $order->uuid ? route('order.tracking', $order->uuid) : route('order.tracking.form') }}" class="btn">Lacak Status Pesanan</a>
     </div>
 
     <div class="footer">

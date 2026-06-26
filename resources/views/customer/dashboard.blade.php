@@ -189,13 +189,25 @@
                             <!-- Action Link -->
                             <div class="col-span-12 md:col-span-2 text-right">
                                 @if ($order->status === 'Awaiting Payment')
-                                    <a href="{{ route('order.payment', $order->uuid) }}" class="label-tiny text-[10px] text-amber-700 underline underline-offset-4 hover:text-amber-800 transition-colors font-bold">
-                                        BAYAR
-                                    </a>
+                                    @if ($order->uuid)
+                                        <a href="{{ route('order.payment', $order->uuid) }}" class="label-tiny text-[10px] text-amber-700 underline underline-offset-4 hover:text-amber-800 transition-colors font-bold">
+                                            BAYAR
+                                        </a>
+                                    @else
+                                        <span class="label-tiny text-[10px] text-neutral-400 cursor-not-allowed font-bold">
+                                            BAYAR
+                                        </span>
+                                    @endif
                                 @else
-                                    <a href="{{ route('order.tracking', $order->uuid) }}" class="label-tiny text-[10px] text-[#121212] underline underline-offset-4 hover:opacity-75 transition-opacity font-semibold">
-                                        LACAK
-                                    </a>
+                                    @if ($order->uuid)
+                                        <a href="{{ route('order.tracking', $order->uuid) }}" class="label-tiny text-[10px] text-[#121212] underline underline-offset-4 hover:opacity-75 transition-opacity font-semibold">
+                                            LACAK
+                                        </a>
+                                    @else
+                                        <span class="label-tiny text-[10px] text-neutral-400 cursor-not-allowed font-semibold">
+                                            LACAK
+                                        </span>
+                                    @endif
                                 @endif
                             </div>
                         </div>
