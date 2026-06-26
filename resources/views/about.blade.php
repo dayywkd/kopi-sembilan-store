@@ -129,7 +129,7 @@
             </p>
         </div>
         
-        <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4">
+        <div class="grid grid-cols-2 lg:grid-cols-5 gap-4">
             {{-- Foto 1: Sertifikat Rak Kopi --}}
             <div class="gallery-card overflow-hidden border border-neutral-200 aspect-[3/4] group bg-neutral-50">
                 <img src="{{ asset('images/about_1.jpg') }}" alt="Sertifikat SCA Certified" class="gallery-img w-full h-full object-cover">
@@ -147,7 +147,7 @@
                 <img src="{{ asset('images/about_4.jpg') }}" alt="Tampak Depan Kedai" class="gallery-img w-full h-full object-cover">
             </div>
             {{-- Foto 5: Tempat Duduk Outdoor --}}
-            <div class="gallery-card overflow-hidden border border-neutral-200 aspect-[3/4] group bg-neutral-50">
+            <div class="gallery-card overflow-hidden border border-neutral-200 aspect-[16/9] lg:aspect-[3/4] col-span-2 lg:col-span-1 group bg-neutral-50">
                 <img src="{{ asset('images/about_5.jpg') }}" alt="Area Bersantai Outdoor" class="gallery-img w-full h-full object-cover">
             </div>
         </div>
