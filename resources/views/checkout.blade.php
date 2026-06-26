@@ -234,25 +234,35 @@
                     <div class="border-b border-neutral-200 pb-2">
                         <h2 class="label-tiny opacity-60">03 / Payment Method</h2>
                     </div>
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-[#121212]">
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4 text-[#121212]">
                         <label class="cursor-pointer relative">
-                            <input class="sr-only peer" name="payment" type="radio" value="Bank Transfer" {{ old('payment', 'Bank Transfer') === 'Bank Transfer' ? 'checked' : '' }}>
-                            <div class="border border-neutral-300 p-6 flex flex-col gap-2 peer-checked:bg-[#121212] peer-checked:text-white peer-checked:border-transparent">
+                            <input class="sr-only peer" name="payment" type="radio" value="Transfer BCA" {{ old('payment', 'Transfer BCA') === 'Transfer BCA' ? 'checked' : '' }}>
+                            <div class="border border-neutral-300 p-6 flex flex-col gap-2 h-full peer-checked:bg-[#121212] peer-checked:text-white peer-checked:border-transparent transition-colors">
                                 <div class="flex justify-between items-start">
-                                    <span class="label-tiny font-bold">Bank Transfer</span>
+                                    <span class="label-tiny font-bold">Transfer BCA</span>
                                     <span class="material-symbols-outlined text-[20px]">account_balance</span>
                                 </div>
-                                <p class="text-[11px] opacity-70">Verifikasi manual dalam 24 jam via Bank Transfer</p>
+                                <p class="text-[11px] opacity-70 mt-auto">Transfer ke Rekening BCA Toko Kopi Sembilan</p>
+                            </div>
+                        </label>
+                        <label class="cursor-pointer relative">
+                            <input class="sr-only peer" name="payment" type="radio" value="Transfer BRI" {{ old('payment') === 'Transfer BRI' ? 'checked' : '' }}>
+                            <div class="border border-neutral-300 p-6 flex flex-col gap-2 h-full peer-checked:bg-[#121212] peer-checked:text-white peer-checked:border-transparent transition-colors">
+                                <div class="flex justify-between items-start">
+                                    <span class="label-tiny font-bold">Transfer BRI</span>
+                                    <span class="material-symbols-outlined text-[20px]">account_balance</span>
+                                </div>
+                                <p class="text-[11px] opacity-70 mt-auto">Transfer ke Rekening BRI Toko Kopi Sembilan</p>
                             </div>
                         </label>
                         <label class="cursor-pointer relative">
                             <input class="sr-only peer" name="payment" type="radio" value="QRIS" {{ old('payment') === 'QRIS' ? 'checked' : '' }}>
-                            <div class="border border-neutral-300 p-6 flex flex-col gap-2 peer-checked:bg-[#121212] peer-checked:text-white peer-checked:border-transparent">
+                            <div class="border border-neutral-300 p-6 flex flex-col gap-2 h-full peer-checked:bg-[#121212] peer-checked:text-white peer-checked:border-transparent transition-colors">
                                 <div class="flex justify-between items-start">
                                     <span class="label-tiny font-bold">QRIS / Instant</span>
                                     <span class="material-symbols-outlined text-[20px]">qr_code_2</span>
                                 </div>
-                                <p class="text-[11px] opacity-70">Proses instan &amp; otomatis terverifikasi</p>
+                                <p class="text-[11px] opacity-70 mt-auto">Proses instan &amp; otomatis terverifikasi via QR Code</p>
                             </div>
                         </label>
                     </div>

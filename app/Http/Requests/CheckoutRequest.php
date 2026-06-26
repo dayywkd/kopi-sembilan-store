@@ -24,7 +24,7 @@ class CheckoutRequest extends FormRequest
             'last_name' => ['required', 'string', 'max:100'],
             'email' => ['required', 'email', 'max:150'],
             'phone' => ['required', 'string', 'max:25'],
-            'payment' => ['required', 'string', 'in:Bank Transfer,QRIS'],
+            'payment' => ['required', 'string', 'in:Bank Transfer,QRIS,Transfer BCA,Transfer BRI'],
             'cart_data' => ['nullable', 'string'],
             'order_notes' => ['nullable', 'string', 'max:500'],
             'delivery_method' => ['required', 'string', 'in:shipping,pickup'],

@@ -117,7 +117,7 @@
         <div class="col-span-12 lg:col-span-7 space-y-8">
 
             {{-- Payment Method Tabs (if Awaiting Payment) --}}
-            @if ($order->payment_method === 'Bank Transfer')
+            @if (in_array($order->payment_method, ['Bank Transfer', 'Transfer BCA', 'Transfer BRI']))
                 {{-- === BANK TRANSFER SECTION === --}}
                 <div class="space-y-6">
                     <div class="border-b border-[#E5E7EB] pb-3">
@@ -136,8 +136,9 @@
                     </div>
 
                     {{-- Rekening Transfer --}}
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div class="grid grid-cols-1 {{ $order->payment_method === 'Bank Transfer' ? 'md:grid-cols-2' : '' }} gap-6">
                         {{-- Rekening BCA --}}
+                        @if (in_array($order->payment_method, ['Bank Transfer', 'Transfer BCA']))
                         <div class="border border-[#E5E7EB] bg-[#FFFFFF] p-7 space-y-6">
                             <div class="flex items-center justify-between border-b border-[#E5E7EB] pb-5">
                                 <div>
@@ -169,8 +170,10 @@
                                 </div>
                             </div>
                         </div>
+                        @endif
 
                         {{-- Rekening BRI --}}
+                        @if (in_array($order->payment_method, ['Bank Transfer', 'Transfer BRI']))
                         <div class="border border-[#E5E7EB] bg-[#FFFFFF] p-7 space-y-6">
                             <div class="flex items-center justify-between border-b border-[#E5E7EB] pb-5">
                                 <div>
@@ -202,6 +205,7 @@
                                 </div>
                             </div>
                         </div>
+                        @endif
                     </div>
 
                     {{-- Jumlah Transfer --}}
@@ -472,13 +476,13 @@
         const phoneOwner = '6285855180131';
 
         let message = '';
-        if (method === 'Bank Transfer') {
+        if (method !== 'QRIS') {
             message =
                 `Halo Toko Kopi Sembilan,\n\n` +
                 `Saya ingin melakukan konfirmasi pembayaran untuk pesanan berikut:\n\n` +
                 `- Nomor Pesanan: *${txId}*\n` +
                 `- Nama Lengkap: ${name}\n` +
-                `- Metode Pembayaran: Bank Transfer BCA/BRI\n` +
+                `- Metode Pembayaran: ${method}\n` +
                 `- Nominal Transfer: Rp. ${total}\n\n` +
                 `[Bukti transfer telah saya lampirkan]\n\n` +
                 `Mohon bantuannya untuk segera diverifikasi. Terima kasih.`;

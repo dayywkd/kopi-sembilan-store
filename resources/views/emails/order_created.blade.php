@@ -175,12 +175,17 @@
         </tr>
     </table>
 
-    @if($order->payment_method === 'Bank Transfer')
+    @if(in_array($order->payment_method, ['Bank Transfer', 'Transfer BCA', 'Transfer BRI']))
         <div style="background-color: #f9f9f9; border: 1px solid #e5e7eb; padding: 20px; font-size: 14px; margin-bottom: 32px;">
             <strong style="text-transform: uppercase; font-size: 12px; letter-spacing: 0.05em; display: block; margin-bottom: 8px;">Informasi Pembayaran:</strong>
-            Silakan melakukan transfer ke salah satu rekening berikut:<br>
-            <strong>Bank BCA: 5550305307 (a.n. Muhammad Fahad)</strong><br>
-            <strong>Bank BRI: 010901031684534 (a.n. Muhammad Fahad)</strong><br><br>
+            Silakan melakukan transfer ke rekening berikut:<br>
+            @if(in_array($order->payment_method, ['Bank Transfer', 'Transfer BCA']))
+                <strong>Bank BCA: 5550305307 (a.n. Muhammad Fahad)</strong><br>
+            @endif
+            @if(in_array($order->payment_method, ['Bank Transfer', 'Transfer BRI']))
+                <strong>Bank BRI: 010901031684534 (a.n. Muhammad Fahad)</strong><br>
+            @endif
+            <br>
             Harap transfer nominal yang sesuai yaitu sebesar:<br>
             <span style="font-size: 18px; font-weight: 700; color: #b45309;">Rp {{ number_format($order->total_paid, 0, ',', '.') }}</span><br>
             <span style="font-size: 12px; color: #666;">(Harap cantumkan kode pesanan {{ $order->transaction_id }} di berita transfer untuk memudahkan verifikasi)</span>
