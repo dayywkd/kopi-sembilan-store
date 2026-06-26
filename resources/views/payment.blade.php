@@ -532,14 +532,6 @@
     // Initialize on DOMContentLoaded
     document.addEventListener('DOMContentLoaded', () => {
         buildWALink();
-        
-        @if (session('checkout_success'))
-            localStorage.removeItem('cart');
-            localStorage.removeItem('order_notes');
-            if (typeof updateCartCount === 'function') {
-                updateCartCount();
-            }
-        @endif
     });
 </script>
 @endsection

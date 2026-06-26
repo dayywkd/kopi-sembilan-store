@@ -426,8 +426,15 @@
 
         // Scroll Reveal Observer
         document.addEventListener('DOMContentLoaded', () => {
+            const checkoutSuccess = {{ session('checkout_success') ? 'true' : 'false' }};
+            if (checkoutSuccess) {
+                localStorage.removeItem('cart');
+                localStorage.removeItem('order_notes');
+                window.serverCart = [];
+            }
+
             const localCart = JSON.parse(localStorage.getItem('cart')) || [];
-            if (localCart.length > 0) {
+            if (localCart.length > 0 && !checkoutSuccess) {
                 syncCartToServer(localCart);
             }
             updateCartCount();
