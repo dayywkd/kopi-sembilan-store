@@ -81,15 +81,15 @@ class OrderResource extends Resource
                     })
                     ->sortable(),
                 Tables\Columns\TextColumn::make('courier')
-                    ->label('Kurir')
-                    ->sortable(),
-                Tables\Columns\TextColumn::make('delivery_method')
-                    ->label('Metode')
+                    ->label('Metode / Kurir')
                     ->badge()
-                    ->color(fn (string $state): string => match ($state) {
-                        'pickup' => 'success',
-                        default => 'primary'
+                    ->formatStateUsing(function (?string $state): string {
+                        if (empty($state)) {
+                            return 'Kirim Kurir';
+                        }
+                        return $state === 'pickup' ? 'Ambil di Toko' : 'Kirim Kurir (' . strtoupper($state) . ')';
                     })
+                    ->color(fn (?string $state): string => $state === 'pickup' ? 'success' : 'primary')
                     ->sortable(),
                 Tables\Columns\TextColumn::make('created_at')
                     ->label('Tanggal Order')
@@ -107,10 +107,26 @@ class OrderResource extends Resource
                         'Cancelled' => 'Cancelled',
                     ]),
                 Tables\Filters\SelectFilter::make('delivery_method')
+                    ->label('Metode Pengiriman')
                     ->options([
                         'courier' => 'Kirim Kurir',
                         'pickup' => 'Ambil di Toko',
                     ])
+                    ->query(function (Builder $query, array $data): Builder {
+                        if (empty($data['value'])) {
+                            return $query;
+                        }
+
+                        if ($data['value'] === 'pickup') {
+                            return $query->where('courier', 'pickup');
+                        }
+
+                        return $query->where(function ($q) {
+                            $q->where('courier', '!=', 'pickup')
+                              ->orWhereNull('courier')
+                              ->orWhere('courier', '');
+                        });
+                    })
             ])
             ->actions([
                 Tables\Actions\Action::make('printReceipt')
