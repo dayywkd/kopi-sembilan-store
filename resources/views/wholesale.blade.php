@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Wholesale B2B | Toko Kopi Sembilan')
+@section('title', __trans('Kemitraan B2B | Toko Kopi Sembilan', 'Wholesale B2B | Toko Kopi Sembilan'))
 
 @section('styles')
 <style>
@@ -46,10 +46,10 @@
 <main class="pt-32 min-h-screen bg-white">
     <div class="max-w-2xl mx-auto px-margin-mobile py-16 reveal">
         <div class="mb-12 text-center space-y-4">
-            <p class="label-tiny text-neutral-400">Kemitraan B2B</p>
-            <h1 class="font-display text-4xl md:text-5xl italic font-bold text-[#121212]">Wholesale Coffee.</h1>
+            <p class="label-tiny text-neutral-400">{{ __trans('Kemitraan B2B', 'B2B Partnership') }}</p>
+            <h1 class="font-display text-4xl md:text-5xl italic font-bold text-[#121212]">{{ __trans('Kemitraan Grosir Kopi.', 'Wholesale Coffee.') }}</h1>
             <p class="text-sm text-neutral-500 font-light leading-relaxed max-w-lg mx-auto">
-                Tertarik menyajikan kopi spesial kami di cafe, kantor, atau hotel Anda? Isi formulir di bawah ini untuk mengajukan proposal kerjasama, tim kami akan segera menghubungi Anda.
+                {{ __trans('Tertarik menyajikan kopi spesial kami di kafe, kantor, atau hotel Anda? Isi formulir di bawah ini untuk mengajukan proposal kerjasama, tim kami akan segera menghubungi Anda.', 'Interested in serving our specialty coffee in your cafe, office, or hotel? Fill out the form below to submit a partnership proposal, and our team will get in touch with you shortly.') }}
             </p>
         </div>
 
@@ -65,8 +65,8 @@
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <!-- Contact Name -->
                 <div class="flex flex-col gap-2">
-                    <label class="label-tiny text-[10px] opacity-60">Nama Kontak</label>
-                    <input name="contact_name" value="{{ old('contact_name') }}" class="w-full py-3 px-4 outline-none text-sm placeholder:opacity-40" placeholder="Contoh: Budi Santoso" required type="text">
+                    <label class="label-tiny text-[10px] opacity-60">{{ __trans('Nama Kontak', 'Contact Name') }}</label>
+                    <input name="contact_name" value="{{ old('contact_name') }}" class="w-full py-3 px-4 outline-none text-sm placeholder:opacity-40" placeholder="{{ __trans('Contoh: Budi Santoso', 'Example: John Doe') }}" required type="text">
                     @error('contact_name')
                         <span class="text-xs text-red-500 uppercase tracking-widest">{{ $message }}</span>
                     @enderror
@@ -74,8 +74,8 @@
 
                 <!-- Business Name -->
                 <div class="flex flex-col gap-2">
-                    <label class="label-tiny text-[10px] opacity-60">Nama Bisnis / Toko</label>
-                    <input name="business_name" value="{{ old('business_name') }}" class="w-full py-3 px-4 outline-none text-sm placeholder:opacity-40" placeholder="Contoh: Sembilan Coffee Shop" required type="text">
+                    <label class="label-tiny text-[10px] opacity-60">{{ __trans('Nama Bisnis / Toko', 'Business / Store Name') }}</label>
+                    <input name="business_name" value="{{ old('business_name') }}" class="w-full py-3 px-4 outline-none text-sm placeholder:opacity-40" placeholder="{{ __trans('Contoh: Sembilan Coffee Shop', 'Example: Sembilan Coffee Shop') }}" required type="text">
                     @error('business_name')
                         <span class="text-xs text-red-500 uppercase tracking-widest">{{ $message }}</span>
                     @enderror
@@ -85,7 +85,7 @@
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <!-- Email -->
                 <div class="flex flex-col gap-2">
-                    <label class="label-tiny text-[10px] opacity-60">Alamat Email</label>
+                    <label class="label-tiny text-[10px] opacity-60">{{ __trans('Alamat Email', 'Email Address') }}</label>
                     <input name="email" value="{{ old('email') }}" class="w-full py-3 px-4 outline-none text-sm placeholder:opacity-40" placeholder="email@domain.com" required type="email">
                     @error('email')
                         <span class="text-xs text-red-500 uppercase tracking-widest">{{ $message }}</span>
@@ -94,7 +94,7 @@
 
                 <!-- Phone -->
                 <div class="flex flex-col gap-2">
-                    <label class="label-tiny text-[10px] opacity-60">Nomor Telepon / HP</label>
+                    <label class="label-tiny text-[10px] opacity-60">{{ __trans('Nomor Telepon / HP', 'Phone Number') }}</label>
                     <input name="phone" value="{{ old('phone') }}" class="w-full py-3 px-4 outline-none text-sm placeholder:opacity-40" placeholder="08XXXXXXXXXX" required type="text">
                     @error('phone')
                         <span class="text-xs text-red-500 uppercase tracking-widest">{{ $message }}</span>
@@ -104,8 +104,8 @@
 
             <!-- Message -->
             <div class="flex flex-col gap-2">
-                <label class="label-tiny text-[10px] opacity-60">Pesan Kerjasama & Kebutuhan Kopi</label>
-                <textarea name="message" class="w-full py-3 px-4 outline-none text-sm placeholder:opacity-40 resize-none min-h-[120px]" placeholder="Jelaskan kebutuhan volume kopi bulanan Anda atau profil rasa kopi yang Anda inginkan..." required>{{ old('message') }}</textarea>
+                <label class="label-tiny text-[10px] opacity-60">{{ __trans('Pesan Kerjasama & Kebutuhan Kopi', 'Partnership Message & Coffee Needs') }}</label>
+                <textarea name="message" class="w-full py-3 px-4 outline-none text-sm placeholder:opacity-40 resize-none min-h-[120px]" placeholder="{{ __trans('Jelaskan kebutuhan volume kopi bulanan Anda atau profil rasa kopi yang Anda inginkan...', 'Describe your monthly coffee volume requirements or the flavor profile you desire...') }}" required>{{ old('message') }}</textarea>
                 @error('message')
                     <span class="text-xs text-red-500 uppercase tracking-widest">{{ $message }}</span>
                 @enderror
@@ -113,7 +113,7 @@
 
             <div class="pt-4">
                 <button type="submit" class="w-full py-4 btn-dark label-tiny tracking-wider">
-                    KIRIM PENGAJUAN KERJASAMA
+                    {{ __trans('KIRIM PENGAJUAN KERJASAMA', 'SUBMIT PARTNERSHIP PROPOSAL') }}
                 </button>
             </div>
         </form>
