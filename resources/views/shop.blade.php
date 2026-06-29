@@ -166,7 +166,7 @@
                                 <span class="font-medium text-neutral-700">{{ $product->altitude }}</span>
                             </div>
                             <div class="flex justify-between">
-                                <span class="opacity-70">{{ __trans('Tingkat Sangrai:', 'Roast Level:') }}</span>
+                                <span class="opacity-70">{{ __trans('Tingkat Roasting:', 'Roast Level:') }}</span>
                                 <span class="font-medium text-neutral-700">{{ $product->roast_level }}</span>
                             </div>
                             <p class="mt-2 line-clamp-2 leading-relaxed italic">"{{ $product->sensory_notes }}"</p>

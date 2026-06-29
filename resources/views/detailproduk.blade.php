@@ -176,7 +176,7 @@
                                     <span class="font-bold text-[#121212]">{{ $product->category->name }}</span>
                                 </div>
                                 <div class="flex justify-between py-1 border-b border-[#F3F4F6]">
-                                    <span class="opacity-60">{{ __trans('Tingkat Sangrai', 'Roast Level') }}</span>
+                                    <span class="opacity-60">{{ __trans('Tingkat Roasting', 'Roast Level') }}</span>
                                     <span class="font-bold text-[#121212]">{{ $product->roast_level }}</span>
                                 </div>
                                 <div class="flex justify-between py-1 border-b border-[#F3F4F6]">
@@ -219,7 +219,7 @@
                         <div class="accordion-content max-h-0 overflow-hidden transition-all duration-300 ease-in-out">
                             <div class="pb-6 pt-2 space-y-3 text-xs font-sans text-neutral-500 leading-relaxed uppercase tracking-wider text-[10px]">
                                 <p>{{ __trans('Diperoleh secara etis dan perdagangan langsung. Kami membayar harga premium langsung kepada petani untuk memastikan praktik produksi yang berkelanjutan dan berkualitas tinggi.', 'Ethically sourced and direct trade. We pay premium prices directly to farmers to ensure sustainable and high-quality production practices.') }}</p>
-                                <p>{{ __trans('Tanggal Sangrai: Semua pesanan dijamin disangrai dalam waktu 7 hari sebelum pengiriman untuk memastikan kesegaran puncak dan keutuhan rasa.', 'Roast Date: All orders are guaranteed roasted within 7 days of shipment to ensure peak freshness and flavor integrity.') }}</p>
+                                <p>{{ __trans('Tanggal Roasting: Semua pesanan dijamin di-roasting dalam waktu 7 hari sebelum pengiriman untuk memastikan kesegaran puncak dan keutuhan rasa.', 'Roast Date: All orders are guaranteed roasted within 7 days of shipment to ensure peak freshness and flavor integrity.') }}</p>
                             </div>
                         </div>
                     </div>
@@ -282,7 +282,7 @@
                         <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-transparent"></div>
                     </div>
                     <div class="relative z-10 space-y-3 text-white">
-                        <h3 class="font-serif-italic italic text-2xl font-display">{{ __trans('Penyangraian Presisi', 'Precision Roasting') }}</h3>
+                        <h3 class="font-serif-italic italic text-2xl font-display">{{ __trans('Roasting Presisi', 'Precision Roasting') }}</h3>
                         <p class="font-sans font-light text-neutral-200 text-sm leading-relaxed max-h-0 opacity-0 group-hover:max-h-[100px] group-hover:opacity-100 overflow-hidden transition-all duration-500 ease-in-out">
                             {{ __trans('Setiap batch kopi dipanggang dalam kuantitas kecil dengan kontrol suhu mikro untuk menghasilkan cita rasa yang presisi dan konsisten.', 'Each batch of coffee is roasted in small quantities with micro temperature control to produce precise and consistent flavor.') }}
                         </p>
