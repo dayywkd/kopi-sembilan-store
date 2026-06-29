@@ -13,13 +13,20 @@
 
         <!-- Kolom 2 (Tengah Presisi): Menu Navigasi Utama (SHOP, ABOUT, WHOLESALE) -->
         <div id="nav-menu-center" class="hidden lg:flex items-center justify-center gap-16 h-full text-[#111111] transition-colors duration-300" style="font-family: 'Inter', 'Hanken Grotesk', sans-serif;">
-            <a class="text-[15px] font-medium tracking-[0.08em] uppercase pb-1 border-b-2 {{ Route::is('shop') ? 'border-current font-semibold' : 'border-transparent hover:border-current transition-all duration-200 ease-in-out opacity-90 hover:opacity-100' }}" href="{{ route('shop') }}">Shop</a>
-            <a class="text-[15px] font-medium tracking-[0.08em] uppercase pb-1 border-b-2 {{ Route::is('about') ? 'border-current font-semibold' : 'border-transparent hover:border-current transition-all duration-200 ease-in-out opacity-90 hover:opacity-100' }}" href="{{ route('about') }}">About</a>
-            <a class="text-[15px] font-medium tracking-[0.08em] uppercase pb-1 border-b-2 {{ Route::is('wholesale') ? 'border-current font-semibold' : 'border-transparent hover:border-current transition-all duration-200 ease-in-out opacity-90 hover:opacity-100' }}" href="{{ route('wholesale') }}">Wholesale</a>
+            <a class="text-[15px] font-medium tracking-[0.08em] uppercase pb-1 border-b-2 {{ Route::is('shop') ? 'border-current font-semibold' : 'border-transparent hover:border-current transition-all duration-200 ease-in-out opacity-90 hover:opacity-100' }}" href="{{ route('shop') }}">{{ __trans('Belanja', 'Shop') }}</a>
+            <a class="text-[15px] font-medium tracking-[0.08em] uppercase pb-1 border-b-2 {{ Route::is('about') ? 'border-current font-semibold' : 'border-transparent hover:border-current transition-all duration-200 ease-in-out opacity-90 hover:opacity-100' }}" href="{{ route('about') }}">{{ __trans('Tentang Kami', 'About') }}</a>
+            <a class="text-[15px] font-medium tracking-[0.08em] uppercase pb-1 border-b-2 {{ Route::is('wholesale') ? 'border-current font-semibold' : 'border-transparent hover:border-current transition-all duration-200 ease-in-out opacity-90 hover:opacity-100' }}" href="{{ route('wholesale') }}">{{ __trans('Kemitraan B2B', 'Wholesale') }}</a>
         </div>
 
         <!-- Kolom 3 (Kanan): Ikon Utility (Search, Account, Cart) -->
         <div id="nav-menu-right" class="flex items-center justify-end gap-6 text-[#111111] transition-colors duration-300">
+            <!-- Language Switcher (Desktop) -->
+            <div class="hidden md:flex items-center gap-1 text-[10px] font-bold tracking-[0.1em]" style="font-family: 'Inter', sans-serif;">
+                <a href="{{ route('lang.switch', 'id') }}" class="{{ App::getLocale() === 'id' ? 'text-black underline underline-offset-4' : 'text-neutral-400 hover:text-black transition-colors' }}">ID</a>
+                <span class="text-neutral-300">/</span>
+                <a href="{{ route('lang.switch', 'en') }}" class="{{ App::getLocale() === 'en' ? 'text-black underline underline-offset-4' : 'text-neutral-400 hover:text-black transition-colors' }}">EN</a>
+            </div>
+
             <!-- Ikon Pencarian -->
             <button onclick="openSearchOverlay()" class="material-symbols-outlined text-[22px] font-light leading-none hover:opacity-70 transition-opacity duration-200 cursor-pointer" style="font-variation-settings: 'wght' 300, 'opsz' 24; font-size: 22px;">
                 search
@@ -57,21 +64,26 @@
         <button onclick="toggleMobileMenu()" class="material-symbols-outlined text-2xl hover:text-brand-accent transition-colors text-[#121212]">close</button>
     </div>
     <div class="flex flex-col gap-6 text-2xl font-display italic my-auto text-[#121212] pl-2">
-        <a onclick="toggleMobileMenu()" class="hover:text-brand-accent transition-colors py-2 border-b border-neutral-50" href="{{ route('shop') }}">Shop</a>
-        <a onclick="toggleMobileMenu()" class="hover:text-brand-accent transition-colors py-2 border-b border-neutral-50" href="{{ route('about') }}">About</a>
-        <a onclick="toggleMobileMenu()" class="hover:text-brand-accent transition-colors py-2" href="{{ route('wholesale') }}">Wholesale</a>
+        <a onclick="toggleMobileMenu()" class="hover:text-brand-accent transition-colors py-2 border-b border-neutral-50" href="{{ route('shop') }}">{{ __trans('Belanja', 'Shop') }}</a>
+        <a onclick="toggleMobileMenu()" class="hover:text-brand-accent transition-colors py-2 border-b border-neutral-50" href="{{ route('about') }}">{{ __trans('Tentang Kami', 'About') }}</a>
+        <a onclick="toggleMobileMenu()" class="hover:text-brand-accent transition-colors py-2" href="{{ route('wholesale') }}">{{ __trans('Kemitraan B2B', 'Wholesale') }}</a>
     </div>
-    <div class="pt-8 border-t border-neutral-200 flex justify-between items-center text-[#121212]">
+    <div class="pt-6 border-t border-neutral-200 flex justify-between items-center text-[#121212]">
         @auth
             @if (Auth::user()->role === 'admin')
-                <a onclick="toggleMobileMenu()" href="/admin" class="label-tiny flex items-center gap-2 opacity-80 hover:opacity-100 transition-opacity text-[#121212]"><span class="material-symbols-outlined text-base">person</span> Admin Panel</a>
+                <a onclick="toggleMobileMenu()" href="/admin" class="label-tiny flex items-center gap-2 opacity-80 hover:opacity-100 transition-opacity text-[#121212]"><span class="material-symbols-outlined text-base">person</span> {{ __trans('Panel Admin', 'Admin Panel') }}</a>
             @else
-                <a onclick="toggleMobileMenu()" href="{{ route('customer.dashboard') }}" class="label-tiny flex items-center gap-2 opacity-80 hover:opacity-100 transition-opacity text-[#121212]"><span class="material-symbols-outlined text-base">person</span> Account</a>
+                <a onclick="toggleMobileMenu()" href="{{ route('customer.dashboard') }}" class="label-tiny flex items-center gap-2 opacity-80 hover:opacity-100 transition-opacity text-[#121212]"><span class="material-symbols-outlined text-base">person</span> {{ __trans('Akun', 'Account') }}</a>
             @endif
         @else
-            <a onclick="toggleMobileMenu()" href="{{ route('login') }}" class="label-tiny flex items-center gap-2 opacity-80 hover:opacity-100 transition-opacity text-[#121212]"><span class="material-symbols-outlined text-base">person</span> Login</a>
+            <a onclick="toggleMobileMenu()" href="{{ route('login') }}" class="label-tiny flex items-center gap-2 opacity-80 hover:opacity-100 transition-opacity text-[#121212]"><span class="material-symbols-outlined text-base">person</span> {{ __trans('Masuk', 'Login') }}</a>
         @endauth
-        <a onclick="toggleMobileMenu()" href="{{ route('cart.index') }}" class="label-tiny flex items-center gap-2 opacity-80 hover:opacity-100 transition-opacity text-[#121212]"><span class="material-symbols-outlined text-base">shopping_bag</span> Bag</a>
+        <a onclick="toggleMobileMenu()" href="{{ route('cart.index') }}" class="label-tiny flex items-center gap-2 opacity-80 hover:opacity-100 transition-opacity text-[#121212]"><span class="material-symbols-outlined text-base">shopping_bag</span> {{ __trans('Keranjang', 'Bag') }}</a>
+    </div>
+    <div class="pt-4 border-t border-neutral-100 flex justify-center gap-4 text-xs font-semibold uppercase tracking-widest text-[#121212]" style="font-family: 'Inter', sans-serif;">
+        <a href="{{ route('lang.switch', 'id') }}" class="{{ App::getLocale() === 'id' ? 'text-black underline underline-offset-4' : 'text-neutral-400' }}">Bahasa</a>
+        <span class="text-neutral-300">/</span>
+        <a href="{{ route('lang.switch', 'en') }}" class="{{ App::getLocale() === 'en' ? 'text-black underline underline-offset-4' : 'text-neutral-400' }}">English</a>
     </div>
 </div>
 

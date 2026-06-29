@@ -88,3 +88,11 @@ Route::get('/test-error/{code}', function ($code) {
     }
     return 'Gunakan kode error: 403, 404, 419, atau 500. Contoh: /test-error/404';
 });
+
+// Switch Language Route
+Route::get('/lang/{locale}', function ($locale) {
+    if (in_array($locale, ['id', 'en'])) {
+        session(['locale' => $locale]);
+    }
+    return redirect()->back();
+})->name('lang.switch');
