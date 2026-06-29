@@ -20,6 +20,6 @@ class SetLocale
             App::setLocale('id'); // Default Bahasa Indonesia
         }
 
-        return $next;
+        return $next($request);
     }
 }
