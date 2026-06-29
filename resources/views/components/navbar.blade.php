@@ -38,7 +38,7 @@
 
             <a id="cart-icon-btn" href="{{ route('cart.index') }}" class="material-symbols-outlined text-[22px] font-light leading-none hover:opacity-70 transition-opacity duration-200 relative inline-block" style="font-variation-settings: 'wght' 300, 'opsz' 24; font-size: 22px;">
                 shopping_bag
-                <span id="cart-count" class="absolute -top-2.5 -right-2.5 bg-[#111111] text-white text-[10px] font-bold border border-[#FFFFFF] leading-none flex-shrink-0 aspect-square hidden" style="box-sizing: border-box; width: 20px; height: 20px; min-width: 20px; min-height: 20px; border-radius: 50%; display: flex; align-items: center; justify-content: center; padding: 0; line-height: 1;">0</span>
+                <span id="cart-count" class="absolute -top-2.5 -right-2.5 bg-[#111111] text-white text-[10px] font-bold border border-[#FFFFFF] leading-none flex-shrink-0 aspect-square" style="box-sizing: border-box; width: 20px; height: 20px; min-width: 20px; min-height: 20px; border-radius: 50%; display: none; align-items: center; justify-content: center; padding: 0; line-height: 1;">0</span>
             </a>
 
             <!-- Hamburger Menu Mobile (Hanya tampil di layar < lg) -->
