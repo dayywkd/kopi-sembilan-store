@@ -125,7 +125,6 @@
 @section('scripts')
 <script>
     window.serverCart = @json($serverCart ?? []);
-    const AppLocale = "{{ App::getLocale() }}";
 
     function saveCart(cart) {
         localStorage.setItem('cart', JSON.stringify(cart));

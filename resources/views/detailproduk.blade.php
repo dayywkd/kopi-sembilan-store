@@ -331,7 +331,6 @@
         // Inisialisasi galeri gambar dari backend
         const galleryImages = @json($galleryImages);
         let currentImageIndex = 0;
-        const AppLocale = "{{ App::getLocale() }}";
 
         // Thumbnail active image changer JS
         window.changeActiveImage = function(btn, imgUrl, index) {
