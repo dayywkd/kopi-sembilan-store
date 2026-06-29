@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('title', $product->name . ' | Toko Kopi Sembilan')
-@section('meta_description', 'Beli ' . $product->name . ' - Roast Level: ' . $product->roast_level . ', Altitude: ' . $product->altitude . '. Notes: ' . $product->sensory_notes . '. Dapatkan biji kopi pilihan berkualitas tinggi dari Toko Kopi Sembilan.')
+@section('meta_description', __trans('Beli ' . $product->name . ' - Roast Level: ' . $product->roast_level . ', Altitude: ' . $product->altitude . '. Notes: ' . $product->sensory_notes . '. Dapatkan biji kopi pilihan berkualitas tinggi dari Toko Kopi Sembilan.', 'Buy ' . $product->name . ' - Roast Level: ' . $product->roast_level . ', Altitude: ' . $product->altitude . '. Notes: ' . $product->sensory_notes . '. Get premium selected coffee beans from Toko Kopi Sembilan.'))
 @section('meta_image', $product->image_url)
 
 @section('styles')
@@ -50,7 +50,7 @@
             <!-- Back to Shop Link -->
             <a href="{{ route('shop') }}" class="absolute top-6 left-6 z-10 flex items-center gap-2 text-neutral-400 hover:text-[#121212] transition-colors text-[10px] sm:text-xs font-sans font-bold tracking-widest uppercase">
                 <span class="material-symbols-outlined text-[16px] sm:text-[18px]">arrow_back</span>
-                Kembali ke Katalog
+                {{ __trans('Kembali ke Katalog', 'Back to Catalog') }}
             </a>
 
             <!-- Main Image Container -->
@@ -118,13 +118,13 @@
 
                 <!-- Intro Description -->
                 <p class="font-sans font-light text-sm text-neutral-600 leading-relaxed">
-                    Menghadirkan keunikan rasa dengan dominasi aroma <strong class="text-neutral-900 font-semibold">{{ strtolower($product->sensory_notes) }}</strong>. Biji kopi pilihan ini dipanggang dengan presisi tinggi di roastery kami untuk mengeluarkan keseimbangan rasa yang optimal.
+                    {!! __trans('Menghadirkan keunikan rasa dengan dominasi aroma <strong class="text-neutral-900 font-semibold">' . strtolower($product->sensory_notes) . '</strong>. Biji kopi pilihan ini dipanggang dengan presisi tinggi di roastery kami untuk mengeluarkan keseimbangan rasa yang optimal.', 'Delivering a unique flavor experience dominated by sensory notes of <strong class="text-neutral-900 font-semibold">' . strtolower($product->sensory_notes) . '</strong>. These selected coffee beans are precision roasted in our roastery to unlock their optimal flavor balance.') !!}
                 </p>
                 
                 <!-- Selection & Action -->
                 <div class="space-y-6 pt-2">
                     <div class="space-y-3">
-                        <label class="font-label-caps text-xs text-neutral-500 uppercase font-semibold block" for="grind">Size Beans</label>
+                        <label class="font-label-caps text-xs text-neutral-500 uppercase font-semibold block" for="grind">{{ __trans('Ukuran Biji Kopi', 'Size Beans') }}</label>
                         
                         <!-- Select Asli yang disembunyikan agar logikanya tetap terhubung -->
                         @php
@@ -152,11 +152,11 @@
                     <!-- Action Button -->
                     @if ($product->status === 'SOLD OUT')
                         <button disabled class="w-full bg-neutral-100 text-neutral-400 font-bold py-5 uppercase tracking-[0.25em] border border-neutral-200 cursor-not-allowed text-xs">
-                            SOLD OUT
+                            {{ __trans('HABIS', 'SOLD OUT') }}
                         </button>
                     @else
                         <button id="add-to-bag-btn" class="w-full bg-brand-dark text-white font-bold py-5 uppercase tracking-[0.25em] border border-brand-dark transition-all duration-300 hover:bg-[#222222] hover:border-[#222222] active:scale-[0.98] text-xs">
-                            Add to Bag
+                            {{ __trans('Tambah ke Keranjang', 'Add to Bag') }}
                         </button>
                     @endif
                 </div>
@@ -166,25 +166,25 @@
                     <!-- Accordion 01: Coffee Profile -->
                     <div class="accordion-item">
                         <button type="button" class="accordion-trigger w-full py-4 flex justify-between items-center text-left font-sans text-[11px] font-bold uppercase tracking-widest text-[#121212] focus:outline-none">
-                            <span>01 / Coffee Profile</span>
+                            <span>{{ __trans('01 / Profil Kopi', '01 / Coffee Profile') }}</span>
                             <span class="material-symbols-outlined text-sm leading-none transition-transform duration-300">add</span>
                         </button>
                         <div class="accordion-content max-h-0 overflow-hidden transition-all duration-300 ease-in-out">
                             <div class="pb-6 pt-2 space-y-4 text-xs font-sans text-neutral-600 uppercase tracking-wider">
                                 <div class="flex justify-between py-1 border-b border-[#F3F4F6]">
-                                    <span class="opacity-60">Category</span>
+                                    <span class="opacity-60">{{ __trans('Kategori', 'Category') }}</span>
                                     <span class="font-bold text-[#121212]">{{ $product->category->name }}</span>
                                 </div>
                                 <div class="flex justify-between py-1 border-b border-[#F3F4F6]">
-                                    <span class="opacity-60">Roast Level</span>
+                                    <span class="opacity-60">{{ __trans('Tingkat Sangrai', 'Roast Level') }}</span>
                                     <span class="font-bold text-[#121212]">{{ $product->roast_level }}</span>
                                 </div>
                                 <div class="flex justify-between py-1 border-b border-[#F3F4F6]">
-                                    <span class="opacity-60">Altitude</span>
+                                    <span class="opacity-60">{{ __trans('Ketinggian', 'Altitude') }}</span>
                                     <span class="font-bold text-[#121212]">{{ $product->altitude }}</span>
                                 </div>
                                 <div class="flex flex-col gap-2 pt-2">
-                                    <span class="opacity-60">Sensory Notes</span>
+                                    <span class="opacity-60">{{ __trans('Catatan Rasa', 'Sensory Notes') }}</span>
                                     <span class="font-bold text-sm text-[#121212] normal-case tracking-normal italic">"{{ $product->sensory_notes }}"</span>
                                 </div>
                             </div>
@@ -194,17 +194,17 @@
                     <!-- Accordion 02: Brew Guide -->
                     <div class="accordion-item">
                         <button type="button" class="accordion-trigger w-full py-4 flex justify-between items-center text-left font-sans text-[11px] font-bold uppercase tracking-widest text-[#121212] focus:outline-none">
-                            <span>02 / Brew Guide</span>
+                            <span>{{ __trans('02 / Panduan Seduh', '02 / Brew Guide') }}</span>
                             <span class="material-symbols-outlined text-sm leading-none transition-transform duration-300">add</span>
                         </button>
                         <div class="accordion-content max-h-0 overflow-hidden transition-all duration-300 ease-in-out">
-                            <div class="pb-6 pt-2 space-y-4 text-xs font-sans text-neutral-600 leading-relaxed">
-                                <p class="font-bold uppercase tracking-widest text-[10px] text-[#121212] mb-2">Recommended: Pour Over (V60)</p>
-                                <ul class="list-disc pl-4 space-y-1.5 uppercase tracking-wider text-[10px]">
-                                    <li>Ratio: 1:15 (15g coffee to 225g water)</li>
-                                    <li>Grind Size: Medium-Fine (like table salt)</li>
-                                    <li>Water Temp: 92°C - 94°C</li>
-                                    <li>Pour Time: 2:30 - 3:00 mins</li>
+                            <div class="pb-6 pt-2 space-y-4 text-xs font-sans text-neutral-600 leading-relaxed text-[10px] uppercase tracking-wider">
+                                <p class="font-bold text-[#121212] mb-2">{{ __trans('Rekomendasi: Pour Over (V60)', 'Recommended: Pour Over (V60)') }}</p>
+                                <ul class="list-disc pl-4 space-y-1.5">
+                                    <li>{{ __trans('Rasio: 1:15 (15g kopi ke 225g air)', 'Ratio: 1:15 (15g coffee to 225g water)') }}</li>
+                                    <li>{{ __trans('Tingkat Gilingan: Sedang-Halus (seperti garam meja)', 'Grind Size: Medium-Fine (like table salt)') }}</li>
+                                    <li>{{ __trans('Suhu Air: 92°C - 94°C', 'Water Temp: 92°C - 94°C') }}</li>
+                                    <li>{{ __trans('Waktu Seduh: 2:30 - 3:00 menit', 'Pour Time: 2:30 - 3:00 mins') }}</li>
                                 </ul>
                             </div>
                         </div>
@@ -213,13 +213,13 @@
                     <!-- Accordion 03: Sourcing & Logistics -->
                     <div class="accordion-item">
                         <button type="button" class="accordion-trigger w-full py-4 flex justify-between items-center text-left font-sans text-[11px] font-bold uppercase tracking-widest text-[#121212] focus:outline-none">
-                            <span>03 / Sourcing &amp; Logistics</span>
+                            <span>{{ __trans('03 / Asal-usul & Logistik', '03 / Sourcing & Logistics') }}</span>
                             <span class="material-symbols-outlined text-sm leading-none transition-transform duration-300">add</span>
                         </button>
                         <div class="accordion-content max-h-0 overflow-hidden transition-all duration-300 ease-in-out">
                             <div class="pb-6 pt-2 space-y-3 text-xs font-sans text-neutral-500 leading-relaxed uppercase tracking-wider text-[10px]">
-                                <p>Ethically sourced and direct trade. We pay premium prices directly to farmers to ensure sustainable and high-quality production practices.</p>
-                                <p>Roast Date: All orders are guaranteed roasted within 7 days of shipment to ensure peak freshness and flavor integrity.</p>
+                                <p>{{ __trans('Diperoleh secara etis dan perdagangan langsung. Kami membayar harga premium langsung kepada petani untuk memastikan praktik produksi yang berkelanjutan dan berkualitas tinggi.', 'Ethically sourced and direct trade. We pay premium prices directly to farmers to ensure sustainable and high-quality production practices.') }}</p>
+                                <p>{{ __trans('Tanggal Sangrai: Semua pesanan dijamin disangrai dalam waktu 7 hari sebelum pengiriman untuk memastikan kesegaran puncak dan keutuhan rasa.', 'Roast Date: All orders are guaranteed roasted within 7 days of shipment to ensure peak freshness and flavor integrity.') }}</p>
                             </div>
                         </div>
                     </div>
@@ -233,12 +233,12 @@
     <section id="reviews-section" class="border-t border-[#E5E7EB] py-20 px-margin-mobile md:px-margin-desktop bg-white">
         <div class="max-w-4xl mx-auto">
             <div class="flex justify-between items-baseline border-b border-[#E5E7EB] pb-6 mb-8">
-                <h3 class="font-display text-3xl uppercase italic text-[#121212]">Ulasan Pelanggan</h3>
-                <span class="font-sans text-xs text-neutral-500">Total Ulasan: {{ $product->reviews_count }}</span>
+                <h3 class="font-display text-3xl uppercase italic text-[#121212]">{{ __trans('Ulasan Pelanggan', 'Customer Reviews') }}</h3>
+                <span class="font-sans text-xs text-neutral-500">{{ __trans('Total Ulasan', 'Total Reviews') }}: {{ $product->reviews_count }}</span>
             </div>
             
             @if ($product->reviews->isEmpty())
-                <p class="text-neutral-500 font-sans text-sm italic">Belum ada ulasan untuk produk ini.</p>
+                <p class="text-neutral-500 font-sans text-sm italic">{{ __trans('Belum ada ulasan untuk produk ini.', 'No reviews for this product yet.') }}</p>
             @else
                 <div class="space-y-6">
                     @foreach ($product->reviews as $review)
@@ -257,7 +257,7 @@
                             @if ($review->comment)
                                 <p class="text-xs text-neutral-700 font-sans leading-relaxed">"{{ $review->comment }}"</p>
                             @else
-                                <p class="text-xs text-neutral-500 font-sans italic">Hanya memberikan rating bintang.</p>
+                                <p class="text-xs text-neutral-500 font-sans italic">{{ __trans('Hanya memberikan rating bintang.', 'Only left a rating.') }}</p>
                             @endif
                         </div>
                     @endforeach
@@ -270,8 +270,8 @@
     <section class="border-t border-[#E5E7EB] py-24 px-margin-mobile md:px-margin-desktop bg-white">
         <div class="max-w-container-max mx-auto text-[#121212]">
             <div class="text-center mb-16">
-                <span class="font-label-caps text-xs text-neutral-400 font-bold uppercase tracking-[0.2em]">Our Craft</span>
-                <h2 class="font-serif-italic italic text-3xl md:text-4xl font-display text-[#121212] mt-2">Commitment to Quality</h2>
+                <span class="font-label-caps text-xs text-neutral-400 font-bold uppercase tracking-[0.2em]">{{ __trans('Keahlian Kami', 'Our Craft') }}</span>
+                <h2 class="font-serif-italic italic text-3xl md:text-4xl font-display text-[#121212] mt-2">{{ __trans('Komitmen pada Kualitas', 'Commitment to Quality') }}</h2>
             </div>
             
             <div class="grid grid-cols-1 md:grid-cols-3 gap-6 lg:gap-8">
@@ -282,11 +282,11 @@
                         <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-transparent"></div>
                     </div>
                     <div class="relative z-10 space-y-3 text-white">
-                        <h3 class="font-serif-italic italic text-2xl font-display">Precision Roasting</h3>
+                        <h3 class="font-serif-italic italic text-2xl font-display">{{ __trans('Penyangraian Presisi', 'Precision Roasting') }}</h3>
                         <p class="font-sans font-light text-neutral-200 text-sm leading-relaxed max-h-0 opacity-0 group-hover:max-h-[100px] group-hover:opacity-100 overflow-hidden transition-all duration-500 ease-in-out">
-                            Setiap batch kopi dipanggang dalam kuantitas kecil dengan kontrol suhu mikro untuk menghasilkan cita rasa yang presisi dan konsisten.
+                            {{ __trans('Setiap batch kopi dipanggang dalam kuantitas kecil dengan kontrol suhu mikro untuk menghasilkan cita rasa yang presisi dan konsisten.', 'Each batch of coffee is roasted in small quantities with micro temperature control to produce precise and consistent flavor.') }}
                         </p>
-                        <p class="font-sans font-light text-neutral-400 text-xs tracking-wider group-hover:hidden transition-all duration-300">Arahkan kursor untuk info detail →</p>
+                        <p class="font-sans font-light text-neutral-400 text-xs tracking-wider group-hover:hidden transition-all duration-300">{{ __trans('Arahkan kursor untuk info detail →', 'Hover for details →') }}</p>
                     </div>
                 </div>
 
@@ -297,11 +297,11 @@
                         <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-transparent"></div>
                     </div>
                     <div class="relative z-10 space-y-3 text-white">
-                        <h3 class="font-serif-italic italic text-2xl font-display">Regenerative Sourcing</h3>
+                        <h3 class="font-serif-italic italic text-2xl font-display">{{ __trans('Sourcing Regeneratif', 'Regenerative Sourcing') }}</h3>
                         <p class="font-sans font-light text-neutral-200 text-sm leading-relaxed max-h-0 opacity-0 group-hover:max-h-[100px] group-hover:opacity-100 overflow-hidden transition-all duration-500 ease-in-out">
-                            Bekerja sama langsung dengan petani lokal untuk menerapkan pertanian ramah lingkungan demi kelestarian tanah dan masa depan petani.
+                            {{ __trans('Bekerja sama langsung dengan petani lokal untuk menerapkan pertanian ramah lingkungan demi kelestarian tanah dan masa depan petani.', 'Partnering directly with local farmers to implement eco-friendly agriculture for soil preservation and the farmers\' future.') }}
                         </p>
-                        <p class="font-sans font-light text-neutral-400 text-xs tracking-wider group-hover:hidden transition-all duration-300">Arahkan kursor untuk info detail →</p>
+                        <p class="font-sans font-light text-neutral-400 text-xs tracking-wider group-hover:hidden transition-all duration-300">{{ __trans('Arahkan kursor untuk info detail →', 'Hover for details →') }}</p>
                     </div>
                 </div>
 
@@ -312,11 +312,11 @@
                         <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-transparent"></div>
                     </div>
                     <div class="relative z-10 space-y-3 text-white">
-                        <h3 class="font-serif-italic italic text-2xl font-display">Volcanic Terroir</h3>
+                        <h3 class="font-serif-italic italic text-2xl font-display">{{ __trans('Terroir Vulkanik', 'Volcanic Terroir') }}</h3>
                         <p class="font-sans font-light text-neutral-200 text-sm leading-relaxed max-h-0 opacity-0 group-hover:max-h-[100px] group-hover:opacity-100 overflow-hidden transition-all duration-500 ease-in-out">
-                            Biji kopi single-origin ditanam di ketinggian tinggi pada tanah vulkanik Andosol yang kaya mineral, menghasilkan cita rasa yang unik dan kaya rasa.
+                            {{ __trans('Biji kopi single-origin ditanam di ketinggian tinggi pada tanah vulkanik Andosol yang kaya mineral, menghasilkan cita rasa yang unik dan kaya rasa.', 'Single-origin coffee beans are grown at high altitudes in mineral-rich volcanic Andosol soil, producing unique and rich flavors.') }}
                         </p>
-                        <p class="font-sans font-light text-neutral-400 text-xs tracking-wider group-hover:hidden transition-all duration-300">Arahkan kursor untuk info detail →</p>
+                        <p class="font-sans font-light text-neutral-400 text-xs tracking-wider group-hover:hidden transition-all duration-300">{{ __trans('Arahkan kursor untuk info detail →', 'Hover for details →') }}</p>
                     </div>
                 </div>
             </div>
@@ -331,6 +331,7 @@
         // Inisialisasi galeri gambar dari backend
         const galleryImages = @json($galleryImages);
         let currentImageIndex = 0;
+        const AppLocale = "{{ App::getLocale() }}";
 
         // Thumbnail active image changer JS
         window.changeActiveImage = function(btn, imgUrl, index) {
@@ -465,7 +466,8 @@
                 }
                 
                 saveCart(cart);
-                showToast(`"${grindSize} - {{ $product->name }}" ditambahkan.`);
+                const addedMsg = AppLocale === 'en' ? `"${grindSize} - {{ $product->name }}" added.` : `"${grindSize} - {{ $product->name }}" ditambahkan.`;
+                showToast(addedMsg);
             });
         }
 

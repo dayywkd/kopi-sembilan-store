@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Your Bag | Toko Kopi Sembilan')
+@section('title', __trans('Keranjang Belanja | Toko Kopi Sembilan', 'Your Bag | Toko Kopi Sembilan'))
 
 @section('styles')
 <style>
@@ -46,13 +46,13 @@
     <div class="mb-8">
         <a href="{{ route('shop') }}" class="inline-flex items-center gap-2 text-neutral-400 hover:text-[#121212] transition-colors text-[10px] sm:text-xs font-sans font-bold tracking-widest uppercase">
             <span class="material-symbols-outlined text-[16px] sm:text-[18px]">arrow_back</span>
-            Kembali ke Katalog
+            {{ __trans('Kembali ke Katalog', 'Back to Catalog') }}
         </a>
     </div>
 
     <header class="mb-stack-lg">
-        <h1 class="font-display text-5xl md:text-7xl uppercase italic mb-4">Your Bag</h1>
-        <p class="label-tiny text-neutral-500">SHIPPING CALCULATED AT CHECKOUT</p>
+        <h1 class="font-display text-5xl md:text-7xl uppercase italic mb-4">{{ __trans('Keranjang Belanja', 'Your Bag') }}</h1>
+        <p class="label-tiny text-neutral-500">{{ __trans('ONGKOS KIRIM DIHITUNG SAAT CHECKOUT', 'SHIPPING CALCULATED AT CHECKOUT') }}</p>
     </header>
     
     <div class="grid grid-cols-12 gap-gutter items-start">
@@ -61,9 +61,9 @@
             <div class="w-full border-t border-[#E5E7EB]">
                 <!-- Table Header -->
                 <div class="hidden md:grid grid-cols-12 py-4 border-b border-[#E5E7EB] label-tiny text-neutral-500">
-                    <div class="col-span-6">Product</div>
-                    <div class="col-span-3 text-center">Quantity</div>
-                    <div class="col-span-3 text-right">Price</div>
+                    <div class="col-span-6">{{ __trans('Produk', 'Product') }}</div>
+                    <div class="col-span-3 text-center">{{ __trans('Jumlah', 'Quantity') }}</div>
+                    <div class="col-span-3 text-right">{{ __trans('Harga', 'Price') }}</div>
                 </div>
                 
                 <!-- Dynamic Cart Items Container -->
@@ -73,27 +73,27 @@
             </div>
             
             <div class="mt-stack-md">
-                <label class="label-tiny block mb-2 text-neutral-500 font-semibold">Order Instructions</label>
-                <textarea id="order-notes" class="w-full bg-[#FFFFFF] border border-[#E5E7EB] p-4 font-sans focus:ring-1 focus:ring-brand-accent focus:border-brand-accent min-h-[100px] outline-none placeholder:opacity-30 text-sm text-[#121212] resize-none" placeholder="ADD SPECIAL REQUESTS..."></textarea>
+                <label class="label-tiny block mb-2 text-neutral-500 font-semibold">{{ __trans('Catatan Tambahan', 'Order Instructions') }}</label>
+                <textarea id="order-notes" class="w-full bg-[#FFFFFF] border border-[#E5E7EB] p-4 font-sans focus:ring-1 focus:ring-brand-accent focus:border-brand-accent min-h-[100px] outline-none placeholder:opacity-30 text-sm text-[#121212] resize-none" placeholder="{{ __trans('TAMBAHKAN PERMINTAAN KHUSUS...', 'ADD SPECIAL REQUESTS...') }}"></textarea>
             </div>
         </div>
         
         <!-- Order Summary -->
         <div class="col-span-12 lg:col-span-4 lg:sticky lg:top-28">
             <div class="border border-[#E5E7EB] p-8 bg-brand-cream shadow-sm">
-                <h2 class="font-display text-3xl uppercase italic mb-stack-md">Summary</h2>
+                <h2 class="font-display text-3xl uppercase italic mb-stack-md">{{ __trans('Ringkasan', 'Summary') }}</h2>
                 <div class="space-y-4 font-sans border-b border-[#E5E7EB] pb-stack-md mb-stack-md text-sm text-neutral-700">
                     <div class="flex justify-between">
                         <span class="text-neutral-500">Subtotal</span>
                         <span id="cart-subtotal" class="font-semibold text-neutral-800">Rp. 0</span>
                     </div>
                     <div class="flex justify-between text-neutral-400">
-                        <span>Shipping</span>
-                        <span>Calculated later</span>
+                        <span>{{ __trans('Pengiriman', 'Shipping') }}</span>
+                        <span>{{ __trans('Dihitung nanti', 'Calculated later') }}</span>
                     </div>
                     <div class="flex justify-between text-neutral-400">
-                        <span>Tax</span>
-                        <span>Included</span>
+                        <span>{{ __trans('Pajak', 'Tax') }}</span>
+                        <span>{{ __trans('Sudah termasuk', 'Included') }}</span>
                     </div>
                 </div>
                 <div class="flex justify-between font-display text-2xl uppercase mb-stack-lg text-[#121212]">
@@ -102,19 +102,19 @@
                 </div>
                 
                 <a id="checkout-btn" class="block w-full bg-[#121212] text-white font-bold text-center py-5 uppercase tracking-widest hover:bg-brand-accent hover:border-brand-accent hover:text-white border border-[#121212] transition-all duration-350 active:scale-[0.98] label-tiny" href="{{ route('checkout') }}">
-                    Proceed to Checkout
+                    {{ __trans('Lanjutkan ke Pembayaran', 'Proceed to Checkout') }}
                 </a>
                 
                 <div class="mt-stack-md flex items-center justify-center space-x-2 text-neutral-400">
                     <span class="material-symbols-outlined text-base">verified_user</span>
-                    <span class="label-tiny text-[10px]">Secure Transaction Encrypted</span>
+                    <span class="label-tiny text-[10px]">{{ __trans('Transaksi Aman & Terenkripsi', 'Secure Transaction Encrypted') }}</span>
                 </div>
             </div>
             
             <div class="mt-stack-md border border-[#E5E7EB] p-4 bg-brand-cream text-[#121212]">
                 <div class="flex items-center space-x-2">
                     <span class="material-symbols-outlined text-xl text-neutral-600">local_shipping</span>
-                    <span class="label-tiny text-[10px] md:text-[11px] text-neutral-700">BEBAS ONGKIR MINIMAL BELANJA RP 500.000</span>
+                    <span class="label-tiny text-[10px] md:text-[11px] text-neutral-700">{{ __trans('BEBAS ONGKIR MINIMAL BELANJA RP 500.000', 'FREE SHIPPING ON ORDERS OVER RP 500.000') }}</span>
                 </div>
             </div>
         </div>
@@ -125,6 +125,7 @@
 @section('scripts')
 <script>
     window.serverCart = @json($serverCart ?? []);
+    const AppLocale = "{{ App::getLocale() }}";
 
     function saveCart(cart) {
         localStorage.setItem('cart', JSON.stringify(cart));
@@ -158,10 +159,12 @@
         if (!container) return;
 
         if (cart.length === 0) {
+            const emptyBagText = AppLocale === 'en' ? 'Your bag is empty.' : 'Keranjang belanja Anda kosong.';
+            const exploreText = AppLocale === 'en' ? 'Explore Beans' : 'Cari Biji Kopi';
             container.innerHTML = `
                 <div class="py-16 text-center">
-                    <p class="font-sans text-neutral-500 mb-8 text-lg">Your bag is empty.</p>
-                    <a href="{{ route('shop') }}" class="inline-block bg-[#121212] text-white px-8 py-4 font-bold label-tiny border border-[#121212] hover:bg-brand-accent hover:border-brand-accent transition-all">Explore Beans</a>
+                    <p class="font-sans text-neutral-500 mb-8 text-lg">${emptyBagText}</p>
+                    <a href="{{ route('shop') }}" class="inline-block bg-[#121212] text-white px-8 py-4 font-bold label-tiny border border-[#121212] hover:bg-brand-accent hover:border-brand-accent transition-all">${exploreText}</a>
                 </div>
             `;
             if (checkoutBtn) {
@@ -190,6 +193,7 @@
             const rawSize = item.grind_size ? item.grind_size : 'WHOLE BEAN';
             const displaySize = item.grind_size ? formatSizeJS(item.grind_size) : 'WHOLE BEAN';
             const sizeKey = rawSize.replace(/\s+/g, '-');
+            const removeLabel = AppLocale === 'en' ? 'Remove' : 'Hapus';
             
             html += `
                 <div id="cart-row-${item.id}-${sizeKey}" class="grid grid-cols-12 py-6 border-b border-[#E5E7EB] items-center hover:bg-brand-cream transition-colors duration-75">
@@ -200,9 +204,9 @@
                         <div>
                             <h3 class="font-display text-xl uppercase italic text-[#121212]">${item.name}</h3>
                             <p class="label-tiny text-[10px] mt-1 text-neutral-400">${displaySize}</p>
-                            <button onclick="animateRemoveItem(this, ${item.id}, '${rawSize}')" class="mt-4 flex items-center gap-1.5 text-red-600 hover:text-red-800 transition-colors duration-150" title="Hapus dari Keranjang">
+                            <button onclick="animateRemoveItem(this, ${item.id}, '${rawSize}')" class="mt-4 flex items-center gap-1.5 text-red-600 hover:text-red-800 transition-colors duration-150" title="${removeLabel}">
                                 <span class="material-symbols-outlined text-[18px]" style="font-variation-settings: 'wght' 300;">delete</span>
-                                <span class="label-tiny text-[10px] tracking-wider font-semibold">Hapus</span>
+                                <span class="label-tiny text-[10px] tracking-wider font-semibold">${removeLabel}</span>
                             </button>
                         </div>
                     </div>

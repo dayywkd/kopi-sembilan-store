@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
-@section('title', 'Shop | Toko Kopi Sembilan')
-@section('meta_description', 'Jelajahi koleksi biji kopi pilihan (single origin & blend) terbaik kami di Toko Kopi Sembilan. Roasting fresh setiap minggu untuk kesegaran rasa kopi terbaik Anda.')
+@section('title', __trans('Belanja | Toko Kopi Sembilan', 'Shop | Toko Kopi Sembilan'))
+@section('meta_description', __trans('Jelajahi koleksi biji kopi pilihan (single origin & blend) terbaik kami di Toko Kopi Sembilan. Roasting fresh setiap minggu untuk kesegaran rasa kopi terbaik Anda.', 'Explore our selection of the finest specialty coffee beans (single origin & blends) at Toko Kopi Sembilan. Freshly roasted weekly for your ultimate coffee flavor.'))
 
 @section('styles')
 <style>
@@ -61,7 +61,7 @@
         <!-- Centered Header -->
         <div class="text-center mb-10">
             <nav class="text-xs text-neutral-400 mb-3 uppercase tracking-widest">
-                <a href="{{ route('home') }}" class="hover:text-brand-dark transition-colors">Home</a>
+                <a href="{{ route('home') }}" class="hover:text-brand-dark transition-colors">{{ __trans('Beranda', 'Home') }}</a>
                 <span class="mx-2">&middot;</span>
                 <span class="text-neutral-600 font-semibold">Specialty Coffee</span>
             </nav>
@@ -101,12 +101,12 @@
         <!-- Filter & Sort Bar -->
         <div class="flex justify-between items-center py-6 border-b border-neutral-200 mb-10 mt-6">
             <div class="text-sm font-bold text-brand-dark uppercase tracking-wider">
-                {{ $products->count() }} Products
+                {{ $products->count() }} {{ __trans('Produk', 'Products') }}
             </div>
             <button onclick="openFilterDrawer()" class="flex items-center justify-between border border-neutral-300 px-6 py-3 hover:border-brand-dark transition-all duration-200 text-xs font-bold uppercase tracking-wider text-brand-dark w-44">
                 <div class="flex items-center gap-2">
                     <span class="material-symbols-outlined text-sm">tune</span>
-                    <span>Filter & Sort</span>
+                    <span>{{ __trans('Filter & Urutan', 'Filter & Sort') }}</span>
                 </div>
                 <span class="material-symbols-outlined text-sm">add</span>
             </button>
@@ -116,10 +116,10 @@
         @if (request()->filled('search'))
             <div class="bg-neutral-50 border border-neutral-200 px-6 py-4 flex justify-between items-center mb-8">
                 <div class="text-sm text-neutral-600">
-                    Hasil pencarian untuk: <span class="font-bold text-[#121212]">"{{ request('search') }}"</span>
+                    {{ __trans('Hasil pencarian untuk:', 'Search results for:') }} <span class="font-bold text-[#121212]">"{{ request('search') }}"</span>
                 </div>
                 <a href="{{ route('shop', request()->except('search')) }}" class="text-xs text-neutral-500 hover:text-[#121212] flex items-center gap-1 font-semibold uppercase tracking-widest">
-                    <span class="material-symbols-outlined text-sm">close</span> Bersihkan Pencarian
+                    <span class="material-symbols-outlined text-sm">close</span> {{ __trans('Bersihkan Pencarian', 'Clear Search') }}
                 </a>
             </div>
         @endif
@@ -162,11 +162,11 @@
                                 <span class="inline-block bg-brand-cream text-brand-accent text-[10px] px-2 py-0.5 font-bold uppercase tracking-wider mb-2 border border-brand-accent/20">Best Seller</span>
                             @endif
                             <div class="flex justify-between">
-                                <span class="opacity-70">Altitude:</span>
+                                <span class="opacity-70">{{ __trans('Ketinggian:', 'Altitude:') }}</span>
                                 <span class="font-medium text-neutral-700">{{ $product->altitude }}</span>
                             </div>
                             <div class="flex justify-between">
-                                <span class="opacity-70">Roast Level:</span>
+                                <span class="opacity-70">{{ __trans('Tingkat Sangrai:', 'Roast Level:') }}</span>
                                 <span class="font-medium text-neutral-700">{{ $product->roast_level }}</span>
                             </div>
                             <p class="mt-2 line-clamp-2 leading-relaxed italic">"{{ $product->sensory_notes }}"</p>
@@ -177,19 +177,19 @@
                         @if ($product->stock <= 0 || $product->status === 'SOLD OUT')
                             <button disabled 
                                     class="w-full py-3.5 bg-neutral-200 border border-neutral-300 text-neutral-400 label-tiny tracking-wider text-[11px] font-bold cursor-not-allowed">
-                                SOLD OUT
+                                {{ __trans('HABIS', 'SOLD OUT') }}
                             </button>
                         @else
                             <button onclick="addToBag({{ $product->id }}, '{{ $product->name }}', {{ $product->price }}, '{{ (is_array($product->sizes) && count($product->sizes) > 0) ? $product->sizes[0]['size'] : '100gr' }}', '{{ $product->image_url }}')" 
                                     class="w-full py-3.5 btn-dark label-tiny tracking-wider text-[11px] font-bold">
-                                ADD TO BAG
+                                {{ __trans('TAMBAH KE KERANJANG', 'ADD TO BAG') }}
                             </button>
                         @endif
                     </div>
                 </div>
             @empty
                 <div class="col-span-full text-center py-16 bg-neutral-50 border border-dashed border-neutral-200">
-                    <p class="label-tiny text-neutral-400">Tidak ada produk kopi yang sesuai dengan filter Anda.</p>
+                    <p class="label-tiny text-neutral-400">{{ __trans('Tidak ada produk kopi yang sesuai dengan filter Anda.', 'No coffee products match your filters.') }}</p>
                 </div>
             @endforelse
         </div>
@@ -204,8 +204,8 @@
     <!-- Header -->
     <div class="p-6 border-b border-neutral-100 flex items-center justify-between">
         <div>
-            <h2 class="font-display text-2xl font-bold text-brand-dark">Filter & Sort</h2>
-            <p class="text-xs text-neutral-400 mt-1 uppercase tracking-wider">{{ $products->count() }} Products</p>
+            <h2 class="font-display text-2xl font-bold text-brand-dark">{{ __trans('Filter & Urutan', 'Filter & Sort') }}</h2>
+            <p class="text-xs text-neutral-400 mt-1 uppercase tracking-wider">{{ $products->count() }} {{ __trans('Produk', 'Products') }}</p>
         </div>
         <button onclick="closeFilterDrawer()" class="text-neutral-400 hover:text-brand-dark transition-colors flex items-center justify-center">
             <span class="material-symbols-outlined text-2xl">close</span>
@@ -216,25 +216,25 @@
     <form id="filter-form" action="{{ route('shop') }}" method="GET" class="flex-grow overflow-y-auto p-6 space-y-6">
         <!-- Sort By Dropdown -->
         <div>
-            <label class="block text-xs uppercase tracking-wider font-bold text-neutral-500 mb-2">Sort By</label>
+            <label class="block text-xs uppercase tracking-wider font-bold text-neutral-500 mb-2">{{ __trans('Urutkan Berdasarkan', 'Sort By') }}</label>
             <select name="sort" class="w-full py-3 px-4 outline-none text-xs uppercase bg-white border border-neutral-300 text-brand-dark focus:border-brand-accent">
-                <option value="best_seller" {{ $defaultSort === 'best_seller' ? 'selected' : '' }}>Best Seller / Featured</option>
-                <option value="newest" {{ $defaultSort === 'newest' ? 'selected' : '' }}>Terbaru</option>
-                <option value="price_asc" {{ $defaultSort === 'price_asc' ? 'selected' : '' }}>Harga: Termurah</option>
-                <option value="price_desc" {{ $defaultSort === 'price_desc' ? 'selected' : '' }}>Harga: Termahal</option>
+                <option value="best_seller" {{ $defaultSort === 'best_seller' ? 'selected' : '' }}>{{ __trans('Terlaris / Pilihan', 'Best Seller / Featured') }}</option>
+                <option value="newest" {{ $defaultSort === 'newest' ? 'selected' : '' }}>{{ __trans('Terbaru', 'Newest') }}</option>
+                <option value="price_asc" {{ $defaultSort === 'price_asc' ? 'selected' : '' }}>{{ __trans('Harga: Termurah', 'Price: Lowest') }}</option>
+                <option value="price_desc" {{ $defaultSort === 'price_desc' ? 'selected' : '' }}>{{ __trans('Harga: Termahal', 'Price: Highest') }}</option>
             </select>
         </div>
 
         <!-- Kategori Section (Collapsible) -->
         <div class="border-t border-neutral-100 pt-4">
             <button type="button" onclick="toggleSection('category-filters')" class="w-full flex items-center justify-between text-xs uppercase tracking-wider font-bold text-brand-dark py-2">
-                <span>Kategori</span>
+                <span>{{ __trans('Kategori', 'Category') }}</span>
                 <span id="category-filters-chevron" class="material-symbols-outlined text-sm transition-transform duration-200">expand_more</span>
             </button>
             <div id="category-filters" class="mt-3 space-y-2.5 pl-1 transition-all duration-300">
                 <label class="flex items-center gap-3 cursor-pointer">
                     <input type="radio" name="category" value="ALL" {{ $defaultCategory === 'ALL' ? 'checked' : '' }} class="text-brand-accent focus:ring-brand-accent border-neutral-300">
-                    <span class="text-xs font-semibold text-neutral-600 uppercase tracking-wider">Semua Kopi</span>
+                    <span class="text-xs font-semibold text-neutral-600 uppercase tracking-wider">{{ __trans('Semua Kopi', 'All Coffee') }}</span>
                 </label>
                 @foreach ($filteredCategories as $category)
                     @php
@@ -251,13 +251,13 @@
         <!-- Ukuran / Berat Section (Collapsible) -->
         <div class="border-t border-neutral-100 pt-4">
             <button type="button" onclick="toggleSection('weight-filters')" class="w-full flex items-center justify-between text-xs uppercase tracking-wider font-bold text-brand-dark py-2">
-                <span>Ukuran / Berat</span>
+                <span>{{ __trans('Ukuran / Berat', 'Size / Weight') }}</span>
                 <span id="weight-filters-chevron" class="material-symbols-outlined text-sm transition-transform duration-200">expand_more</span>
             </button>
             <div id="weight-filters" class="mt-3 space-y-2.5 pl-1 transition-all duration-300">
                 <label class="flex items-center gap-3 cursor-pointer">
                     <input type="radio" name="weight" value="ALL" {{ $defaultWeight === 'ALL' ? 'checked' : '' }} class="text-brand-accent focus:ring-brand-accent border-neutral-300">
-                    <span class="text-xs font-semibold text-neutral-600 uppercase tracking-wider">Semua Ukuran</span>
+                    <span class="text-xs font-semibold text-neutral-600 uppercase tracking-wider">{{ __trans('Semua Ukuran', 'All Sizes') }}</span>
                 </label>
                 @foreach (['100g', '200g', '250g', '500g', '1kg'] as $wOption)
                     <label class="flex items-center gap-3 cursor-pointer">
@@ -272,11 +272,11 @@
     <!-- Sticky Drawer Footer -->
     <div class="p-6 border-t border-neutral-100 bg-white space-y-4">
         <button type="submit" form="filter-form" class="w-full py-4 bg-brand-dark hover:bg-brand-accent text-white font-bold text-xs uppercase tracking-widest transition-all rounded-full">
-            Apply Filters
+            {{ __trans('Terapkan Filter', 'Apply Filters') }}
         </button>
         <div class="text-center">
             <a href="{{ route('shop') }}" class="text-xs font-semibold text-neutral-500 hover:text-brand-dark transition-colors underline uppercase tracking-wider">
-                Remove all filters
+                {{ __trans('Hapus Semua Filter', 'Remove All Filters') }}
             </a>
         </div>
     </div>
