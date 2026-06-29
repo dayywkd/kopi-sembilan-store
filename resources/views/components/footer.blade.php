@@ -19,12 +19,12 @@
 
             <!-- Newsletter (Right) -->
             <div class="flex flex-col items-center md:items-end gap-3 text-center md:text-right w-full md:w-auto">
-                <span class="text-xs text-neutral-500 uppercase tracking-widest font-semibold">Subscribe and receive 10% off your first coffee order.</span>
-                <span class="font-display text-xl font-bold italic text-brand-dark -mt-1">Join the Toko Kopi Sembilan Family</span>
-                <form onsubmit="event.preventDefault(); showToast('Terima kasih telah berlangganan!');" class="flex border border-neutral-300 rounded-full overflow-hidden p-1 bg-white w-full max-w-md items-center mt-1">
-                    <input type="email" placeholder="Enter your email address" class="flex-grow px-5 py-2 text-xs bg-white text-brand-dark placeholder:opacity-50 focus:ring-0 focus:outline-none" style="border: none !important; outline: none !important; box-shadow: none !important; margin: 0 !important;" required />
+                <span class="text-xs text-neutral-500 uppercase tracking-widest font-semibold">{{ __trans('Berlangganan & dapatkan diskon 10% untuk pesanan kopi pertama Anda.', 'Subscribe & receive 10% off your first coffee order.') }}</span>
+                <span class="font-display text-xl font-bold italic text-brand-dark -mt-1">{{ __trans('Bergabung dengan Keluarga Toko Kopi Sembilan', 'Join the Toko Kopi Sembilan Family') }}</span>
+                <form onsubmit="event.preventDefault(); showToast('{{ __trans('Terima kasih telah berlangganan!', 'Thank you for subscribing!') }}');" class="flex border border-neutral-300 rounded-full overflow-hidden p-1 bg-white w-full max-w-md items-center mt-1">
+                    <input type="email" placeholder="{{ __trans('Masukkan alamat email Anda', 'Enter your email address') }}" class="flex-grow px-5 py-2 text-xs bg-white text-brand-dark placeholder:opacity-50 focus:ring-0 focus:outline-none" style="border: none !important; outline: none !important; box-shadow: none !important; margin: 0 !important;" required />
                     <button type="submit" class="bg-brand-dark text-white px-6 py-2.5 rounded-full font-bold text-[10px] uppercase tracking-widest hover:bg-brand-accent transition-colors">
-                        Sign up
+                        {{ __trans('Daftar', 'Sign up') }}
                     </button>
                 </form>
             </div>
@@ -34,52 +34,52 @@
         <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-y-12 gap-x-8 py-4">
             <!-- Column 1: About -->
             <div class="flex flex-col gap-4">
-                <h4 class="text-xs font-bold uppercase tracking-widest text-brand-dark">About</h4>
+                <h4 class="text-xs font-bold uppercase tracking-widest text-brand-dark">{{ __trans('Tentang', 'About') }}</h4>
                 <div class="flex flex-col gap-2 text-xs text-brand-dark font-medium">
-                    <a class="hover:text-brand-accent transition-colors" href="{{ route('about') }}">Our Story</a>
-                    <a class="hover:text-brand-accent transition-colors" href="{{ route('location') }}">Locations</a>
-                    <a class="hover:text-brand-accent transition-colors" href="{{ route('wholesale') }}">Wholesale</a>
+                    <a class="hover:text-brand-accent transition-colors" href="{{ route('about') }}">{{ __trans('Cerita Kami', 'Our Story') }}</a>
+                    <a class="hover:text-brand-accent transition-colors" href="{{ route('location') }}">{{ __trans('Lokasi', 'Locations') }}</a>
+                    <a class="hover:text-brand-accent transition-colors" href="{{ route('wholesale') }}">{{ __trans('Kemitraan', 'Wholesale') }}</a>
                 </div>
             </div>
 
             <!-- Column 2: Shop -->
             <div class="flex flex-col gap-4">
-                <h4 class="text-xs font-bold uppercase tracking-widest text-brand-dark">Shop</h4>
+                <h4 class="text-xs font-bold uppercase tracking-widest text-brand-dark">{{ __trans('Belanja', 'Shop') }}</h4>
                 <div class="flex flex-col gap-2 text-xs text-brand-dark font-medium">
-                    <a class="hover:text-brand-accent transition-colors" href="{{ route('shop') }}">Shop Coffee</a>
-                    <a class="hover:text-brand-accent transition-colors" href="{{ route('reviews') }}">Reviews</a>
-                    <a class="hover:text-brand-accent transition-colors" href="{{ route('faq') }}">FAQ</a>
+                    <a class="hover:text-brand-accent transition-colors" href="{{ route('shop') }}">{{ __trans('Beli Kopi', 'Shop Coffee') }}</a>
+                    <a class="hover:text-brand-accent transition-colors" href="{{ route('reviews') }}">{{ __trans('Ulasan', 'Reviews') }}</a>
+                    <a class="hover:text-brand-accent transition-colors" href="{{ route('faq') }}">{{ __trans('Tanya Jawab', 'FAQ') }}</a>
                 </div>
             </div>
 
             <!-- Column 3: Support -->
             <div class="flex flex-col gap-4">
-                <h4 class="text-xs font-bold uppercase tracking-widest text-brand-dark">Support</h4>
+                <h4 class="text-xs font-bold uppercase tracking-widest text-brand-dark">{{ __trans('Bantuan', 'Support') }}</h4>
                 <div class="flex flex-col gap-2 text-xs text-brand-dark font-medium">
-                    <a class="hover:text-brand-accent transition-colors" href="{{ route('order.tracking.form') }}">Lacak Pesanan</a>
-                    <a class="hover:text-brand-accent transition-colors" href="{{ route('legal.refund') }}">Refund Policy</a>
-                    <a class="hover:text-brand-accent transition-colors" href="{{ route('legal.privacy') }}">Privacy Policy</a>
-                    <a class="hover:text-brand-accent transition-colors" href="{{ route('legal.terms') }}">Terms & Conditions</a>
+                    <a class="hover:text-brand-accent transition-colors" href="{{ route('order.tracking.form') }}">{{ __trans('Lacak Pesanan', 'Track Order') }}</a>
+                    <a class="hover:text-brand-accent transition-colors" href="{{ route('legal.refund') }}">{{ __trans('Kebijakan Pengembalian', 'Refund Policy') }}</a>
+                    <a class="hover:text-brand-accent transition-colors" href="{{ route('legal.privacy') }}">{{ __trans('Kebijakan Privasi', 'Privacy Policy') }}</a>
+                    <a class="hover:text-brand-accent transition-colors" href="{{ route('legal.terms') }}">{{ __trans('Syarat & Ketentuan', 'Terms & Conditions') }}</a>
                 </div>
             </div>
 
             <!-- Column 4: Visit Us -->
             <div class="flex flex-col gap-4">
-                <h4 class="text-xs font-bold uppercase tracking-widest text-brand-dark">Visit Us</h4>
+                <h4 class="text-xs font-bold uppercase tracking-widest text-brand-dark">{{ __trans('Kunjungi Kami', 'Visit Us') }}</h4>
                 <p class="text-xs text-brand-dark leading-relaxed font-medium">
                     Jl. Pemuda Kutorejo Gg. II No.230<br/>
-                    Kutorejo, Tuban, East Java 62311<br/>
+                    Kutorejo, Tuban, {!! __trans('Jawa Timur', 'East Java') !!} 62311<br/>
                     Indonesia
                 </p>
             </div>
 
             <!-- Column 5: Operating Hours -->
             <div class="flex flex-col gap-4">
-                <h4 class="text-xs font-bold uppercase tracking-widest text-brand-dark">Operating Hours</h4>
+                <h4 class="text-xs font-bold uppercase tracking-widest text-brand-dark">{{ __trans('Jam Operasional', 'Operating Hours') }}</h4>
                 <div class="flex flex-col gap-2 text-xs text-brand-dark font-medium">
-                    <p>Tue-Thu: 10am-3pm, 5pm-11pm</p>
-                    <p>Fri: 2pm-11pm | Mon: Closed</p>
-                    <p>Sat-Sun: 7am-3pm, 5pm-11pm</p>
+                    <p>{{ __trans('Sel-Kam: 10.00-15.00, 17.00-23.00', 'Tue-Thu: 10am-3pm, 5pm-11pm') }}</p>
+                    <p>{{ __trans('Jum: 14.00-23.00 | Sen: Tutup', 'Fri: 2pm-11pm | Mon: Closed') }}</p>
+                    <p>{{ __trans('Sab-Min: 07.00-15.00, 17.00-23.00', 'Sat-Sun: 7am-3pm, 5pm-11pm') }}</p>
                 </div>
             </div>
         </div>

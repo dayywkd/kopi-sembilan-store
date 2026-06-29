@@ -76,7 +76,7 @@
             {!! __trans('Edisi Terbatas:<br/>Rilisan Khas Sembilan', 'Limited Edition:<br/>Sembilan Signature Release') !!}
         </h1>
         <p class="font-sans text-neutral-600 text-sm md:text-base leading-relaxed mb-8 max-w-md">
-            {{ __trans('Menjelajahi rangkaian varietas kopi kami yang paling istimewa melalui metode penyangraian presisi oleh Toko Kopi Sembilan.', 'Exploring the range of our most celebrated coffee varieties through precision roasting methods by Toko Kopi Sembilan.') }}
+            {{ __trans('Menjelajahi ragam varietas kopi kami yang paling terkenal melalui metode pemanggangan presisi dari Toko Kopi Sembilan.', 'Exploring the range of our most celebrated coffee varieties through precision roasting methods by Toko Kopi Sembilan.') }}
         </p>
         
         <a href="{{ route('shop') }}" class="w-full md:w-auto bg-[#121212] text-white hover:bg-neutral-800 transition-colors text-center py-4 px-16 rounded-full text-xs font-bold tracking-widest uppercase mb-8 block">
@@ -110,7 +110,7 @@
     <div class="px-margin-mobile md:px-margin-desktop max-w-container-max mx-auto">
         <div class="mb-16 flex flex-col md:flex-row md:items-end justify-between gap-8">
             <div>
-                <p class="label-tiny mb-3 text-neutral-400">{{ __trans('Pilihan Terkurasi', 'Curated Favorites') }}</p>
+                <p class="label-tiny mb-3 text-neutral-400">{{ __trans('Pilihan Favorit', 'Curated Favorites') }}</p>
                 <h2 class="text-4xl md:text-5xl font-display text-[#121212] italic font-bold">{{ __trans('Biji Kopi Terlaris.', 'Best Seller Beans.') }}</h2>
             </div>
             <a class="label-tiny border-b border-[#121212]/30 pb-2 text-[#121212] font-semibold hover:border-brand-accent hover:text-brand-accent transition-colors" href="{{ route('shop') }}">
@@ -183,7 +183,7 @@
                 <p class="label-tiny text-neutral-400">{{ __trans('Showroom Tuban', 'Tuban Showroom') }}</p>
                 <h2 class="text-3xl md:text-4xl font-display font-bold text-[#121212] italic leading-tight">{{ __trans('Datang & Nikmati Kopi di Roastery Kami', 'Visit & Enjoy Coffee at Our Roastery') }}</h2>
                 <p class="text-sm text-neutral-500 leading-relaxed font-light">
-                    {{ __trans('Nikmati suasana tenang roastery kami di pusat kota Tuban. Anda dapat mencicipi langsung sajian kopi single origin musiman kami, berkonsultasi mengenai profil sangrai dengan barista kami, atau membeli biji kopi segar langsung dari rak penyimpanan.', 'Enjoy the serene atmosphere of our roastery in the heart of Tuban. You can taste our seasonal single origin coffee offerings, consult roasting profiles with our baristas, or purchase fresh coffee beans directly from our shelves.') }}
+                    {{ __trans('Nikmati suasana tenang roastery kami di pusat kota Tuban. Anda dapat mencicipi langsung sajian kopi single origin musiman kami, berkonsultasi mengenai profil roasting dengan barista kami, atau membeli biji kopi segar langsung dari rak penyimpanan.', 'Enjoy the serene atmosphere of our roastery in the heart of Tuban. You can taste our seasonal single origin coffee offerings, consult roasting profiles with our baristas, or purchase fresh coffee beans directly from our shelves.') }}
                 </p>
                 <div class="space-y-3 pt-4 border-t border-[#E5E7EB]">
                     <div class="flex justify-between items-baseline gap-4 text-xs">
