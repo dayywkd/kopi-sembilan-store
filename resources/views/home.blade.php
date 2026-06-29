@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
-@section('title', 'Toko Kopi Sembilan | Specialty Coffee | SCA Certified | Roastery')
-@section('meta_description', 'Toko Kopi Sembilan adalah roastery kopi lokal di Tuban yang menyediakan biji kopi pilihan (specialty coffee) berkualitas tinggi dengan standar SCA Certified Roastery.')
+@section('title', __trans('Toko Kopi Sembilan | Specialty Coffee | SCA Certified | Roastery', 'Sembilan Coffee Shop | Specialty Coffee | SCA Certified | Roastery'))
+@section('meta_description', __trans('Toko Kopi Sembilan adalah roastery kopi lokal di Tuban yang menyediakan biji kopi pilihan (specialty coffee) berkualitas tinggi dengan standar SCA Certified Roastery.', 'Toko Kopi Sembilan is a local specialty coffee roastery in Tuban offering premium coffee beans with SCA Certified standards.'))
 
 @section('styles')
 <style>
@@ -73,20 +73,20 @@
     <!-- Kolom Kiri: Teks & CTA -->
     <div class="flex flex-col justify-center items-start px-6 md:pl-20 md:pr-16 py-16 md:py-24 bg-white">
         <h1 class="font-sans font-bold text-4xl md:text-5xl lg:text-[54px] text-[#121212] leading-[1.1] tracking-tight mb-6">
-            Limited Edition:<br/>Sembilan Signature Release
+            {{ __trans('Edisi Terbatas:<br/>Rilisan Khas Sembilan', 'Limited Edition:<br/>Sembilan Signature Release') }}
         </h1>
         <p class="font-sans text-neutral-600 text-sm md:text-base leading-relaxed mb-8 max-w-md">
-            Exploring the range of our most celebrated coffee varieties through precision roasting methods by Toko Kopi Sembilan.
+            {{ __trans('Menjelajahi rangkaian varietas kopi kami yang paling istimewa melalui metode penyangraian presisi oleh Toko Kopi Sembilan.', 'Exploring the range of our most celebrated coffee varieties through precision roasting methods by Toko Kopi Sembilan.') }}
         </p>
         
         <a href="{{ route('shop') }}" class="w-full md:w-auto bg-[#121212] text-white hover:bg-neutral-800 transition-colors text-center py-4 px-16 rounded-full text-xs font-bold tracking-widest uppercase mb-8 block">
-            Shop now
+            {{ __trans('Beli sekarang', 'Shop now') }}
         </a>
         
         <div class="font-sans text-[11px] text-neutral-500 space-y-1">
             <p class="tracking-wider uppercase">Toko Kopi Sembilan — Specialty Coffee Roasters</p>
             <p class="flex items-center gap-1">
-                <span>Over 10,000</span>
+                <span>{{ __trans('Lebih dari 10.000', 'Over 10,000') }}</span>
                 <span class="flex text-[#121212]">
                     <span class="material-symbols-outlined text-sm" style="font-variation-settings: 'FILL' 1, 'wght' 400; font-size: 14px;">star</span>
                     <span class="material-symbols-outlined text-sm" style="font-variation-settings: 'FILL' 1, 'wght' 400; font-size: 14px;">star</span>
@@ -94,7 +94,7 @@
                     <span class="material-symbols-outlined text-sm" style="font-variation-settings: 'FILL' 1, 'wght' 400; font-size: 14px;">star</span>
                     <span class="material-symbols-outlined text-sm" style="font-variation-settings: 'FILL' 1, 'wght' 400; font-size: 14px;">star</span>
                 </span>
-                <span>reviews</span>
+                <span>{{ __trans('ulasan', 'reviews') }}</span>
             </p>
         </div>
     </div>
@@ -110,11 +110,11 @@
     <div class="px-margin-mobile md:px-margin-desktop max-w-container-max mx-auto">
         <div class="mb-16 flex flex-col md:flex-row md:items-end justify-between gap-8">
             <div>
-                <p class="label-tiny mb-3 text-neutral-400">Curated Favorites</p>
-                <h2 class="text-4xl md:text-5xl font-display text-[#121212] italic font-bold">Best Seller Beans.</h2>
+                <p class="label-tiny mb-3 text-neutral-400">{{ __trans('Pilihan Terkurasi', 'Curated Favorites') }}</p>
+                <h2 class="text-4xl md:text-5xl font-display text-[#121212] italic font-bold">{{ __trans('Biji Kopi Terlaris.', 'Best Seller Beans.') }}</h2>
             </div>
             <a class="label-tiny border-b border-[#121212]/30 pb-2 text-[#121212] font-semibold hover:border-brand-accent hover:text-brand-accent transition-colors" href="{{ route('shop') }}">
-                View All Collection &rarr;
+                {{ __trans('Lihat Semua Koleksi', 'View All Collection') }} &rarr;
             </a>
         </div>
         
@@ -156,11 +156,11 @@
                             <p class="text-xs text-neutral-500 line-clamp-2 leading-relaxed min-h-[32px]">{{ $product->sensory_notes }}</p>
                             @if ($product->stock <= 0 || $product->status === 'SOLD OUT')
                                 <button disabled class="w-full py-3.5 bg-neutral-200 border border-neutral-300 text-neutral-400 label-tiny tracking-wider text-[11px] cursor-not-allowed">
-                                    SOLD OUT
+                                    {{ __trans('HABIS', 'SOLD OUT') }}
                                 </button>
                             @else
                                 <button onclick="addToBag({{ $product->id }}, '{{ $product->name }}', {{ $product->price }}, '{{ (is_array($product->sizes) && count($product->sizes) > 0) ? $product->sizes[0]['size'] : '100gr' }}', '{{ $product->image_url }}')" class="w-full py-3.5 btn-dark label-tiny tracking-wider text-[11px]">
-                                    ADD TO BAG
+                                    {{ __trans('TAMBAH KE KERANJANG', 'ADD TO BAG') }}
                                 </button>
                             @endif
                         </div>
@@ -168,7 +168,7 @@
                 </div>
             @empty
                 <div class="col-span-full text-center py-12">
-                    <p class="label-tiny text-neutral-400">Belum ada produk unggulan yang ditandai sebagai Best Seller.</p>
+                    <p class="label-tiny text-neutral-400">{{ __trans('Belum ada produk unggulan yang ditandai sebagai Best Seller.', 'No featured products marked as Best Seller yet.') }}</p>
                 </div>
             @endforelse
         </div>
@@ -180,21 +180,21 @@
     <div class="px-margin-mobile md:px-margin-desktop max-w-container-max mx-auto">
         <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
             <div class="lg:col-span-5 space-y-6">
-                <p class="label-tiny text-neutral-400">Tuban Showroom</p>
-                <h2 class="text-3xl md:text-4xl font-display font-bold text-[#121212] italic leading-tight">Datang & Nikmati Kopi di Roastery Kami</h2>
+                <p class="label-tiny text-neutral-400">{{ __trans('Showroom Tuban', 'Tuban Showroom') }}</p>
+                <h2 class="text-3xl md:text-4xl font-display font-bold text-[#121212] italic leading-tight">{{ __trans('Datang & Nikmati Kopi di Roastery Kami', 'Visit & Enjoy Coffee at Our Roastery') }}</h2>
                 <p class="text-sm text-neutral-500 leading-relaxed font-light">
-                    Nikmati suasana tenang roastery kami di pusat kota Tuban. Anda dapat mencicipi langsung sajian kopi single origin musiman kami, berkonsultasi mengenai profil sangrai dengan barista kami, atau membeli biji kopi segar langsung dari rak penyimpanan.
+                    {{ __trans('Nikmati suasana tenang roastery kami di pusat kota Tuban. Anda dapat mencicipi langsung sajian kopi single origin musiman kami, berkonsultasi mengenai profil sangrai dengan barista kami, atau membeli biji kopi segar langsung dari rak penyimpanan.', 'Enjoy the serene atmosphere of our roastery in the heart of Tuban. You can taste our seasonal single origin coffee offerings, consult roasting profiles with our baristas, or purchase fresh coffee beans directly from our shelves.') }}
                 </p>
                 <div class="space-y-3 pt-4 border-t border-[#E5E7EB]">
                     <div class="flex justify-between items-baseline gap-4 text-xs">
-                        <span class="label-tiny text-neutral-400">Address</span>
+                        <span class="label-tiny text-neutral-400">{{ __trans('Alamat', 'Address') }}</span>
                         <span class="text-neutral-600 text-right leading-relaxed font-medium">
                             Jl. Pemuda Kutorejo Gg. II No.230,<br/>Kutorejo, Tuban, Jawa Timur 62311
                         </span>
                     </div>
                     <div class="pt-2">
                         <a href="https://www.google.com/maps/search/?api=1&query=Toko+Kopi+Sembilan+Kutorejo+Tuban" target="_blank" class="w-full inline-flex justify-center items-center gap-2 py-4 border border-neutral-300 hover:bg-brand-accent hover:text-white hover:border-brand-accent transition-all duration-300 label-tiny font-bold text-[11px]">
-                            GET DIRECTIONS 
+                            {{ __trans('PETUNJUK ARAH', 'GET DIRECTIONS') }}
                             <span class="material-symbols-outlined text-xs">open_in_new</span>
                         </a>
                     </div>

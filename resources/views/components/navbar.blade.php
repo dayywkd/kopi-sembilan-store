@@ -14,8 +14,8 @@
         <!-- Kolom 2 (Tengah Presisi): Menu Navigasi Utama (SHOP, ABOUT, WHOLESALE) -->
         <div id="nav-menu-center" class="hidden lg:flex items-center justify-center gap-16 h-full text-[#111111] transition-colors duration-300" style="font-family: 'Inter', 'Hanken Grotesk', sans-serif;">
             <a class="text-[15px] font-medium tracking-[0.08em] uppercase pb-1 border-b-2 {{ Route::is('shop') ? 'border-current font-semibold' : 'border-transparent hover:border-current transition-all duration-200 ease-in-out opacity-90 hover:opacity-100' }}" href="{{ route('shop') }}">{{ __trans('Belanja', 'Shop') }}</a>
-            <a class="text-[15px] font-medium tracking-[0.08em] uppercase pb-1 border-b-2 {{ Route::is('about') ? 'border-current font-semibold' : 'border-transparent hover:border-current transition-all duration-200 ease-in-out opacity-90 hover:opacity-100' }}" href="{{ route('about') }}">{{ __trans('Tentang Kami', 'About') }}</a>
-            <a class="text-[15px] font-medium tracking-[0.08em] uppercase pb-1 border-b-2 {{ Route::is('wholesale') ? 'border-current font-semibold' : 'border-transparent hover:border-current transition-all duration-200 ease-in-out opacity-90 hover:opacity-100' }}" href="{{ route('wholesale') }}">{{ __trans('Kemitraan B2B', 'Wholesale') }}</a>
+            <a class="text-[15px] font-medium tracking-[0.08em] uppercase pb-1 border-b-2 {{ Route::is('about') ? 'border-current font-semibold' : 'border-transparent hover:border-current transition-all duration-200 ease-in-out opacity-90 hover:opacity-100' }}" href="{{ route('about') }}">{{ __trans('Tentang', 'About') }}</a>
+            <a class="text-[15px] font-medium tracking-[0.08em] uppercase pb-1 border-b-2 {{ Route::is('wholesale') ? 'border-current font-semibold' : 'border-transparent hover:border-current transition-all duration-200 ease-in-out opacity-90 hover:opacity-100' }}" href="{{ route('wholesale') }}">{{ __trans('Kemitraan', 'Wholesale') }}</a>
         </div>
 
         <!-- Kolom 3 (Kanan): Ikon Utility (Search, Account, Cart) -->
@@ -65,8 +65,8 @@
     </div>
     <div class="flex flex-col gap-6 text-2xl font-display italic my-auto text-[#121212] pl-2">
         <a onclick="toggleMobileMenu()" class="hover:text-brand-accent transition-colors py-2 border-b border-neutral-50" href="{{ route('shop') }}">{{ __trans('Belanja', 'Shop') }}</a>
-        <a onclick="toggleMobileMenu()" class="hover:text-brand-accent transition-colors py-2 border-b border-neutral-50" href="{{ route('about') }}">{{ __trans('Tentang Kami', 'About') }}</a>
-        <a onclick="toggleMobileMenu()" class="hover:text-brand-accent transition-colors py-2" href="{{ route('wholesale') }}">{{ __trans('Kemitraan B2B', 'Wholesale') }}</a>
+        <a onclick="toggleMobileMenu()" class="hover:text-brand-accent transition-colors py-2 border-b border-neutral-50" href="{{ route('about') }}">{{ __trans('Tentang', 'About') }}</a>
+        <a onclick="toggleMobileMenu()" class="hover:text-brand-accent transition-colors py-2" href="{{ route('wholesale') }}">{{ __trans('Kemitraan', 'Wholesale') }}</a>
     </div>
     <div class="pt-6 border-t border-neutral-200 flex justify-between items-center text-[#121212]">
         @auth
