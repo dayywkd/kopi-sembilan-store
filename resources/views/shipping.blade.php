@@ -65,11 +65,12 @@
      *   'pending' = statusIndex < faseIndex  → belum sampai
      */
     $statusOrder = [
-        'Awaiting Payment' => 0,
-        'Paid'             => 1,
-        'Packing'          => 2,
-        'Shipped'          => 3,
-        'Delivered'        => 4,
+        'Awaiting Payment'      => 0,
+        'Awaiting Verification' => 0,
+        'Paid'                  => 1,
+        'Packing'               => 2,
+        'Shipped'               => 3,
+        'Delivered'             => 4,
     ];
     $currentIdx = $statusOrder[$order->status] ?? 0;
 
@@ -106,28 +107,31 @@
             <div class="col-span-12 md:col-span-8">
                 @php
                     $headerLabel = match($order->status) {
-                        'Awaiting Payment' => 'Menunggu Pembayaran',
-                        'Paid'             => 'Pembayaran Diterima',
-                        'Packing'          => $isPickupOrder ? 'Sedang Dipersiapkan' : 'Sedang Dikemas',
-                        'Shipped'          => $isPickupOrder ? 'Siap Diambil' : 'Dalam Pengiriman',
-                        'Delivered'        => $isPickupOrder ? 'Pesanan Telah Diambil' : 'Pesanan Tiba',
-                        default            => 'Order Confirmed',
+                        'Awaiting Payment'      => 'Menunggu Pembayaran',
+                        'Awaiting Verification' => 'Menunggu Verifikasi',
+                        'Paid'                  => 'Pembayaran Diterima',
+                        'Packing'               => $isPickupOrder ? 'Sedang Dipersiapkan' : 'Sedang Dikemas',
+                        'Shipped'               => $isPickupOrder ? 'Siap Diambil' : 'Dalam Pengiriman',
+                        'Delivered'             => $isPickupOrder ? 'Pesanan Telah Diambil' : 'Pesanan Tiba',
+                        default                 => 'Order Confirmed',
                     };
                     $headerTitle = match($order->status) {
-                        'Awaiting Payment' => 'Awaiting Payment',
-                        'Paid'             => 'Paid — In Roast',
-                        'Packing'          => 'Packing & Prep',
-                        'Shipped'          => $isPickupOrder ? 'Ready For Pickup' : 'On The Way',
-                        'Delivered'        => $isPickupOrder ? 'Picked Up' : 'Delivered',
-                        default            => 'Order Confirmed',
+                        'Awaiting Payment'      => 'Awaiting Payment',
+                        'Awaiting Verification' => 'Awaiting Verification',
+                        'Paid'                  => 'Paid — In Roast',
+                        'Packing'               => 'Packing & Prep',
+                        'Shipped'               => $isPickupOrder ? 'Ready For Pickup' : 'On The Way',
+                        'Delivered'             => $isPickupOrder ? 'Picked Up' : 'Delivered',
+                        default                 => 'Order Confirmed',
                     };
                     $headerColor = match($order->status) {
-                        'Awaiting Payment' => 'text-[#5B5B5B]',
-                        'Paid'             => 'text-[#000000]',
-                        'Packing'          => 'text-[#5B5B5B]',
-                        'Shipped'          => 'text-[#000000]',
-                        'Delivered'        => 'text-[#000000]',
-                        default            => 'text-neutral-500',
+                        'Awaiting Payment'      => 'text-[#5B5B5B]',
+                        'Awaiting Verification' => 'text-amber-600',
+                        'Paid'                  => 'text-[#000000]',
+                        'Packing'               => 'text-[#5B5B5B]',
+                        'Shipped'               => 'text-[#000000]',
+                        'Delivered'             => 'text-[#000000]',
+                        default                 => 'text-neutral-500',
                     };
                 @endphp
                 <span class="label-tiny {{ $headerColor }} font-bold tracking-widest block mb-2">
@@ -141,6 +145,8 @@
                 <p class="font-sans text-neutral-500 text-sm max-w-xs md:ml-auto leading-relaxed">
                     @if ($order->status === 'Awaiting Payment')
                         Segera selesaikan pembayaran agar pesanan Anda diproses.
+                    @elseif ($order->status === 'Awaiting Verification')
+                        Konfirmasi pembayaran Anda telah kami terima dan sedang diverifikasi oleh admin.
                     @elseif ($order->status === 'Paid')
                         Pembayaran terverifikasi. Kopi Anda sedang masuk jadwal roasting.
                     @elseif ($order->status === 'Packing')
@@ -172,6 +178,27 @@
                class="flex-shrink-0 flex items-center gap-2 bg-[#121212] text-white hover:bg-brand-accent hover:text-[#FFFFFF] font-bold text-xs uppercase tracking-widest px-6 py-4 transition-all duration-300 active:scale-[0.98] whitespace-nowrap">
                 <span class="material-symbols-outlined text-[18px]">payments</span>
                 Bayar Sekarang
+            </a>
+        </div>
+    </section>
+    @elseif ($order->status === 'Awaiting Verification')
+    <section class="mb-10">
+        <div class="bg-amber-50 border border-amber-200 p-6 flex flex-col md:flex-row md:items-center justify-between gap-5">
+            <div class="flex items-start gap-4">
+                <span class="material-symbols-outlined text-amber-600 text-[28px] flex-shrink-0">hourglass_top</span>
+                <div>
+                    <p class="label-tiny text-amber-800 mb-1">Menunggu Verifikasi Pembayaran</p>
+                    <p class="font-sans text-sm text-amber-700 leading-relaxed">
+                        Konfirmasi pembayaran Anda telah kami terima. Tim kami sedang melakukan verifikasi transaksi Anda secara manual (maks. 1x24 jam).
+                    </p>
+                </div>
+            </div>
+            <a href="https://wa.me/6285336688839?text={{ urlencode('Halo Toko Kopi Sembilan, mohon verifikasi pembayaran untuk pesanan ' . $order->transaction_id) }}" target="_blank"
+               class="flex-shrink-0 flex items-center gap-2 bg-[#25D366] text-white hover:bg-[#128C7E] font-bold text-xs uppercase tracking-widest px-6 py-4 transition-all duration-300 active:scale-[0.98] whitespace-nowrap">
+                <svg class="fill-current" style="width:16px;height:16px;" viewBox="0 0 24 24">
+                    <path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946C.06 5.348 5.397.01 12.008.01c3.202.001 6.212 1.246 8.477 3.514 2.266 2.268 3.507 5.28 3.505 8.484-.004 6.657-5.34 11.997-11.953 11.997-2.005-.001-3.973-.502-5.724-1.455L0 24zm6.59-4.846c1.6.95 3.498 1.452 5.43 1.453 5.414 0 9.82-4.402 9.823-9.817.002-2.624-1.02-5.09-2.88-6.953-1.862-1.863-4.33-2.887-6.954-2.889-5.422 0-9.827 4.404-9.831 9.82-.001 1.943.506 3.841 1.47 5.509l-.965 3.526 3.61-.947zm11.231-6.793c-.302-.152-1.791-.883-2.073-.985-.282-.102-.489-.152-.696.152-.207.304-.799.985-.979 1.187-.18.203-.361.228-.663.077-1.127-.565-1.928-1.01-2.697-2.327-.2-.343.2-.319.574-1.066.06-.122.03-.228-.015-.319-.045-.091-.489-1.18-.671-1.616-.177-.428-.356-.369-.489-.376-.127-.007-.272-.008-.418-.008-.145 0-.382.054-.582.273-.2.22-.763.746-.763 1.82 0 1.073.782 2.107.891 2.254.11.147 1.54 2.349 3.729 3.291.52.224.926.358 1.242.459.522.167 1.002.143 1.379.087.42-.063 1.291-.527 1.472-1.034.18-.506.18-.94.127-1.034-.053-.09-.203-.152-.505-.304z"/>
+                </svg>
+                Hubungi WhatsApp
             </a>
         </div>
     </section>
@@ -261,7 +288,7 @@
                         'label' => 'Pembayaran Terverifikasi',
                         'desc_done'    => 'Lunas via ' . $order->payment_method,
                         'desc_active'  => 'Pembayaran baru saja dikonfirmasi. Kopi masuk antrian roasting.',
-                        'desc_pending' => 'Menunggu konfirmasi pembayaran.',
+                        'desc_pending' => $order->status === 'Awaiting Verification' ? 'Menunggu verifikasi pembayaran oleh admin.' : 'Menunggu konfirmasi pembayaran.',
                         'icon'  => 'verified',
                     ],
                     [
@@ -611,6 +638,11 @@
                                 <span class="inline-flex items-center gap-1.5 px-3 py-1 border border-brand-accent/20 bg-brand-cream text-brand-accent label-tiny text-[9px] font-bold">
                                     <span class="w-1.5 h-1.5 rounded-full bg-brand-accent animate-pulse"></span>
                                     Belum Dibayar
+                                </span>
+                            @elseif ($order->status === 'Awaiting Verification')
+                                <span class="inline-flex items-center gap-1.5 px-3 py-1 border border-amber-300 bg-amber-50 text-amber-700 label-tiny text-[9px] font-bold">
+                                    <span class="w-1.5 h-1.5 rounded-full bg-amber-500 animate-pulse"></span>
+                                    Menunggu Verifikasi
                                 </span>
                             @else
                                 <span class="inline-flex items-center gap-1.5 px-3 py-1 border border-[#A7F3D0] bg-[#E2F9EB] text-[#121212] label-tiny text-[9px] font-bold">

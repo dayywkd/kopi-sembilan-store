@@ -36,6 +36,7 @@ Route::get('/order/payment/{uuid}', [OrderController::class, 'payment'])->name('
 Route::get('/order/tracking/{uuid}', [OrderController::class, 'tracking'])->name('order.tracking');
 Route::post('/order/confirm-delivery/{uuid}', [OrderController::class, 'confirmDelivery'])->name('order.confirm_delivery');
 Route::post('/order/payment/{uuid}/proof', [OrderController::class, 'uploadPaymentProof'])->name('order.payment.proof');
+Route::post('/order/payment/{uuid}/confirm', [OrderController::class, 'confirmPayment'])->name('order.payment.confirm');
 Route::get('/order/invoice/{uuid}/download', [OrderController::class, 'downloadInvoice'])->name('order.invoice.download');
 
 // Halaman Kemitraan Wholesale B2B

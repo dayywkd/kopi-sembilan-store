@@ -35,6 +35,7 @@ class OrderResource extends Resource
                                 $isPickup = $get('courier') === 'pickup';
                                 return [
                                     'Awaiting Payment' => 'Awaiting Payment',
+                                    'Awaiting Verification' => 'Awaiting Verification (Menunggu Verifikasi)',
                                     'Paid' => 'Paid (Lunas)',
                                     'Packing' => $isPickup ? 'Packing (Sedang Disiapkan)' : 'Packing (Sedang Dikemas)',
                                     'Shipped' => $isPickup ? 'Ready For Pickup (Siap Diambil)' : 'Shipped (Dalam Pengiriman)',
@@ -100,7 +101,8 @@ class OrderResource extends Resource
                         return $state;
                     })
                     ->color(fn (string $state): string => match ($state) {
-                        'Awaiting Payment' => 'warning',
+                        'Awaiting Payment' => 'danger',
+                        'Awaiting Verification' => 'warning',
                         'Paid' => 'info',
                         'Packing' => 'gray',
                         'Shipped' => 'primary',

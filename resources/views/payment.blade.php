@@ -255,15 +255,36 @@
                         <h2 class="label-tiny text-neutral-500">02 / Langkah Pembayaran</h2>
                     </div>
 
-                    <div class="space-y-4">
-                        @foreach ([
+                    @php
+                        $isBCA = $order->payment_method === 'Transfer BCA';
+                        $isBRI = $order->payment_method === 'Transfer BRI';
+                        
+                        $step2 = 'Pilih menu Transfer → ke Rekening Bank (BCA atau BRI).';
+                        if ($isBCA) {
+                            $step2 = 'Pilih menu Transfer → ke Rekening Bank BCA.';
+                        } elseif ($isBRI) {
+                            $step2 = 'Pilih menu Transfer → ke Rekening Bank BRI.';
+                        }
+                        
+                        $step3 = 'Masukkan nomor rekening tujuan (<strong class="text-[#121212]">5550305307</strong> untuk BCA atau <strong class="text-[#121212]">010901031684534</strong> untuk BRI) atas nama <strong class="text-[#121212]">Muhammad Fahad</strong>.';
+                        if ($isBCA) {
+                            $step3 = 'Masukkan nomor rekening tujuan (<strong class="text-[#121212]">5550305307</strong>) atas nama <strong class="text-[#121212]">Muhammad Fahad</strong>.';
+                        } elseif ($isBRI) {
+                            $step3 = 'Masukkan nomor rekening tujuan (<strong class="text-[#121212]">010901031684534</strong>) atas nama <strong class="text-[#121212]">Muhammad Fahad</strong>.';
+                        }
+                        
+                        $steps = [
                             ['Buka aplikasi m-banking atau ATM Bank Anda.', 'phone_android'],
-                            ['Pilih menu Transfer → ke Rekening Bank (BCA atau BRI).', 'compare_arrows'],
-                            ['Masukkan nomor rekening tujuan (<strong class="text-[#121212]">5550305307</strong> untuk BCA atau <strong class="text-[#121212]">010901031684534</strong> untuk BRI) atas nama <strong class="text-[#121212]">Muhammad Fahad</strong>.', 'dialpad'],
+                            [$step2, 'compare_arrows'],
+                            [$step3, 'dialpad'],
                             ['Masukkan nominal transfer <strong class="text-black underline underline-offset-2">PERSIS TEPAT</strong> sesuai yang tertera.', 'payments'],
                             ['Isi berita transfer dengan kode pesanan: <strong class="font-mono text-[#121212]">' . $order->transaction_id . '</strong>', 'edit_note'],
                             ['Konfirmasi dan selesaikan transfer. Simpan bukti transfer Anda.', 'check_circle'],
-                        ] as $i => [$step, $icon])
+                        ];
+                    @endphp
+
+                    <div class="space-y-4">
+                        @foreach ($steps as $i => [$step, $icon])
                         <div class="flex items-start gap-4 py-4 border-b border-[#E5E7EB]/50 last:border-0">
                             <div class="step-num bg-neutral-50 text-neutral-500">{{ $i + 1 }}</div>
                             <div class="flex-grow">
@@ -290,6 +311,20 @@
                             </svg>
                             Kirim Bukti Transfer via WhatsApp
                         </a>
+
+                        <div class="flex items-center my-4">
+                            <div class="flex-grow border-t border-neutral-200"></div>
+                            <span class="px-3 text-neutral-400 text-[10px] font-sans font-bold uppercase tracking-wider">Atau</span>
+                            <div class="flex-grow border-t border-neutral-200"></div>
+                        </div>
+
+                        <form action="{{ route('order.payment.confirm', $order->uuid) }}" method="POST">
+                            @csrf
+                            <button type="submit" class="w-full bg-[#121212] hover:bg-neutral-800 text-white font-bold py-4 px-4 text-xs sm:text-sm uppercase tracking-widest transition-colors duration-300 active:scale-[0.98]">
+                                Saya Sudah Bayar
+                            </button>
+                        </form>
+
                         <p class="font-sans text-[10px] text-center text-neutral-400 uppercase tracking-wider">
                             Pesanan akan diproses setelah pembayaran terverifikasi oleh tim kami (maks. 1×24 jam)
                         </p>
@@ -368,6 +403,20 @@
                             </svg>
                             Kirim Bukti QRIS via WhatsApp
                         </a>
+
+                        <div class="flex items-center my-4">
+                            <div class="flex-grow border-t border-neutral-200"></div>
+                            <span class="px-3 text-neutral-400 text-[10px] font-sans font-bold uppercase tracking-wider">Atau</span>
+                            <div class="flex-grow border-t border-neutral-200"></div>
+                        </div>
+
+                        <form action="{{ route('order.payment.confirm', $order->uuid) }}" method="POST">
+                            @csrf
+                            <button type="submit" class="w-full bg-[#121212] hover:bg-neutral-800 text-white font-bold py-4 px-4 text-xs sm:text-sm uppercase tracking-widest transition-colors duration-300 active:scale-[0.98]">
+                                Saya Sudah Bayar
+                            </button>
+                        </form>
+
                         <p class="font-sans text-[10px] text-center text-neutral-400 uppercase tracking-wider">
                             Tim kami akan memverifikasi dan memulai proses roasting dalam 1×24 jam
                         </p>

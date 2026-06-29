@@ -375,6 +375,21 @@ class OrderController extends Controller
         return back()->with('success', 'Bukti pembayaran berhasil diunggah. Tim kami akan memverifikasi secara manual.');
     }
 
+    public function confirmPayment($uuid)
+    {
+        $order = Order::where('uuid', $uuid)->firstOrFail();
+
+        // Hanya ubah status jika saat ini masih Awaiting Payment
+        if ($order->status === 'Awaiting Payment') {
+            $order->update([
+                'status' => 'Awaiting Verification'
+            ]);
+            return redirect()->route('order.tracking', $uuid)->with('confirm_success', 'Konfirmasi pembayaran berhasil dikirim. Menunggu verifikasi admin.');
+        }
+
+        return redirect()->route('order.tracking', $uuid);
+    }
+
     public function downloadInvoice($uuid)
     {
         $order = Order::with('items')->where('uuid', $uuid)->firstOrFail();
