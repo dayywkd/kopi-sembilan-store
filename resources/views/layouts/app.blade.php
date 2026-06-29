@@ -165,6 +165,7 @@
 
     <!-- Global Layout Scripts -->
     <script>
+        const AppLocale = "{{ App::getLocale() }}";
         // Toggle Mobile Navigation Drawer
         function toggleMobileMenu() {
             const menu = document.getElementById('mobile-menu');
@@ -447,17 +448,17 @@
 
         @if ($errors->any())
         document.addEventListener('DOMContentLoaded', () => {
-            showCustomAlert('Perhatian', '{{ $errors->first() }}', 'warning');
+            showCustomAlert('{{ __trans('Perhatian', 'Attention') }}', '{{ $errors->first() }}', 'warning');
         });
         @endif
         @if (session('error'))
         document.addEventListener('DOMContentLoaded', () => {
-            showCustomAlert('Terjadi Kesalahan', '{{ session('error') }}', 'error');
+            showCustomAlert('{{ __trans('Terjadi Kesalahan', 'Error Occurred') }}', '{{ session('error') }}', 'error');
         });
         @endif
         @if (session('success'))
         document.addEventListener('DOMContentLoaded', () => {
-            showCustomAlert('Berhasil', '{{ session('success') }}', 'success');
+            showCustomAlert('{{ __trans('Berhasil', 'Success') }}', '{{ session('success') }}', 'success');
         });
         @endif
 
@@ -480,7 +481,8 @@
             }
             
             saveCart(cart);
-            showToast(`"${size} - ${name}" ditambahkan.`);
+            const toastMsg = AppLocale === 'en' ? `"${size} - ${name}" added.` : `"${size} - ${name}" ditambahkan.`;
+            showToast(toastMsg);
         }
 
         // Scroll Reveal Observer
