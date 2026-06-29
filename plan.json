@@ -1,0 +1,17 @@
+{
+  "projectId": "c1a452ef-acf7-46ad-9a8a-147716414595",
+  "type": "frontend",
+  "name": "Verify multi-language switcher, catalog navigation, and cart additions",
+  "description": "Navigate through the home, catalog, and product detail pages, toggling between ID and EN languages, adding a product to the cart, and verifying that both page content and toast alerts update dynamically according to the active language.",
+  "priority": "p0",
+  "planSteps": [
+    { "type": "action", "description": "Navigate to the homepage" },
+    { "type": "action", "description": "Click the EN button on the top right navigation bar to switch the website language to English" },
+    { "type": "action", "description": "Click the SHOP link in the main navigation menu" },
+    { "type": "action", "description": "Click the first product image or name in the catalog grid to open the product detail page" },
+    { "type": "action", "description": "Click the Add to Bag button to add the selected coffee to the cart" },
+    { "type": "assertion", "description": "Verify a toast notification pop-up appears containing the word 'added' in English" },
+    { "type": "action", "description": "Click the ID button on the top right navigation bar to switch the website language back to Indonesian" },
+    { "type": "assertion", "description": "Verify the main button text updates to read 'Tambah ke Keranjang' in Indonesian" }
+  ]
+}
