@@ -73,7 +73,7 @@
     <!-- Kolom Kiri: Teks & CTA -->
     <div class="flex flex-col justify-center items-start px-6 md:pl-20 md:pr-16 py-16 md:py-24 bg-white">
         <h1 class="font-sans font-bold text-4xl md:text-5xl lg:text-[54px] text-[#121212] leading-[1.1] tracking-tight mb-6">
-            {{ __trans('Edisi Terbatas:<br/>Rilisan Khas Sembilan', 'Limited Edition:<br/>Sembilan Signature Release') }}
+            {!! __trans('Edisi Terbatas:<br/>Rilisan Khas Sembilan', 'Limited Edition:<br/>Sembilan Signature Release') !!}
         </h1>
         <p class="font-sans text-neutral-600 text-sm md:text-base leading-relaxed mb-8 max-w-md">
             {{ __trans('Menjelajahi rangkaian varietas kopi kami yang paling istimewa melalui metode penyangraian presisi oleh Toko Kopi Sembilan.', 'Exploring the range of our most celebrated coffee varieties through precision roasting methods by Toko Kopi Sembilan.') }}
