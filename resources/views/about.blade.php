@@ -59,7 +59,7 @@
         <p class="label-tiny mb-4 text-neutral-400">{{ __trans('Warisan & Cerita Kami', 'Our Heritage & Story') }}</p>
         <h1 class="text-display-hero font-display italic text-white mb-6">{!! __trans('Murni & Presisi.<br/>Perjalanan Kami.', 'Pure & Precise.<br/>Our Journey.') !!}</h1>
         <p class="font-sans font-light text-sm md:text-base text-neutral-300 max-w-xl mx-auto leading-relaxed">
-            {{ __trans('Est. MMXXIV di Tuban — Dedikasi penuh untuk menyangrai biji kopi pilihan dengan standar ketat SCA guna menyajikan profil rasa terbaik bagi para pecinta kopi di Indonesia.', 'Est. MMXXIV in Tuban — Dedicated to roasting selected coffee beans under strict SCA standards to deliver the best flavor profile for coffee lovers in Indonesia.') }}
+            {{ __trans('Est. MMXXIV di Tuban — Dedikasi penuh untuk roasting biji kopi pilihan dengan standar ketat SCA guna menyajikan profil rasa terbaik bagi para pecinta kopi di Indonesia.', 'Est. MMXXIV in Tuban — Dedicated to roasting selected coffee beans under strict SCA standards to deliver the best flavor profile for coffee lovers in Indonesia.') }}
         </p>
     </div>
 </section>
@@ -72,7 +72,7 @@
                 <p class="label-tiny text-neutral-400">{{ __trans('01 / Asal Mula', '01 / The Origin') }}</p>
                 <h2 class="text-3xl md:text-4xl font-display font-bold text-[#121212] italic leading-tight">{{ __trans('Bagaimana Semuanya Dimulai', 'How It All Began') }}</h2>
                 <p class="text-sm text-neutral-500 leading-relaxed font-light">
-                    {{ __trans('Toko Kopi Sembilan didirikan pada tahun 2024 di kawasan bersejarah Kutorejo, Tuban. Berawal dari komunitas kecil penyuka kopi spesialis, roastery kami berfokus untuk mengeksplorasi cita rasa asli dari biji kopi micro-lot Indonesia dan dunia. Kami percaya bahwa setiap biji kopi memiliki cerita unik yang dapat diungkapkan melalui sangraian yang presisi.', 'Toko Kopi Sembilan was founded in 2024 in the historic area of Kutorejo, Tuban. Starting as a small community of specialty coffee enthusiasts, our roastery focuses on exploring the authentic flavors of micro-lot coffee beans from Indonesia and around the world. We believe that every coffee bean has a unique story that can be revealed through precision roasting.') }}
+                    {{ __trans('Toko Kopi Sembilan didirikan pada tahun 2024 di kawasan bersejarah Kutorejo, Tuban. Berawal dari komunitas kecil penyuka kopi spesialis, roastery kami berfokus untuk mengeksplorasi cita rasa asli dari biji kopi micro-lot Indonesia dan dunia. Kami percaya bahwa setiap biji kopi memiliki cerita unik yang dapat diungkapkan melalui roasting yang presisi.', 'Toko Kopi Sembilan was founded in 2024 in the historic area of Kutorejo, Tuban. Starting as a small community of specialty coffee enthusiasts, our roastery focuses on exploring the authentic flavors of micro-lot coffee beans from Indonesia and around the world. We believe that every coffee bean has a unique story that can be revealed through precision roasting.') }}
                 </p>
             </div>
             <!-- Menggunakan Foto Area Bar Kopi & Roaster Asli User -->
@@ -104,7 +104,7 @@
             <div class="bg-white/5 backdrop-blur-md p-8 border border-white/10 space-y-4 hover:scale-[1.03] transition-transform duration-500 shadow-xl group">
                 <h3 class="text-lg font-bold text-white group-hover:text-neutral-300 transition-colors">{{ __trans('Standar SCA Certified', 'SCA Certified Standards') }}</h3>
                 <p class="text-xs text-neutral-300 leading-relaxed font-light">
-                    {{ __trans('Setiap profil sangrai dianalisis dan di-evaluasi sesuai standar Specialty Coffee Association (SCA) untuk menjamin kualitas rasa serta konsistensi tingkat kematangan biji kopi.', 'Every roasting profile is analyzed and evaluated according to Specialty Coffee Association (SCA) standards to guarantee flavor quality and consistency in coffee bean development.') }}
+                    {{ __trans('Setiap profil roasting dianalisis dan di-evaluasi sesuai standar Specialty Coffee Association (SCA) untuk menjamin kualitas rasa serta konsistensi tingkat kematangan biji kopi.', 'Every roasting profile is analyzed and evaluated according to Specialty Coffee Association (SCA) standards to guarantee flavor quality and consistency in coffee bean development.') }}
                 </p>
             </div>
             <div class="bg-white/5 backdrop-blur-md p-8 border border-white/10 space-y-4 hover:scale-[1.03] transition-transform duration-500 shadow-xl group">

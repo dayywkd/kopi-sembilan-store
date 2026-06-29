@@ -50,6 +50,7 @@
     $categoryImages = [
         'single-origin' => 'images/products/geisha_obsidian.jpg',
         'espresso-blends' => 'images/products/sembilan_zero.jpg',
+        'filter' => 'images/products/sembilan_zero.jpg',
         'roast-profile' => 'images/products/nebula_eclipse.jpg',
         'gear' => 'images/products/copper_dripper.jpg',
         'subscriptions' => 'images/products/subscription.jpg',
@@ -70,12 +71,7 @@
 
         <!-- Circular Category Navigation -->
         <div class="flex flex-wrap items-center justify-center gap-6 md:gap-10 my-10">
-            @php
-                $filteredCategories = $categories->filter(function($cat) {
-                    return in_array($cat->slug, ['single-origin', 'espresso-blends']);
-                });
-            @endphp
-            @foreach ($filteredCategories as $cat)
+            @foreach ($categories as $cat)
                 @php
                     $imgPath = $categoryImages[$cat->slug] ?? 'images/products/aurora_medium.jpg';
                     $isActive = (string)$defaultCategory === (string)$cat->id;
@@ -85,7 +81,7 @@
                         : route('shop', array_merge(request()->except('category'), ['category' => $cat->id]));
                     
                     // Map name
-                    $displayName = $cat->slug === 'single-origin' ? 'FILTER' : ($cat->slug === 'espresso-blends' ? 'ESPRESSO' : $cat->name);
+                    $displayName = $cat->slug === 'single-origin' ? __trans('SINGLE ORIGIN', 'SINGLE ORIGIN') : ($cat->slug === 'filter' ? __trans('FILTER', 'FILTER') : $cat->name);
                 @endphp
                 <a href="{{ $targetUrl }}" class="group flex flex-col items-center">
                     <div class="w-20 h-20 md:w-24 md:h-24 rounded-full bg-neutral-50 border {{ $isActive ? 'border-2 border-[#121212] ring-4 ring-neutral-100' : 'border-neutral-200 hover:border-[#121212]/50' }} flex items-center justify-center overflow-hidden transition-all duration-300">
@@ -236,9 +232,9 @@
                     <input type="radio" name="category" value="ALL" {{ $defaultCategory === 'ALL' ? 'checked' : '' }} class="text-brand-accent focus:ring-brand-accent border-neutral-300">
                     <span class="text-xs font-semibold text-neutral-600 uppercase tracking-wider">{{ __trans('Semua Kopi', 'All Coffee') }}</span>
                 </label>
-                @foreach ($filteredCategories as $category)
+                @foreach ($categories as $category)
                     @php
-                        $displayName = $category->slug === 'single-origin' ? 'FILTER' : ($category->slug === 'espresso-blends' ? 'ESPRESSO' : $category->name);
+                        $displayName = $category->slug === 'single-origin' ? __trans('SINGLE ORIGIN', 'SINGLE ORIGIN') : ($category->slug === 'filter' ? __trans('FILTER', 'FILTER') : $category->name);
                     @endphp
                     <label class="flex items-center gap-3 cursor-pointer">
                         <input type="radio" name="category" value="{{ $category->id }}" {{ (string)$defaultCategory === (string)$category->id ? 'checked' : '' }} class="text-brand-accent focus:ring-brand-accent border-neutral-300">
