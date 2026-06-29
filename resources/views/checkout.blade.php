@@ -623,7 +623,7 @@
             if (res.success && res.rates && res.rates.length > 0) {
                 disableWhatsappFallback();
 
-                // Filter to keep JNE Reguler and J&T
+                // Filter to keep standard/regular services for active couriers (JNE, J&T, POS, SiCepat, etc.)
                 const filteredRates = res.rates.filter(rate => {
                     const courier = rate.courier.toLowerCase();
                     const service = rate.service.toLowerCase();
@@ -634,11 +634,18 @@
                     if (courier === 'jnt' || courier === 'j&t') {
                         return service === 'ez' || service === 'reguler' || service === 'regular' || service === 'standard';
                     }
-                    return false;
+                    if (courier === 'pos') {
+                        return service.includes('reg') || service.includes('kilat') || service.includes('standard') || service.includes('standar');
+                    }
+                    if (courier === 'sicepat') {
+                        return service === 'reg' || service === 'reguler' || service === 'siuntung' || service === 'halu';
+                    }
+                    // Untuk kurir aktif lain yang mungkin ditambahkan di masa depan:
+                    return service.includes('reg') || service.includes('std') || service.includes('standard') || service.includes('standar') || service.includes('ez') || service.includes('siuntung') || service.includes('halu');
                 });
 
                 if (filteredRates.length === 0) {
-                    statusDiv.innerHTML = '<p class="text-xs text-brand-accent uppercase tracking-widest">Tidak ada layanan JNE Reguler atau J&T yang menjangkau lokasi Anda.</p>';
+                    statusDiv.innerHTML = '<p class="text-xs text-brand-accent uppercase tracking-widest">Tidak ada layanan pengiriman reguler yang menjangkau lokasi Anda.</p>';
                     statusDiv.style.display = 'block';
                     wrapperDiv.style.display = 'none';
                     enableWhatsappFallback();
@@ -651,7 +658,17 @@
                 // Populate options
                 let optionsHtml = '';
                 sortedRates.forEach((rate) => {
-                    const courierName = rate.courier.toLowerCase() === 'jne' ? 'JNE Reguler' : 'J&T';
+                    let courierName = rate.courier.toUpperCase();
+                    const courierLower = rate.courier.toLowerCase();
+                    if (courierLower === 'jne') {
+                        courierName = 'JNE Reguler';
+                    } else if (courierLower === 'jnt' || courierLower === 'j&t') {
+                        courierName = 'J&T';
+                    } else if (courierLower === 'pos') {
+                        courierName = 'POS Indonesia';
+                    } else if (courierLower === 'sicepat') {
+                        courierName = 'SiCepat';
+                    }
                     
                     // Parse and clean estimated delivery time
                     let etdText = '1-3 Hari';
