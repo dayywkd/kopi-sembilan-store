@@ -48,7 +48,7 @@
 @section('content')
 @php
     $categoryImages = [
-        'single-origin' => 'images/products/geisha_obsidian.jpg',
+        'espresso' => 'images/products/geisha_obsidian.jpg',
         'espresso-blends' => 'images/products/sembilan_zero.jpg',
         'filter' => 'images/products/sembilan_zero.jpg',
         'roast-profile' => 'images/products/nebula_eclipse.jpg',
@@ -81,7 +81,7 @@
                         : route('shop', array_merge(request()->except('category'), ['category' => $cat->id]));
                     
                     // Map name
-                    $displayName = $cat->slug === 'single-origin' ? __trans('SINGLE ORIGIN', 'SINGLE ORIGIN') : ($cat->slug === 'filter' ? __trans('FILTER', 'FILTER') : $cat->name);
+                    $displayName = $cat->slug === 'espresso' ? __trans('ESPRESSO', 'ESPRESSO') : ($cat->slug === 'filter' ? __trans('FILTER', 'FILTER') : $cat->name);
                 @endphp
                 <a href="{{ $targetUrl }}" class="group flex flex-col items-center">
                     <div class="w-20 h-20 md:w-24 md:h-24 rounded-full bg-neutral-50 border {{ $isActive ? 'border-2 border-[#121212] ring-4 ring-neutral-100' : 'border-neutral-200 hover:border-[#121212]/50' }} flex items-center justify-center overflow-hidden transition-all duration-300">
@@ -234,7 +234,7 @@
                 </label>
                 @foreach ($categories as $category)
                     @php
-                        $displayName = $category->slug === 'single-origin' ? __trans('SINGLE ORIGIN', 'SINGLE ORIGIN') : ($category->slug === 'filter' ? __trans('FILTER', 'FILTER') : $category->name);
+                        $displayName = $category->slug === 'espresso' ? __trans('ESPRESSO', 'ESPRESSO') : ($category->slug === 'filter' ? __trans('FILTER', 'FILTER') : $category->name);
                     @endphp
                     <label class="flex items-center gap-3 cursor-pointer">
                         <input type="radio" name="category" value="{{ $category->id }}" {{ (string)$defaultCategory === (string)$category->id ? 'checked' : '' }} class="text-brand-accent focus:ring-brand-accent border-neutral-300">
